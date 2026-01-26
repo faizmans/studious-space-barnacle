@@ -1,0 +1,134 @@
+{% extends 'inventory/base.html' %}
+
+{% block content %}
+<style>
+    .contact-container {
+        display: grid;
+        grid-template-columns: 1fr 1.5fr;
+        gap: 60px;
+        margin-top: 60px;
+        margin-bottom: 100px;
+    }
+
+    /* Left Side: Info */
+    .contact-info {
+        background: var(--dark);
+        color: white;
+        padding: 50px;
+        border-radius: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+    /* Decorative Circle */
+    .contact-info::before {
+        content: ''; position: absolute; bottom: -50px; right: -50px;
+        width: 200px; height: 200px; background: rgba(255,255,255,0.05);
+        border-radius: 50%;
+    }
+
+    .info-item { margin-bottom: 40px; position: relative; z-index: 2; }
+    .info-label { display: block; color: #94a3b8; font-size: 0.9rem; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+    .info-value { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: white; }
+    .info-sub { color: #cbd5e1; font-size: 1rem; margin-top: 5px; display: block; }
+
+    /* Right Side: Form */
+    .contact-form-wrapper {
+        background: white;
+        padding: 50px;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+        border: 1px solid rgba(0,0,0,0.02);
+    }
+
+    .form-header h2 { font-size: 2.5rem; margin-bottom: 10px; color: var(--dark); }
+    .form-header p { color: #64748b; margin-bottom: 40px; }
+
+    /* Input Styling */
+    .input-group { margin-bottom: 25px; }
+    .input-field {
+        width: 100%;
+        padding: 15px 20px;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        font-family: 'Manrope', sans-serif;
+        font-size: 1rem;
+        transition: all 0.3s;
+        background: #f8fafc;
+    }
+    .input-field:focus {
+        border-color: var(--primary);
+        background: white;
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(211, 84, 0, 0.1);
+    }
+    textarea.input-field { resize: vertical; }
+
+    @media(max-width: 900px) {
+        .contact-container { grid-template-columns: 1fr; }
+    }
+</style>
+
+<div class="container">
+    
+    {% if messages %}
+        {% for message in messages %}
+            <div style="background: #d4edda; color: #155724; padding: 15px; border-radius: 10px; margin-top: 30px; text-align: center;">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="contact-container">
+        
+        <div class="contact-info">
+            <div class="info-item">
+                <span class="info-label">Visit Us</span>
+                <div class="info-value">Ahmedabad HQ</div>
+                <span class="info-sub">123, Bakery Market, Kalupur<br>Ahmedabad, Gujarat 380001</span>
+            </div>
+            
+            <div class="info-item">
+                <span class="info-label">Call Us</span>
+                <div class="info-value">+91 98765 43210</div>
+                <span class="info-sub">Mon-Sat, 9am - 8pm</span>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Email Us</span>
+                <div class="info-value">help@sameertrading.com</div>
+                <span class="info-sub">We reply within 24 hours</span>
+            </div>
+        </div>
+
+        <div class="contact-form-wrapper">
+            <div class="form-header">
+                <h2>Get in Touch</h2>
+                <p>Have a question about bulk pricing or specific products? Send us a message.</p>
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="input-group">
+                    {{ form.full_name }}
+                </div>
+                
+                <div class="input-group">
+                    {{ form.email }}
+                </div>
+
+                <div class="input-group">
+                    {{ form.subject }}
+                </div>
+
+                <div class="input-group">
+                    {{ form.message }}
+                </div>
+
+                <button type="submit" class="btn" style="width: 100%;">Send Message</button>
+            </form>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
