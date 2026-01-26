@@ -1,0 +1,400 @@
+{% extends 'inventory/base.html' %}
+
+{% block content %}
+<style>
+    /* --- 1. CINEMATIC HERO SECTION --- */
+    .hero {
+        position: relative;
+        height: 80vh; /* Taller, more impressive */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: white;
+        margin-bottom: 100px;
+        overflow: hidden;
+    }
+
+    /* Background Image with modern overlay */
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: url('https://images.unsplash.com/photo-1509440159596-0249088772ff?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80') center/cover no-repeat fixed;
+        filter: brightness(0.6) contrast(1.1); /* Darken slightly for text pop */
+        z-index: -1;
+    }
+
+    /* Gradient overlay for text readability */
+    .hero::after {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%);
+        z-index: -1;
+    }
+
+    .hero-content {
+        max-width: 800px;
+        padding: 0 20px;
+        animation: fadeUp 1s ease-out;
+    }
+
+    .hero h1 { 
+        font-family: 'Playfair Display', serif;
+        font-size: 4.5rem; /* Massive, luxury heading */
+        font-weight: 700; 
+        margin-bottom: 20px; 
+        line-height: 1.1;
+        letter-spacing: -1px;
+        text-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    
+    .hero p { 
+        font-family: 'Manrope', sans-serif;
+        font-size: 1.4rem; 
+        margin-bottom: 40px; 
+        opacity: 0.95; 
+        font-weight: 300;
+        letter-spacing: 0.5px;
+    }
+
+    /* Custom Hero Button */
+    .btn-hero {
+        background: white;
+        color: var(--dark);
+        padding: 16px 45px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        border-radius: 50px;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+    .btn-hero:hover {
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        background: var(--primary);
+        color: white;
+    }
+
+    /* --- 2. CATEGORY SECTION --- */
+    .category-section { margin-bottom: 120px; }
+    
+    .category-grid { 
+        display: flex; 
+        justify-content: center; 
+        gap: 50px; 
+        flex-wrap: wrap; 
+    }
+    
+    .cat-card-link { text-decoration: none; color: inherit; display: block; }
+
+    .cat-card { 
+        text-align: center; 
+        width: 160px; 
+        transition: all 0.4s ease;
+        position: relative;
+    }
+    
+    .cat-img-wrapper {
+        width: 150px; 
+        height: 150px; 
+        border-radius: 50%; 
+        padding: 6px; /* Space for double border effect */
+        background: transparent;
+        border: 2px solid rgba(211, 84, 0, 0.1);
+        margin: 0 auto 20px;
+        transition: all 0.4s ease;
+    }
+
+    .cat-img-box {
+        width: 100%; 
+        height: 100%; 
+        border-radius: 50%; 
+        overflow: hidden; 
+        background: white;
+        position: relative;
+    }
+    
+    .cat-img-box img { 
+        width: 100%; 
+        height: 100%; 
+        object-fit: cover; 
+        transition: transform 0.6s ease;
+    }
+    
+    /* Hover Effects */
+    .cat-card:hover .cat-img-wrapper { 
+        border-color: var(--primary); 
+        transform: scale(1.05);
+        box-shadow: 0 10px 30px rgba(211, 84, 0, 0.15);
+    }
+    .cat-card:hover img { transform: scale(1.15); }
+    
+    .cat-title { 
+        font-family: 'Playfair Display', serif;
+        font-weight: 700; 
+        color: var(--dark); 
+        font-size: 1.2rem; 
+        letter-spacing: 0.5px;
+        margin-top: 15px;
+    }
+
+    /* --- 3. PRODUCT GRID (Luxury Cards) --- */
+    .product-grid { 
+        display: grid; 
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Slightly wider cards */
+        gap: 40px; 
+        margin-bottom: 120px;
+    }
+    
+    .product-card { 
+        background: white; 
+        border-radius: 20px; 
+        overflow: hidden; 
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        display: flex;
+        flex-direction: column;
+        border: 1px solid rgba(0,0,0,0.04); /* Extremely subtle border */
+        position: relative;
+    }
+    
+    /* Premium Hover Lift */
+    .product-card:hover { 
+        transform: translateY(-12px); 
+        box-shadow: 0 20px 40px rgba(0,0,0,0.08); /* Soft, deep shadow */
+        border-color: transparent;
+    }
+    
+    .p-img-box {
+        width: 100%;
+        height: 280px; /* Taller image area */
+        position: relative;
+        overflow: hidden;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px; /* Breathing room for product */
+    }
+
+    .p-img { 
+        width: 100%; 
+        height: 100%; 
+        object-fit: contain; /* Crystal clear images */
+        transition: transform 0.7s ease;
+        image-rendering: -webkit-optimize-contrast; 
+        filter: drop-shadow(0 5px 15px rgba(0,0,0,0.05)); /* Product casts its own shadow */
+    }
+    
+    .product-card:hover .p-img { transform: scale(1.08); }
+    
+    .p-details { 
+        padding: 30px; 
+        flex-grow: 1; 
+        display: flex; 
+        flex-direction: column; 
+        background: white;
+        z-index: 2;
+    }
+    
+    .p-title { 
+        font-family: 'Playfair Display', serif;
+        font-size: 1.4rem; 
+        margin: 0 0 10px; 
+        font-weight: 700; 
+        color: var(--dark);
+        line-height: 1.3;
+    }
+    
+    .p-desc { 
+        font-size: 0.95rem; 
+        color: #64748b; 
+        margin-bottom: 25px; 
+        line-height: 1.6;
+    }
+
+    /* Action Row at bottom of card */
+    .card-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: auto;
+        border-top: 1px solid #f1f5f9;
+        padding-top: 20px;
+    }
+
+    .stock-pill {
+        font-size: 0.8rem;
+        background: #f1f5f9;
+        color: #475569;
+        padding: 6px 14px;
+        border-radius: 30px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+
+    .view-link {
+        color: var(--primary);
+        font-weight: 700;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    .view-link:hover { gap: 8px; /* Arrow moves on hover */ }
+
+    /* --- 4. TRUST FEATURES (Modernized) --- */
+    .features-section {
+        background: #fff;
+        padding: 100px 0;
+        border-radius: 30px; /* Slight curve to section */
+        margin: 0 20px 60px; /* Inset slightly */
+        box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+    }
+    
+    .features-grid {
+        display: flex; 
+        justify-content: center; 
+        gap: 80px;
+        flex-wrap: wrap; 
+    }
+    
+    .feature-box { 
+        text-align: center; 
+        padding: 20px;
+        transition: 0.3s;
+        max-width: 250px;
+    }
+    
+    /* Styled Icon Circle */
+    .icon-circle {
+        width: 80px; height: 80px;
+        background: rgba(211, 84, 0, 0.08);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        font-size: 2.5rem;
+        transition: transform 0.3s ease;
+    }
+    
+    .feature-box:hover .icon-circle { 
+        transform: rotate(10deg) scale(1.1); 
+        background: rgba(211, 84, 0, 0.15);
+    }
+    
+    .feature-box strong { 
+        display: block; 
+        font-size: 1.25rem; 
+        color: var(--dark); 
+        margin-bottom: 8px;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .feature-box span {
+        color: #94a3b8;
+        font-size: 0.95rem;
+    }
+
+    /* Mobile Responsive tweaks */
+    @media (max-width: 768px) {
+        .hero h1 { font-size: 2.8rem; }
+        .hero p { font-size: 1.1rem; }
+        .hero { height: 65vh; }
+        .category-grid { gap: 30px; }
+        .features-grid { gap: 40px; }
+    }
+</style>
+
+<section class="hero">
+    <div class="hero-content">
+        <h1>Baking Excellence Starts Here</h1>
+        <p>Premium wholesale ingredients sourced for professional chefs, patisseries, and passionate home bakers.</p>
+        <a href="{% url 'product_list' %}" class="btn-hero">Explore Collection</a>
+    </div>
+</section>
+
+<div class="container">
+
+    {% if categories %}
+    <div class="category-section">
+        <h2 class="section-title">Curated Categories</h2>
+        <div class="category-grid">
+            {% for cat in categories %}
+            
+            <a href="{% url 'category_filter' category_id=cat.id %}" class="cat-card-link">
+                <div class="cat-card">
+                    <div class="cat-img-wrapper">
+                        <div class="cat-img-box">
+                            {% if cat.image %}
+                                <img src="{{ cat.image.url }}" alt="{{ cat.name }}">
+                            {% else %}
+                                <img src="https://via.placeholder.com/150?text={{ cat.name|slice:':1' }}" alt="No Image">
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="cat-title">{{ cat.name }}</div>
+                </div>
+            </a>
+            
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <h2 class="section-title" id="products">Latest Arrivals</h2>
+    <div class="product-grid">
+        {% for product in products %}
+        <div class="product-card">
+            
+            <a href="{% url 'product_detail' pk=product.pk %}" class="p-img-box">
+                {% if product.images.first %}
+                    <img src="{{ product.images.first.image.url }}" class="p-img" alt="{{ product.name }}">
+                {% else %}
+                    <div style="color:#cbd5e1; font-weight:500;">No Image</div>
+                {% endif %}
+            </a>
+            
+            <div class="p-details">
+                <h3 class="p-title">{{ product.name }}</h3>
+                <p class="p-desc">{{ product.description|truncatewords:10 }}</p>
+                
+                <div class="card-actions">
+                    <span class="stock-pill">
+                        {{ product.available_quantity }}
+                    </span>
+                    <a href="{% url 'product_detail' pk=product.pk %}" class="view-link">
+                        View Details <span>&rarr;</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+<section class="features-section">
+    <div class="features-grid">
+        <div class="feature-box">
+            <div class="icon-circle">💰</div>
+            <strong>Wholesale Pricing</strong>
+            <span>Direct rates for bulk orders</span>
+        </div>
+        <div class="feature-box">
+            <div class="icon-circle">🚚</div>
+            <strong>Fast Delivery</strong>
+            <span>Dispatched within 24 hours</span>
+        </div>
+        <div class="feature-box">
+            <div class="icon-circle">✨</div>
+            <strong>Premium Quality</strong>
+            <span>Verified, high-grade materials</span>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

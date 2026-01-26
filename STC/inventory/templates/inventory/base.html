@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sameer Trading Company | Premium Bakery Supplies</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- 1. LUXURY VARIABLES --- */
+        :root {
+            /* A more sophisticated Orange-Gold gradient for buttons */
+            --primary-gradient: linear-gradient(135deg, #d35400 0%, #e67e22 100%);
+            --primary: #d35400;
+            
+            /* Deep, rich blacks instead of default black */
+            --dark: #0f172a;       
+            --dark-surface: #1e293b;
+            
+            /* Warm, creamy background for that "Bakery" vibe */
+            --light-bg: #fdfcf8;   
+            --white: #ffffff;
+            
+            /* Soft, expensive-looking shadows */
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.01);
+            
+            --nav-height: 90px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html { scroll-behavior: smooth; }
+
+        body { 
+            font-family: 'Manrope', sans-serif; /* Clean, modern text */
+            background-color: var(--light-bg); 
+            /* Subtle grain texture for premium feel (optional, keeps it clean if removed) */
+            background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+            background-size: 40px 40px;
+            color: var(--dark); 
+            line-height: 1.7;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        h1, h2, h3, .logo {
+            font-family: 'Playfair Display', serif; /* Elegant headings */
+        }
+
+        a { text-decoration: none; color: inherit; transition: all 0.3s ease; }
+        ul { list-style: none; }
+
+        /* --- 2. PREMIUM GLASS NAVBAR --- */
+        .navbar { 
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            height: var(--nav-height);
+            padding: 0 5%; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            border-bottom: 1px solid rgba(0,0,0,0.03);
+            transition: all 0.3s ease;
+        }
+
+        .logo { 
+            font-size: 1.8rem; 
+            font-weight: 700; 
+            color: var(--dark); 
+            letter-spacing: -0.5px;
+            position: relative;
+        }
+        .logo span { 
+            color: var(--primary); 
+            font-style: italic;
+        }
+
+        .nav-links { display: flex; align-items: center; gap: 40px; }
+        
+        .nav-links a { 
+            font-weight: 500; 
+            font-size: 0.95rem; 
+            color: #475569; /* Softer grey for links */
+            position: relative;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links a:hover { color: var(--primary); }
+
+        /* The "Full Catalogue" Button - Now looks like a Pill */
+        .nav-cta {
+            background: var(--primary-gradient);
+            color: var(--white) !important;
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(211, 84, 0, 0.3);
+            transform: translateY(0);
+        }
+        .nav-cta:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(211, 84, 0, 0.4);
+        }
+
+        /* --- 3. LAYOUT & ANIMATIONS --- */
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 0 20px; 
+            width: 100%;
+        }
+
+        main { flex: 1; animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1); }
+        
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Global Button Styles */
+        .btn { 
+            display: inline-block; 
+            background: var(--primary-gradient); 
+            color: var(--white); 
+            padding: 14px 35px; 
+            border-radius: 50px; 
+            font-weight: 600; 
+            border: none; 
+            cursor: pointer; 
+            box-shadow: var(--shadow-lg);
+            letter-spacing: 0.5px;
+        }
+        .btn:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 15px 30px rgba(211, 84, 0, 0.3);
+        }
+
+        /* Section Titles - More Elegant */
+        .section-title { 
+            text-align: center; 
+            font-size: 2.8rem; /* Larger */
+            font-weight: 700;
+            margin: 100px 0 60px; 
+            color: var(--dark); 
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Stylized Underline */
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 3px;
+            background: var(--primary);
+            margin: 20px auto 0;
+            border-radius: 10px;
+            opacity: 0.8;
+        }
+
+        /* --- 4. LUXURY DARK FOOTER --- */
+        footer { 
+            background: var(--dark); 
+            color: var(--white); 
+            padding: 100px 0 40px; 
+            margin-top: 120px; 
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Decorative top border for footer */
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 6px;
+            background: var(--primary-gradient);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr; /* Brand gets more space */
+            gap: 60px;
+            margin-bottom: 80px;
+        }
+
+        .footer-col h3 { 
+            font-size: 1.5rem; 
+            margin-bottom: 25px; 
+            color: var(--white); 
+            letter-spacing: 0.5px;
+        }
+        
+        .footer-col p { 
+            color: #94a3b8; 
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+        
+        .footer-col ul li { margin-bottom: 15px; }
+        .footer-col ul li a { 
+            color: #94a3b8; 
+            transition: color 0.2s;
+            display: inline-block;
+        }
+        .footer-col ul li a:hover { 
+            color: var(--primary); 
+            transform: translateX(5px); 
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 40px;
+            text-align: center;
+            color: #64748b;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .navbar { padding: 0 20px; height: 70px; }
+            .nav-links { gap: 15px; }
+            .nav-links a:not(.nav-cta) { display: none; } /* Hide text links on small screens */
+            .footer-grid { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+            .section-title { font-size: 2rem; }
+            .footer-bottom { flex-direction: column; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="{% url 'home' %}" class="logo">Sameer<span>Trading</span></a>
+        
+        <div class="nav-links">
+    <a href="{% url 'home' %}">Home</a>
+    <a href="{% url 'about' %}">About Us</a>
+    <a href="{% url 'contact' %}">Contact</a>
+    <a href="{% url 'product_list' %}" class="nav-cta">Catalogue</a>
+</div>
+    </nav>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>Sameer Trading Co.</h3>
+                    <p>We source the finest bakery raw materials from across India, ensuring that every cake, bread, and pastry you bake meets the highest standards of excellence.</p>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Explore</h3>
+                    <ul>
+                        <li><a href="{% url 'home' %}">Home</a></li>
+                        <li><a href="{% url 'product_list' %}">Full Catalogue</a></li>
+                        <li><a href="#contact">Support Center</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Visit Us</h3>
+                    <p>Ahmedabad, Gujarat, India</p>
+                    <p>+91-12345-67890</p>
+                    <p>hello@sameertrading.com</p>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <span>&copy; {% now "Y" %} Sameer Trading Company.</span>
+                <span>Designed for Excellence.</span>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
