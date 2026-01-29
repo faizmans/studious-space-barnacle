@@ -268,6 +268,37 @@
         width: 25px;         /* Fixed width ensures text lines up perfectly */
         text-align: center;
     }
+    .social-icons {
+        display: flex;
+        gap: 15px;
+    }
+
+    .social-btn {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.05); /* Subtle glass effect */
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.2rem;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        text-decoration: none; /* Removes underline */
+    }
+
+    /* Hover Effects */
+    .social-btn:hover {
+        transform: translateY(-5px);
+        background: var(--primary); /* Turns Gold on hover */
+        border-color: var(--primary);
+        box-shadow: 0 10px 20px rgba(211, 84, 0, 0.3);
+    }
+    
+    /* Optional: Specific Brand Colors on Hover if you prefer */
+    .social-btn.insta:hover { background: #E1306C; border-color: #E1306C; } 
+    .social-btn.fb:hover { background: #4267B2; border-color: #4267B2; } 
     
         /* --- 5. RESPONSIVE MEDIA QUERIES --- */
         @media (max-width: 768px) {
@@ -344,13 +375,16 @@
                 </div>
 
                 <div class="footer-col">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="{% url 'home' %}">Home</a></li>
-                        <li><a href="{% url 'product_list' %}">Full Catalogue</a></li>
-                        <li><a href="{% url 'contact' %}">Support</a></li>
-                    </ul>
-                </div>
+    <h3>Follow Us</h3>
+    <div class="social-icons">
+        <a href="https://instagram.com" target="_blank" class="social-btn insta">
+            <i class="fab fa-instagram"></i>
+        </a>
+        <a href="https://facebook.com" target="_blank" class="social-btn fb">
+            <i class="fab fa-facebook-f"></i>
+        </a>
+    </div>
+</div>
 
                 <div class="footer-col">
                     <h3>Get in Touch</h3>

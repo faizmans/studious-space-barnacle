@@ -23,7 +23,7 @@
     }
 
     .hero-text {
-        position: relative; z-index: 2; margin-bottom: 40px; /* Push text up slightly */
+        position: relative; z-index: 2; margin-bottom: 40px; 
     }
     
     .hero-text h1 { 
@@ -37,15 +37,16 @@
     
     .hero-text p { font-size: 1.1rem; color: #94a3b8; font-weight: 300; letter-spacing: 0.5px; }
 
-    /* --- OVERLAPPING CONTAINER --- */
+    /* --- MAIN CONTENT CONTAINER --- */
     .contact-wrapper {
         max-width: 1100px;
-        margin: -80px auto 100px; /* Negative margin pulls it up into hero */
+        margin: -80px auto 50px; /* Negative margin pulls it up */
         position: relative;
         z-index: 10;
         padding: 0 20px;
     }
 
+    /* --- CONTACT CARD --- */
     .contact-card {
         background: white;
         border-radius: 30px;
@@ -53,18 +54,18 @@
         overflow: hidden;
         display: grid;
         grid-template-columns: 1fr 1.5fr;
+        margin-bottom: 80px; /* Space before map */
     }
 
-    /* --- LEFT SIDE: INFO PANEL --- */
+    /* Left Side: Info */
     .contact-info {
-        background: var(--dark-surface); /* Slightly lighter dark */
+        background: var(--dark-surface);
         color: white;
         padding: 60px;
         position: relative;
         overflow: hidden;
     }
     
-    /* Decorative Circle */
     .contact-info::after {
         content: ''; position: absolute; bottom: -80px; right: -80px;
         width: 250px; height: 250px; 
@@ -76,78 +77,79 @@
     .info-group { margin-bottom: 50px; position: relative; z-index: 2; }
     
     .info-label { 
-        display: block; 
-        font-size: 0.85rem; 
-        text-transform: uppercase; 
-        letter-spacing: 1.5px; 
-        color: var(--primary); 
-        margin-bottom: 10px;
-        font-weight: 700;
+        display: block; font-size: 0.85rem; text-transform: uppercase; 
+        letter-spacing: 1.5px; color: var(--primary); margin-bottom: 10px; font-weight: 700;
     }
     
     .info-value { 
-        font-family: 'Playfair Display', serif; 
-        font-size: 1.8rem; 
-        line-height: 1.2;
-        margin-bottom: 8px;
+        font-family: 'Playfair Display', serif; font-size: 1.8rem; line-height: 1.2; margin-bottom: 8px;
     }
     
-    .info-sub { 
-        font-family: 'Manrope', sans-serif;
-        color: #94a3b8; 
-        font-size: 1rem; 
-        line-height: 1.6;
-    }
+    .info-sub { font-family: 'Manrope', sans-serif; color: #94a3b8; font-size: 1rem; line-height: 1.6; }
 
-    /* --- RIGHT SIDE: FORM --- */
-    .contact-form-section {
-        padding: 60px;
-        background: white;
-    }
+    /* Right Side: Form */
+    .contact-form-section { padding: 60px; background: white; }
 
     .form-intro { margin-bottom: 40px; }
     .form-intro h2 { font-size: 2.2rem; margin-bottom: 10px; color: var(--dark); font-family: 'Playfair Display', serif; }
     .form-intro p { color: #64748b; font-size: 1rem; }
 
-    /* Input Styling */
+    /* Inputs */
     .input-group { margin-bottom: 25px; }
-    
     .input-field {
-        width: 100%;
-        padding: 18px 25px;
-        border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        font-family: 'Manrope', sans-serif;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-        background: #fcfcfc;
+        width: 100%; padding: 18px 25px;
+        border: 1px solid #e2e8f0; border-radius: 12px;
+        font-family: 'Manrope', sans-serif; font-size: 1rem;
+        transition: all 0.3s ease; background: #fcfcfc;
     }
-    
     .input-field:focus {
-        border-color: var(--primary);
-        background: white;
-        outline: none;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.03);
+        border-color: var(--primary); background: white;
+        outline: none; box-shadow: 0 10px 20px rgba(0,0,0,0.03);
     }
-    
     textarea.input-field { resize: vertical; min-height: 150px; }
 
-    /* Button Override */
-    .btn-submit {
+    .btn-submit { width: 100%; padding: 18px; font-size: 1rem; margin-top: 10px; }
+
+    /* --- MAP SECTION --- */
+    .map-section {
+        margin-bottom: 100px;
+        text-align: center;
+    }
+    
+    .map-header { margin-bottom: 40px; }
+    .map-header h2 { 
+        font-family: 'Playfair Display', serif; 
+        font-size: 2.5rem; 
+        color: var(--dark); 
+        margin-bottom: 10px; 
+    }
+    .map-header p { color: #64748b; }
+
+    .map-container {
         width: 100%;
-        padding: 18px;
-        font-size: 1rem;
-        margin-top: 10px;
+        height: 450px;
+        border-radius: 30px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        border: 1px solid rgba(0,0,0,0.05);
+        position: relative;
     }
 
-    /* --- RESPONSIVE DESIGN --- */
+    .map-container iframe {
+        width: 100%;
+        height: 100%;
+        border: 0;
+        filter: grayscale(20%) contrast(1.1); /* Subtle premium filter */
+    }
+
+    /* RESPONSIVE */
     @media(max-width: 900px) {
         .contact-card { grid-template-columns: 1fr; }
         .contact-info { padding: 50px 30px; text-align: center; }
         .contact-info::after { display: none; }
         .contact-form-section { padding: 50px 30px; }
         .contact-wrapper { margin-top: -50px; }
-        .hero-text h1 { font-size: 2.5rem; }
+        .map-container { height: 300px; }
     }
 </style>
 
@@ -201,28 +203,29 @@
 
             <form method="POST">
                 {% csrf_token %}
-                
-                <div class="input-group">
-                    {{ form.full_name }}
-                </div>
-                
-                <div class="input-group">
-                    {{ form.email }}
-                </div>
-
-                <div class="input-group">
-                    {{ form.subject }}
-                </div>
-
-                <div class="input-group">
-                    {{ form.message }}
-                </div>
-
+                <div class="input-group">{{ form.full_name }}</div>
+                <div class="input-group">{{ form.email }}</div>
+                <div class="input-group">{{ form.subject }}</div>
+                <div class="input-group">{{ form.message }}</div>
                 <button type="submit" class="btn btn-submit">Send Message</button>
             </form>
         </div>
-
     </div>
+
+    <div class="map-section">
+        <div class="map-header">
+            <h2>Locate Us</h2>
+            <p>Visit our wholesale outlet in the heart of Ahmedabad.</p>
+        </div>
+        
+        <div class="map-container">
+            <iframe 
+                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d229.49011034448975!2d72.59508971504333!3d23.02958142044998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e85fa8eb1d6bb%3A0x7a65e7dd5c4ae459!2sSameer%20Trading%20Company!5e0!3m2!1sen!2sin!4v1769677074988!5m2!1sen!2sin" 
+                loading="lazy">
+            </iframe>
+        </div>
+    </div>
+
 </div>
 
 {% endblock %}

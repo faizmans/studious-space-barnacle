@@ -22,21 +22,28 @@
     /* --- LAYOUT GRID --- */
     .product-container {
         display: grid;
-        grid-template-columns: 1.1fr 0.9fr; /* Balanced split */
-        gap: 80px;
+        /* UPDATED: More space for the left content (Gallery + Details) */
+        grid-template-columns: 1.8fr 1fr; 
+        gap: 60px;
         align-items: start;
         padding-bottom: 100px;
     }
 
-    /* --- LEFT: GALLERY SECTION --- */
+    /* --- LEFT COLUMN STYLES --- */
+    .product-left-col {
+        display: flex;
+        flex-direction: column;
+        gap: 40px; /* Space between gallery and text details */
+    }
+
+    /* Gallery Styles */
     .gallery-wrapper {
         position: relative;
     }
 
-    /* Main Image Container */
     .main-media-container {
         width: 100%;
-        height: 550px; /* Taller for impact */
+        height: 550px; /* Kept tall for premium look */
         background: white;
         border-radius: 24px;
         border: 1px solid rgba(0,0,0,0.04);
@@ -45,30 +52,29 @@
         justify-content: center;
         overflow: hidden;
         margin-bottom: 25px;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.05); /* Soft, luxurious shadow */
+        box-shadow: 0 20px 50px rgba(0,0,0,0.05);
         position: relative;
         transition: transform 0.3s ease;
     }
     
     .main-media-container:hover {
-        transform: translateY(-5px); /* Subtle lift */
+        transform: translateY(-5px);
         box-shadow: 0 30px 60px rgba(0,0,0,0.08);
     }
 
     .main-media-container img, 
     .main-media-container video {
-        max-width: 90%;
-        max-height: 90%;
+        max-width: 95%;
+        max-height: 95%;
         width: auto; height: auto;
         display: block;
         object-fit: contain;
-        filter: drop-shadow(0 10px 20px rgba(0,0,0,0.08)); /* Inner shadow for depth */
+        filter: drop-shadow(0 10px 20px rgba(0,0,0,0.08));
     }
 
-    /* Thumbnails Grid */
     .media-thumbnails {
         display: flex;
-        justify-content: center; /* Center aligned */
+        justify-content: center;
         gap: 15px;
         overflow-x: auto;
         padding: 10px;
@@ -89,45 +95,23 @@
         box-shadow: 0 5px 15px rgba(0,0,0,0.03);
     }
 
-    .thumb-item:hover {
-        transform: translateY(-3px);
-        opacity: 1;
-    }
-
-    .thumb-item img, .thumb-item video {
-        width: 100%; height: 100%;
-        object-fit: contain;
-        border-radius: 8px;
-    }
-
+    .thumb-item:hover { transform: translateY(-3px); opacity: 1; }
     .thumb-item.active {
         border-color: var(--primary);
         opacity: 1;
         box-shadow: 0 10px 25px rgba(211, 84, 0, 0.2);
     }
-    
+    .thumb-item img, .thumb-item video { width: 100%; height: 100%; object-fit: contain; border-radius: 8px; }
+
     .play-icon {
-        position: absolute; top: 50%; left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 24px; color: white;
-        background: rgba(0,0,0,0.3);
+        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        font-size: 24px; color: white; background: rgba(0,0,0,0.3);
         width: 40px; height: 40px; border-radius: 50%;
-        display: flex; align-items: center; justify-content: center;
-        backdrop-filter: blur(2px);
+        display: flex; align-items: center; justify-content: center; backdrop-filter: blur(2px);
     }
 
-    /* --- RIGHT: INFO SECTION --- */
-    .product-info {
-        position: sticky;
-        top: 120px; /* Sticks when scrolling on desktop */
-        background: white;
-        padding: 40px;
-        border-radius: 30px;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.04);
-        border: 1px solid rgba(0,0,0,0.02);
-    }
-
-    .product-info h1 {
+    /* Product Details (Now in Left Column) */
+    .product-details-block h1 {
         font-family: 'Playfair Display', serif;
         font-size: 2.8rem;
         font-weight: 700;
@@ -153,7 +137,7 @@
         font-size: 1.1rem;
         color: #64748b;
         line-height: 1.8;
-        margin-bottom: 40px;
+        margin-bottom: 30px;
         font-weight: 300;
     }
 
@@ -165,92 +149,70 @@
     }
 
     /* Color Swatches */
-    .color-section { margin-bottom: 40px; }
+    .color-section { margin-bottom: 20px; }
     .color-label { 
-        font-weight: 700; 
-        margin-bottom: 15px; 
-        display: block; 
-        font-family: 'Playfair Display', serif;
-        font-size: 1.2rem;
+        font-weight: 700; margin-bottom: 15px; display: block; 
+        font-family: 'Playfair Display', serif; font-size: 1.2rem;
     }
     
     .color-swatch {
-        display: inline-block;
-        width: 40px; height: 40px;
-        border-radius: 50%;
-        margin-right: 12px;
-        border: 3px solid white;
-        box-shadow: 0 0 0 2px #e2e8f0; /* Outer ring */
-        cursor: help;
-        transition: transform 0.2s;
+        display: inline-block; width: 40px; height: 40px; border-radius: 50%;
+        margin-right: 12px; border: 3px solid white;
+        box-shadow: 0 0 0 2px #e2e8f0; cursor: help; transition: transform 0.2s;
     }
     .color-swatch:hover { transform: scale(1.15); box-shadow: 0 0 0 2px var(--primary); }
 
-    /* --- INQUIRY FORM BOX --- */
+    /* --- RIGHT COLUMN STYLES --- */
+    .product-right-col {
+        position: sticky;
+        top: 120px; /* Sticks on scroll */
+    }
+
+    /* Inquiry Form Box */
     .inquiry-card {
-        background: #f8fafc; /* Subtle contrast background */
-        padding: 30px;
-        border-radius: 20px;
+        background: #f8fafc;
+        padding: 35px;
+        border-radius: 24px;
         border: 1px solid rgba(0,0,0,0.03);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.05);
     }
 
     .inquiry-card h3 { 
         margin-top: 0; 
         font-family: 'Playfair Display', serif;
-        font-size: 1.5rem; 
+        font-size: 1.6rem; 
         color: var(--dark);
+        margin-bottom: 10px;
     }
     .inquiry-card p { color: #94a3b8; font-size: 0.95rem; margin-bottom: 25px; }
 
-    /* Custom Form Styling */
-    .form-group p { margin-bottom: 15px; }
-    
-    .inquiry-card input, 
-    .inquiry-card textarea,
-    .inquiry-card select {
-        width: 100%;
-        padding: 16px 20px;
-        border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        font-family: 'Manrope', sans-serif;
-        font-size: 1rem;
-        transition: all 0.3s;
-        box-sizing: border-box; 
-        background: white;
+    .inquiry-card input, .inquiry-card textarea, .inquiry-card select {
+        width: 100%; padding: 16px 20px;
+        border: 1px solid #e2e8f0; border-radius: 12px;
+        font-family: 'Manrope', sans-serif; font-size: 1rem;
+        transition: all 0.3s; box-sizing: border-box; background: white;
     }
 
-    .inquiry-card input:focus, 
-    .inquiry-card textarea:focus {
-        border-color: var(--primary);
-        outline: none;
-        background: white;
-        box-shadow: 0 0 0 4px rgba(211, 84, 0, 0.1);
+    .inquiry-card input:focus, .inquiry-card textarea:focus {
+        border-color: var(--primary); outline: none;
+        background: white; box-shadow: 0 0 0 4px rgba(211, 84, 0, 0.1);
     }
 
     .inquiry-card label {
-        font-weight: 600;
-        font-size: 0.9rem;
-        margin-bottom: 8px;
-        display: block;
-        color: #475569;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+        font-weight: 600; font-size: 0.9rem; margin-bottom: 8px;
+        display: block; color: #475569; text-transform: uppercase; letter-spacing: 0.5px;
     }
 
     /* --- MOBILE RESPONSIVE --- */
     @media (max-width: 992px) {
         .product-container { 
-            grid-template-columns: 1fr; 
+            grid-template-columns: 1fr; /* Stack on mobile */
             gap: 50px; 
             padding-bottom: 60px;
         }
-        
-        .product-info { position: static; box-shadow: none; padding: 0; border: none; }
         .main-media-container { height: 400px; }
-        .breadcrumb-wrapper { display: none; /* Hide breadcrumb on mobile for cleaner look */ }
-        
-        .thumb-item { width: 70px; height: 70px; }
-        .product-info h1 { font-size: 2.2rem; }
+        .breadcrumb-wrapper { display: none; }
+        .product-right-col { position: static; } /* Unstick on mobile */
     }
 </style>
 
@@ -267,62 +229,64 @@
 <div class="container">
     <div class="product-container">
         
-        <div class="gallery-wrapper">
+        <div class="product-left-col">
             
-            <div class="main-media-container" id="mainDisplay">
-                </div>
-            
-            <div class="media-thumbnails">
-                {% for img in images %}
-                    <div class="thumb-item" 
-                         data-type="image" 
-                         data-url="{{ img.image.url }}">
-                        <img src="{{ img.image.url }}" alt="Product Image">
+            <div class="gallery-wrapper">
+                <div class="main-media-container" id="mainDisplay">
                     </div>
-                {% endfor %}
+                
+                <div class="media-thumbnails">
+                    {% for img in images %}
+                        <div class="thumb-item" data-type="image" data-url="{{ img.image.url }}">
+                            <img src="{{ img.image.url }}" alt="Product Image">
+                        </div>
+                    {% endfor %}
 
-                {% for vid in videos %}
-                    <div class="thumb-item" 
-                         data-type="video" 
-                         data-url="{{ vid.video.url }}">
-                        <video src="{{ vid.video.url }}#t=0.1" preload="metadata"></video>
-                        <div class="play-icon">▶</div>
-                    </div>
-                {% endfor %}
+                    {% for vid in videos %}
+                        <div class="thumb-item" data-type="video" data-url="{{ vid.video.url }}">
+                            <video src="{{ vid.video.url }}#t=0.1" preload="metadata"></video>
+                            <div class="play-icon">▶</div>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
+
+            <div class="product-details-block">
+                <h1>{{ product.name }}</h1>
+                <span class="stock-badge">Available In : {{ product.available_quantity }}</span>
+                <div class="description">{{ product.description|linebreaks }}</div>
+
+                <hr class="divider">
+
+                {% if colors %}
+                <div class="color-section">
+                    <span class="color-label">Available Colors</span>
+                    <div>
+                        {% for color in colors %}
+                            {% if color.hex_code %}
+                                <span class="color-swatch" 
+                                      data-color="{{ color.hex_code }}" 
+                                      title="{{ color.name }}">
+                                </span>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div style="font-size:0.9rem; color:#64748b; margin-top:10px; font-weight:500;">
+                        {% for color in colors %}
+                            {{ color.name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
         </div>
 
-        <div class="product-info">
-            <h1>{{ product.name }}</h1>
-            <span class="stock-badge">In Stock: {{ product.available_quantity }}</span>
-            <div class="description">{{ product.description|linebreaks }}</div>
-
-            <hr class="divider">
-
-            <div class="color-section">
-                <span class="color-label">Available Colors</span>
-                <div>
-                    {% for color in colors %}
-                        {% if color.hex_code %}
-                            <span class="color-swatch" 
-                                  data-color="{{ color.hex_code }}" 
-                                  title="{{ color.name }}">
-                            </span>
-                        {% endif %}
-                    {% empty %}
-                        <span style="color:#94a3b8; font-style:italic;">Standard Color</span>
-                    {% endfor %}
-                </div>
-                <div style="font-size:0.9rem; color:#64748b; margin-top:10px; font-weight:500;">
-                    {% for color in colors %}
-                        {{ color.name }}{% if not forloop.last %}, {% endif %}
-                    {% endfor %}
-                </div>
-            </div>
-
+        <div class="product-right-col">
             <div class="inquiry-card">
                 <h3>Request a Quote</h3>
                 <p>Fill out the form below to receive today's wholesale pricing.</p>
+                
                 <form method="POST" class="form-group">
                     {% csrf_token %}
                     {{ form.as_p }}
@@ -332,6 +296,7 @@
                 </form>
             </div>
         </div>
+
     </div>
 </div>
 
@@ -371,13 +336,12 @@ document.addEventListener('DOMContentLoaded', function() {
         currentIndex = index;
         const media = mediaList[index];
 
-        mainDisplay.innerHTML = ''; // Clear current
+        mainDisplay.innerHTML = ''; 
 
-        // Render new media with animation class
         if (media.type === 'image') {
             const img = document.createElement('img');
             img.src = media.url;
-            img.style.animation = "fadeIn 0.5s ease"; // Add fade in
+            img.style.animation = "fadeIn 0.5s ease"; 
             mainDisplay.appendChild(img);
         } else if (media.type === 'video') {
             const video = document.createElement('video');
@@ -387,7 +351,6 @@ document.addEventListener('DOMContentLoaded', function() {
             mainDisplay.appendChild(video);
         }
 
-        // Update active class
         thumbElements.forEach(el => el.classList.remove('active'));
         if (thumbElements[index]) {
             thumbElements[index].classList.add('active');
@@ -400,7 +363,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 let nextIndex = currentIndex + 1;
                 if (nextIndex >= mediaList.length) nextIndex = 0;
                 showMedia(nextIndex);
-            }, 4000); // 4 seconds (slower is more elegant)
+            }, 4000); 
         }
     }
 

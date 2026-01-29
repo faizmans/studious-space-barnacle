@@ -85,13 +85,58 @@
         font-size: 1.1rem; line-height: 1.8;
     }
 
-    .signature-block {
+    /* --- CEO PROFILE STYLING --- */
+    .profile-block {
         margin-top: 40px;
-        border-left: 4px solid var(--primary);
+        display: flex;
+        align-items: center;
+        gap: 15px; /* Space between photo and text */
+        border-left: 4px solid var(--primary); /* Gold accent line */
         padding-left: 20px;
     }
-    .signature-block img { height: 50px; opacity: 0.7; }
-    .signature-block span { display: block; font-size: 0.9rem; color: #94a3b8; margin-top: 5px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+
+    .profile-block img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%; /* Makes it a circle */
+        object-fit: cover;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        border: 2px solid white; /* Clean white ring */
+    }
+
+    .profile-text {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .profile-text strong {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.1rem;
+        color: var(--dark);
+        line-height: 1.2;
+    }
+
+    .profile-text span {
+        font-size: 0.85rem;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 500;
+    }
+
+    /* Mobile Adjustment */
+    @media(max-width: 992px) {
+        .profile-block {
+            justify-content: center; /* Center on mobile */
+            border-left: none;
+            padding-left: 0;
+            border-bottom: 4px solid var(--primary);
+            padding-bottom: 15px;
+            display: inline-flex;
+            text-align: left; /* Keep text aligned left relative to image */
+        }
+    }
+   
 
     /* --- 3. LIVE STATS COUNTER --- */
     .stats-container {
@@ -203,10 +248,12 @@
             <p>We understand that the secret to a perfect cake or a flaky pastry isn't just skill—it's the integrity of the ingredients. That is why we meticulously source only the finest flours, richest cocoas, and purest essences.</p>
             <p>Today, we are proud to serve as the backbone for over 500+ successful retail businesses and professional kitchens across Ahmedabad and beyond.</p>
             
-            <div class="signature-block">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/Sig_J_P_Morgan.png" alt="Founder Signature">
-                <span>Founder & CEO</span>
-            </div>
+            <div class="profile-block">
+    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="CEO Profile">
+    <div class="profile-text">
+        <strong>Sameer Mansuri</strong> <span>Founder & CEO</span>
+    </div>
+</div>
         </div>
     </div>
 
