@@ -203,6 +203,42 @@
         display: block; color: #475569; text-transform: uppercase; letter-spacing: 0.5px;
     }
 
+    /* --- SUCCESS MESSAGE STYLING --- */
+    .success-alert {
+        background: #e3fcf0; /* Soft premium green */
+        color: #059669; /* Deep emerald text */
+        padding: 20px;
+        border-radius: 20px;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        animation: slideInDown 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+        font-weight: 600;
+        font-size: 0.95rem;
+    }
+
+    .success-alert i {
+        font-size: 1.2rem;
+    }
+
+    /* Animation for the message appearance */
+    @keyframes slideInDown {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Standardized button for the right side */
+    .btn-submit-inquiry {
+        width: 100%; 
+        margin-top: 15px; 
+        padding: 18px !important;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
     /* --- MOBILE RESPONSIVE --- */
     @media (max-width: 992px) {
         .product-container { 
@@ -253,7 +289,7 @@
 
             <div class="product-details-block">
                 <h1>{{ product.name }}</h1>
-                <span class="stock-badge">Available In : {{ product.available_quantity }}</span>
+                <span class="stock-badge">Available In: {{ product.available_quantity }}</span>
                 <div class="description">{{ product.description|linebreaks }}</div>
 
                 <hr class="divider">
@@ -283,19 +319,29 @@
         </div>
 
         <div class="product-right-col">
-            <div class="inquiry-card">
-                <h3>Request a Quote</h3>
-                <p>Fill out the form below to receive today's wholesale pricing.</p>
-                
-                <form method="POST" class="form-group">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit" class="btn" style="width: 100%; margin-top: 15px; padding: 16px;">
-                        Send Inquiry
-                    </button>
-                </form>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="success-alert">
+                <i class="fas fa-check-circle"></i>
+                <span>{{ message }}</span>
             </div>
-        </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="inquiry-card">
+        <h3>Request a Quote</h3>
+        <p>Fill out the form below to receive today's wholesale pricing.</p>
+        
+        <form method="POST" class="form-group">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-submit-inquiry">
+                Send Inquiry
+            </button>
+        </form>
+    </div>
+</div>
 
     </div>
 </div>
