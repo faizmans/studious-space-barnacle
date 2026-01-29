@@ -25,7 +25,7 @@ class Product(models.Model):
     description = models.TextField()
     # No price field as requested
     available_quantity = models.CharField(max_length=100, help_text="e.g., 500kg, 200 packets")
-    available_colors = models.ManyToManyField(Color, blank=True)
+    available_colors = models.ManyToManyField(Color, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

@@ -2,101 +2,290 @@
 
 {% block content %}
 <style>
-    /* --- HEADER --- */
-    .about-header {
+    /* --- 1. CINEMATIC HERO --- */
+    .about-hero {
+        position: relative;
+        height: 60vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         text-align: center;
-        padding: 80px 20px;
-        background: var(--light-bg);
-    }
-    .about-header h1 {
-        font-size: 3.5rem;
-        color: var(--dark);
-        margin-bottom: 20px;
-    }
-    .about-header p {
-        font-size: 1.2rem;
-        color: #64748b;
-        max-width: 600px;
-        margin: 0 auto;
+        color: white;
+        background: url("/media/products/images/our1.jpg") center/cover no-repeat fixed;
+        margin-bottom: 100px;
     }
 
-    /* --- STORY SECTION --- */
+    .about-hero::before {
+        content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(15, 23, 42, 0.75);
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        max-width: 800px;
+        padding: 0 20px;
+        animation: fadeUp 1s ease-out;
+    }
+
+    .hero-content h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 4.5rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        background: linear-gradient(to right, #ffffff, #cbd5e1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .hero-content p {
+        font-size: 1.25rem;
+        font-weight: 300;
+        color: rgba(255,255,255,0.9);
+        letter-spacing: 0.5px;
+    }
+
+    /* --- 2. STORY SECTION --- */
     .story-section {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 80px;
         align-items: center;
-        padding: 80px 0;
+        padding: 50px 0 100px;
     }
     
+    .story-img-wrapper { position: relative; }
+
+    .story-img-wrapper::before {
+        content: ''; position: absolute; top: -20px; left: -20px;
+        width: 100%; height: 100%;
+        border: 2px solid var(--primary);
+        border-radius: 20px;
+        z-index: 0;
+        opacity: 0.3;
+    }
+
     .story-img {
-        width: 100%;
-        height: 500px;
+        width: 100%; height: 600px;
         border-radius: 20px;
         overflow: hidden;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+        position: relative; z-index: 1;
     }
-    .story-img img { width: 100%; height: 100%; object-fit: cover; }
+    .story-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s; }
+    .story-img:hover img { transform: scale(1.05); }
 
-    .story-content h2 { font-size: 2.5rem; margin-bottom: 25px; color: var(--dark); }
-    .story-content p { margin-bottom: 20px; color: #475569; font-size: 1.05rem; }
+    .story-content h2 { 
+        font-size: 3rem; margin-bottom: 30px; 
+        color: var(--dark); line-height: 1.1;
+        font-family: 'Playfair Display', serif;
+    }
+    .story-content p { 
+        margin-bottom: 25px; color: #64748b; 
+        font-size: 1.1rem; line-height: 1.8;
+    }
 
-    /* --- STATS ROW --- */
-    .stats-row {
+    .signature-block {
+        margin-top: 40px;
+        border-left: 4px solid var(--primary);
+        padding-left: 20px;
+    }
+    .signature-block img { height: 50px; opacity: 0.7; }
+    .signature-block span { display: block; font-size: 0.9rem; color: #94a3b8; margin-top: 5px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+
+    /* --- 3. LIVE STATS COUNTER --- */
+    .stats-container {
         background: var(--dark);
-        color: white;
-        padding: 60px 0;
-        margin: 60px 0;
-        border-radius: 20px;
+        border-radius: 30px;
+        padding: 80px 40px;
+        margin-bottom: 100px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stats-container::after {
+        content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+        background-size: 20px 20px;
+        pointer-events: none;
+    }
+
+    .stats-row {
         display: flex;
         justify-content: space-around;
         text-align: center;
+        position: relative;
+        z-index: 2;
+        flex-wrap: wrap; /* Important for mobile */
+        gap: 40px;
     }
-    .stat-box h3 { font-size: 3rem; color: var(--primary); margin-bottom: 5px; }
-    .stat-box span { font-size: 1rem; opacity: 0.8; letter-spacing: 1px; text-transform: uppercase; }
+
+    /* --- FIXED: COUNTER STYLES --- */
+    /* This ensures 24 and h are aligned and visible */
+    .stat-box h3, 
+    .combined-stat { 
+        font-family: 'Playfair Display', serif;
+        font-size: 5rem; /* Big luxury size */
+        font-weight: 700;
+        margin-bottom: 5px;
+        line-height: 1;
+        
+        /* Gold Gradient */
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: var(--primary);
+        
+        /* Flexbox fixes the invisibility issue */
+        display: flex;
+        justify-content: center;
+        align-items: baseline; 
+    }
+    
+    /* Smaller 'h' unit */
+    .stat-unit {
+        font-size: 3rem; 
+        margin-left: 5px;
+        font-weight: 400;
+        -webkit-text-fill-color: initial; /* Reset gradient for 'h' if needed, or keep it */
+        color: rgba(255, 255, 255, 0.8); /* Make 'h' slightly softer white */
+    }
+    
+    .stat-box span:not(.counter):not(.stat-unit) { 
+        font-size: 1.1rem; 
+        color: white; 
+        opacity: 0.8; 
+        letter-spacing: 2px; 
+        text-transform: uppercase; 
+        font-weight: 600;
+        display: block;
+        margin-top: 10px;
+    }
+
+    /* --- RESPONSIVE --- */
+    @media(max-width: 992px) {
+        .about-hero { height: 50vh; }
+        .hero-content h1 { font-size: 3.5rem; }
+        .story-section { grid-template-columns: 1fr; gap: 50px; }
+        .story-img { height: 400px; }
+        .story-content { text-align: center; }
+        .signature-block { border-left: none; border-bottom: 4px solid var(--primary); padding-left: 0; padding-bottom: 15px; display: inline-block; }
+    }
 
     @media(max-width: 768px) {
-        .story-section { grid-template-columns: 1fr; }
-        .stats-row { flex-direction: column; gap: 40px; }
+        .stats-row { flex-direction: column; gap: 60px; }
+        .stat-box h3, .combined-stat { font-size: 4rem; }
+        .hero-content h1 { font-size: 2.8rem; }
     }
 </style>
 
-<div class="about-header">
-    <h1>Our Story</h1>
-    <p>From a small local shop to a leading wholesale partner for India's finest bakeries.</p>
-</div>
+<header class="about-hero">
+    <div class="hero-content">
+        <h1>Our Legacy</h1>
+        <p>Bridging the gap between premium manufacturers and India's finest culinary artists.</p>
+    </div>
+</header>
 
 <div class="container">
+    
     <div class="story-section">
-        <div class="story-img">
-            <img src="https://images.unsplash.com/photo-1556910103-1c02745a30bf?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Bakery Workflow">
+        <div class="story-img-wrapper">
+            <div class="story-img">
+                <img src="/media/products/images/our1.jpg" alt="Our Kitchen">
+            </div>
         </div>
+        
         <div class="story-content">
-            <h2>Serving Excellence Since 2024</h2>
-            <p>Sameer Trading Company began with a simple mission: to bridge the gap between premium raw material manufacturers and the passionate chefs who use them.</p>
-            <p>We understand that the secret to a perfect cake or a flaky pastry isn't just skill—it's the quality of the ingredients. That is why we source only the finest flours, richest cocoas, and purest essences.</p>
-            <p>Today, we are proud to supply over 500+ retailers and professional kitchens across Ahmedabad and beyond.</p>
+            <h2>Serving Excellence<br>Since 2024</h2>
+            <p>Sameer Trading Company began with a simple yet ambitious mission: to ensure that every baker, from home enthusiasts to 5-star pastry chefs, has access to the world's finest raw materials.</p>
+            <p>We understand that the secret to a perfect cake or a flaky pastry isn't just skill—it's the integrity of the ingredients. That is why we meticulously source only the finest flours, richest cocoas, and purest essences.</p>
+            <p>Today, we are proud to serve as the backbone for over 500+ successful retail businesses and professional kitchens across Ahmedabad and beyond.</p>
             
-            <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/Sig_J_P_Morgan.png" style="height: 60px; opacity: 0.6; margin-top: 20px;" alt="Signature">
+            <div class="signature-block">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/Sig_J_P_Morgan.png" alt="Founder Signature">
+                <span>Founder & CEO</span>
+            </div>
         </div>
     </div>
+
+    <div class="stats-container" id="statsSection">
+        <div class="stats-row">
+            <div class="stat-box">
+                <h3 class="counter" data-target="500">0</h3>
+                <span>Happy Clients</span>
+            </div>
+            
+            <div class="stat-box">
+                <h3 class="counter" data-target="150">0</h3>
+                <span>Premium Products</span>
+            </div>
+            
+            <div class="stat-box">
+                <div class="combined-stat">
+                    <span class="counter" data-target="24">0</span>
+                    <span class="stat-unit">h</span>
+                </div>
+                <span>Fast Delivery</span>
+            </div>
+        </div>
+    </div>
+
 </div>
 
-<div class="container">
-    <div class="stats-row">
-        <div class="stat-box">
-            <h3>500+</h3>
-            <span>Happy Clients</span>
-        </div>
-        <div class="stat-box">
-            <h3>150+</h3>
-            <span>Products</span>
-        </div>
-        <div class="stat-box">
-            <h3>24h</h3>
-            <span>Delivery Time</span>
-        </div>
-    </div>
-</div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const counters = document.querySelectorAll('.counter');
+        const statsSection = document.getElementById('statsSection');
+        let hasAnimated = false;
+
+        const animateCounters = () => {
+            counters.forEach(counter => {
+                const target = +counter.getAttribute('data-target');
+                const suffix = (target === 500) ? '+' : ''; 
+                
+                // --- SMALL NUMBER LOGIC (e.g., 24) ---
+                if(target < 100) {
+                    let count = 0;
+                    const interval = setInterval(() => {
+                        count++;
+                        counter.innerText = count + suffix;
+                        if(count >= target) clearInterval(interval);
+                    }, 50); // Speed for small numbers
+                } 
+                // --- BIG NUMBER LOGIC (e.g., 500) ---
+                else {
+                    const duration = 2000; // 2 seconds total
+                    const stepTime = 20;   // Update every 20ms
+                    const steps = duration / stepTime;
+                    const increment = target / steps;
+                    let count = 0;
+
+                    const timer = setInterval(() => {
+                        count += increment;
+                        if (count >= target) {
+                            counter.innerText = target + suffix;
+                            clearInterval(timer);
+                        } else {
+                            counter.innerText = Math.ceil(count) + suffix;
+                        }
+                    }, stepTime);
+                }
+            });
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting && !hasAnimated) {
+                animateCounters();
+                hasAnimated = true;
+            }
+        }, { threshold: 0.2 }); // 20% visibility required
+
+        if(statsSection) {
+            observer.observe(statsSection);
+        }
+    });
+</script>
 
 {% endblock %}

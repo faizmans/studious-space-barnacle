@@ -5,7 +5,7 @@
     /* --- 1. CINEMATIC HERO SECTION --- */
     .hero {
         position: relative;
-        height: 80vh; /* Taller, more impressive */
+        height: 85vh;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -14,68 +14,78 @@
         color: white;
         margin-bottom: 100px;
         overflow: hidden;
+        /* REMOVED: background: url(...) because CSS cannot load videos */
     }
 
-    /* Background Image with modern overlay */
+    .hero-video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Ensures video covers the area without stretching */
+        z-index: 0; /* Sits at the very back */
+    }
+
+    /* Premium Dark Overlay */
     .hero::before {
         content: '';
         position: absolute;
         top: 0; left: 0; width: 100%; height: 100%;
-        background: url('https://images.unsplash.com/photo-1509440159596-0249088772ff?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80') center/cover no-repeat fixed;
-        filter: brightness(0.6) contrast(1.1); /* Darken slightly for text pop */
-        z-index: -1;
-    }
-
-    /* Gradient overlay for text readability */
-    .hero::after {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; width: 100%; height: 100%;
-        background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%);
-        z-index: -1;
+        /* Adjusted z-index to sit ON TOP of the video (0) but BEHIND text (2) */
+        z-index: 1; 
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(44, 62, 80, 0.6) 100%);
     }
 
     .hero-content {
-        max-width: 800px;
-        padding: 0 20px;
-        animation: fadeUp 1s ease-out;
+        position: relative;
+        z-index: 2; /* Sits on top of everything */
+        max-width: 900px;
+        padding: 0 30px;
+        animation: fadeUp 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
     .hero h1 { 
         font-family: 'Playfair Display', serif;
-        font-size: 4.5rem; /* Massive, luxury heading */
+        font-size: 5rem; 
         font-weight: 700; 
-        margin-bottom: 20px; 
+        margin-bottom: 25px; 
         line-height: 1.1;
-        letter-spacing: -1px;
-        text-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        background: linear-gradient(to right, #ffffff, #e2e8f0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
     
     .hero p { 
         font-family: 'Manrope', sans-serif;
-        font-size: 1.4rem; 
-        margin-bottom: 40px; 
-        opacity: 0.95; 
+        font-size: 1.35rem; 
+        margin-bottom: 50px; 
+        color: rgba(255,255,255,0.9);
         font-weight: 300;
         letter-spacing: 0.5px;
+        line-height: 1.6;
     }
 
-    /* Custom Hero Button */
+    /* Luxury "Gold" Button */
     .btn-hero {
+        display: inline-block;
         background: white;
         color: var(--dark);
-        padding: 16px 45px;
+        padding: 18px 50px;
         font-size: 1.1rem;
         font-weight: 700;
         border-radius: 50px;
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        transition: all 0.4s ease;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        text-transform: uppercase;
+        letter-spacing: 1px;
     }
     .btn-hero:hover {
-        transform: translateY(-5px) scale(1.05);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        background: var(--primary);
+        transform: translateY(-5px);
+        background: var(--primary); /* Gold/Orange from base */
         color: white;
+        box-shadow: 0 15px 40px rgba(211, 84, 0, 0.4);
     }
 
     /* --- 2. CATEGORY SECTION --- */
@@ -84,7 +94,7 @@
     .category-grid { 
         display: flex; 
         justify-content: center; 
-        gap: 50px; 
+        gap: 60px; 
         flex-wrap: wrap; 
     }
     
@@ -92,20 +102,20 @@
 
     .cat-card { 
         text-align: center; 
-        width: 160px; 
+        width: 180px; 
         transition: all 0.4s ease;
-        position: relative;
+        group: hover;
     }
     
     .cat-img-wrapper {
-        width: 150px; 
-        height: 150px; 
+        width: 160px; 
+        height: 160px; 
         border-radius: 50%; 
-        padding: 6px; /* Space for double border effect */
-        background: transparent;
-        border: 2px solid rgba(211, 84, 0, 0.1);
-        margin: 0 auto 20px;
-        transition: all 0.4s ease;
+        padding: 8px; /* Gap between image and border */
+        border: 2px solid rgba(0,0,0,0.08);
+        margin: 0 auto 25px;
+        transition: all 0.5s ease;
+        position: relative;
     }
 
     .cat-img-box {
@@ -121,74 +131,74 @@
         width: 100%; 
         height: 100%; 
         object-fit: cover; 
-        transition: transform 0.6s ease;
+        transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
     
-    /* Hover Effects */
+    /* Hover Animation */
     .cat-card:hover .cat-img-wrapper { 
         border-color: var(--primary); 
         transform: scale(1.05);
-        box-shadow: 0 10px 30px rgba(211, 84, 0, 0.15);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
     }
     .cat-card:hover img { transform: scale(1.15); }
     
     .cat-title { 
         font-family: 'Playfair Display', serif;
-        font-weight: 700; 
+        font-weight: 600; 
         color: var(--dark); 
-        font-size: 1.2rem; 
+        font-size: 1.3rem; 
         letter-spacing: 0.5px;
-        margin-top: 15px;
     }
 
-    /* --- 3. PRODUCT GRID (Luxury Cards) --- */
+    /* --- 3. PRODUCT GRID (Ultra Premium) --- */
     .product-grid { 
         display: grid; 
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Slightly wider cards */
-        gap: 40px; 
-        margin-bottom: 120px;
+        /* Intelligent Responsive Grid */
+        grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); 
+        gap: 50px; 
+        margin-bottom: 140px;
     }
     
     .product-card { 
         background: white; 
-        border-radius: 20px; 
+        border-radius: 24px; 
         overflow: hidden; 
-        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
         display: flex;
         flex-direction: column;
-        border: 1px solid rgba(0,0,0,0.04); /* Extremely subtle border */
+        border: 1px solid rgba(0,0,0,0.03);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.04);
         position: relative;
     }
     
-    /* Premium Hover Lift */
+    /* Hover Lift */
     .product-card:hover { 
-        transform: translateY(-12px); 
-        box-shadow: 0 20px 40px rgba(0,0,0,0.08); /* Soft, deep shadow */
+        transform: translateY(-15px); 
+        box-shadow: 0 30px 60px rgba(0,0,0,0.12);
         border-color: transparent;
     }
     
     .p-img-box {
         width: 100%;
-        height: 280px; /* Taller image area */
+        height: 320px; /* Tall, airy image space */
         position: relative;
         overflow: hidden;
         background: white;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 20px; /* Breathing room for product */
+        padding: 30px;
     }
 
     .p-img { 
         width: 100%; 
         height: 100%; 
-        object-fit: contain; /* Crystal clear images */
-        transition: transform 0.7s ease;
-        image-rendering: -webkit-optimize-contrast; 
-        filter: drop-shadow(0 5px 15px rgba(0,0,0,0.05)); /* Product casts its own shadow */
+        object-fit: contain; 
+        transition: transform 0.8s ease;
+        filter: drop-shadow(0 10px 20px rgba(0,0,0,0.08)); /* Realism shadow */
     }
     
-    .product-card:hover .p-img { transform: scale(1.08); }
+    .product-card:hover .p-img { transform: scale(1.1); }
     
     .p-details { 
         padding: 30px; 
@@ -196,62 +206,78 @@
         display: flex; 
         flex-direction: column; 
         background: white;
+        position: relative;
         z-index: 2;
     }
     
     .p-title { 
         font-family: 'Playfair Display', serif;
-        font-size: 1.4rem; 
+        font-size: 1.5rem; 
         margin: 0 0 10px; 
         font-weight: 700; 
         color: var(--dark);
-        line-height: 1.3;
+        line-height: 1.2;
     }
     
     .p-desc { 
         font-size: 0.95rem; 
-        color: #64748b; 
-        margin-bottom: 25px; 
+        color: #94a3b8; 
+        margin-bottom: 30px; 
         line-height: 1.6;
+        flex-grow: 1;
     }
 
-    /* Action Row at bottom of card */
+    /* Actions Row */
     .card-actions {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: auto;
-        border-top: 1px solid #f1f5f9;
         padding-top: 20px;
+        border-top: 1px solid #f1f5f9;
     }
 
     .stock-pill {
-        font-size: 0.8rem;
-        background: #f1f5f9;
-        color: #475569;
-        padding: 6px 14px;
-        border-radius: 30px;
-        font-weight: 600;
-        letter-spacing: 0.5px;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        background: #f8fafc;
+        color: #64748b;
+        padding: 8px 16px;
+        border-radius: 40px;
+        font-weight: 700;
+        letter-spacing: 1px;
     }
 
     .view-link {
         color: var(--primary);
         font-weight: 700;
-        font-size: 0.95rem;
+        font-size: 0.9rem;
         display: flex;
         align-items: center;
-        gap: 5px;
+        gap: 8px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: gap 0.3s;
     }
-    .view-link:hover { gap: 8px; /* Arrow moves on hover */ }
+    .view-link:hover { gap: 12px; }
 
-    /* --- 4. TRUST FEATURES (Modernized) --- */
+    /* --- 4. TRUST FEATURES (Floating Card Style) --- */
     .features-section {
-        background: #fff;
+        position: relative;
+        background: white;
         padding: 100px 0;
-        border-radius: 30px; /* Slight curve to section */
-        margin: 0 20px 60px; /* Inset slightly */
-        box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+        border-radius: 40px;
+        margin: 0 20px 80px; 
+        /* Subtle glow shadow */
+        box-shadow: 0 20px 80px rgba(0,0,0,0.06);
+        border: 1px solid rgba(0,0,0,0.02);
+        overflow: hidden;
+    }
+
+    /* Decorative background blobs */
+    .features-section::before {
+        content: ''; position: absolute; top: -50%; left: -20%; width: 500px; height: 500px;
+        background: radial-gradient(circle, rgba(211,84,0,0.05) 0%, transparent 70%);
+        border-radius: 50%; pointer-events: none;
     }
     
     .features-grid {
@@ -259,57 +285,86 @@
         justify-content: center; 
         gap: 80px;
         flex-wrap: wrap; 
+        position: relative; z-index: 2;
     }
     
     .feature-box { 
         text-align: center; 
         padding: 20px;
         transition: 0.3s;
-        max-width: 250px;
+        width: 280px;
     }
     
-    /* Styled Icon Circle */
     .icon-circle {
-        width: 80px; height: 80px;
-        background: rgba(211, 84, 0, 0.08);
+        width: 100px; height: 100px;
+        background: #fff;
+        border: 1px solid rgba(0,0,0,0.05);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0 auto 20px;
-        font-size: 2.5rem;
-        transition: transform 0.3s ease;
+        margin: 0 auto 25px;
+        
+        /* Typography for Icons */
+        font-size: 2.5rem; 
+        color: var(--primary); /* <--- This makes the icons Gold/Orange */
+        
+        transition: all 0.5s ease;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
     }
     
     .feature-box:hover .icon-circle { 
-        transform: rotate(10deg) scale(1.1); 
-        background: rgba(211, 84, 0, 0.15);
+        transform: rotate(15deg) scale(1.1); 
+        border-color: var(--primary);
+        box-shadow: 0 20px 40px rgba(211,84,0,0.15);
     }
     
     .feature-box strong { 
         display: block; 
-        font-size: 1.25rem; 
+        font-size: 1.4rem; 
         color: var(--dark); 
-        margin-bottom: 8px;
+        margin-bottom: 10px;
         font-family: 'Playfair Display', serif;
     }
 
     .feature-box span {
         color: #94a3b8;
-        font-size: 0.95rem;
+        font-size: 1rem;
+        line-height: 1.5;
     }
 
-    /* Mobile Responsive tweaks */
+    /* --- MOBILE RESPONSIVE RULES --- */
+    @media (max-width: 992px) {
+        .hero h1 { font-size: 3.5rem; }
+        .hero p { font-size: 1.2rem; }
+    }
+
     @media (max-width: 768px) {
+        .hero { height: 70vh; }
         .hero h1 { font-size: 2.8rem; }
-        .hero p { font-size: 1.1rem; }
-        .hero { height: 65vh; }
+        
         .category-grid { gap: 30px; }
-        .features-grid { gap: 40px; }
+        .cat-card { width: 140px; }
+        .cat-img-wrapper { width: 120px; height: 120px; }
+        
+        /* 1 Column on Mobile for Products */
+        .product-grid { 
+            grid-template-columns: 1fr; 
+            gap: 40px; 
+            padding: 0 15px;
+        }
+        
+        .features-grid { flex-direction: column; align-items: center; gap: 50px; }
+        .features-section { padding: 60px 0; margin: 0 10px 60px; }
     }
 </style>
 
 <section class="hero">
+    <video autoplay muted loop playsinline class="hero-video">
+        <source src="/media/products/videos/baking.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
     <div class="hero-content">
         <h1>Baking Excellence Starts Here</h1>
         <p>Premium wholesale ingredients sourced for professional chefs, patisseries, and passionate home bakers.</p>
@@ -354,7 +409,7 @@
                 {% if product.images.first %}
                     <img src="{{ product.images.first.image.url }}" class="p-img" alt="{{ product.name }}">
                 {% else %}
-                    <div style="color:#cbd5e1; font-weight:500;">No Image</div>
+                    <div style="color:#cbd5e1; font-weight:500; font-size: 0.9rem; letter-spacing: 1px;">NO IMAGE</div>
                 {% endif %}
             </a>
             
@@ -379,21 +434,31 @@
 
 <section class="features-section">
     <div class="features-grid">
+        
         <div class="feature-box">
-            <div class="icon-circle">💰</div>
+            <div class="icon-circle">
+                <i class="fas fa-tags"></i>
+            </div>
             <strong>Wholesale Pricing</strong>
             <span>Direct rates for bulk orders</span>
         </div>
+
         <div class="feature-box">
-            <div class="icon-circle">🚚</div>
+            <div class="icon-circle">
+                <i class="fas fa-shipping-fast"></i>
+            </div>
             <strong>Fast Delivery</strong>
             <span>Dispatched within 24 hours</span>
         </div>
+
         <div class="feature-box">
-            <div class="icon-circle">✨</div>
+            <div class="icon-circle">
+                <i class="fas fa-gem"></i>
+            </div>
             <strong>Premium Quality</strong>
             <span>Verified, high-grade materials</span>
         </div>
+
     </div>
 </section>
 

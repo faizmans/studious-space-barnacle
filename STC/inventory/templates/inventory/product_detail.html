@@ -3,156 +3,204 @@
 {% block content %}
 <style>
     /* --- BREADCRUMBS --- */
+    .breadcrumb-wrapper {
+        background: white;
+        padding: 20px 0;
+        border-bottom: 1px solid rgba(0,0,0,0.03);
+        margin-bottom: 40px;
+    }
     .breadcrumb {
         font-size: 0.9rem;
-        color: #7f8c8d;
-        margin-bottom: 30px;
+        color: #94a3b8;
+        font-weight: 500;
+        letter-spacing: 0.5px;
     }
-    .breadcrumb a { color: var(--dark); font-weight: 500; }
+    .breadcrumb a { color: var(--dark); transition: color 0.2s; }
     .breadcrumb a:hover { color: var(--primary); }
+    .breadcrumb span { color: var(--primary); font-weight: 600; }
 
     /* --- LAYOUT GRID --- */
     .product-container {
         display: grid;
-        grid-template-columns: 1.2fr 0.8fr; 
-        gap: 60px;
+        grid-template-columns: 1.1fr 0.9fr; /* Balanced split */
+        gap: 80px;
         align-items: start;
-        padding-bottom: 80px;
+        padding-bottom: 100px;
     }
 
     /* --- LEFT: GALLERY SECTION --- */
     .gallery-wrapper {
-        position: sticky;
-        top: 100px;
-    }
-
-   /* Fix for Main Image Container */
-    .main-media-container {
-        width: 100%;
-        height: 500px;
-        background: white; /* Clean background */
-        border-radius: 16px;
-        border: 1px solid rgba(0,0,0,0.05);
-        
-        /* Flexbox centers the image perfectly */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        
-        overflow: hidden;
-        margin-bottom: 20px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.02);
         position: relative;
     }
 
-    /* THE FIX: Prevent stretching small images */
+    /* Main Image Container */
+    .main-media-container {
+        width: 100%;
+        height: 550px; /* Taller for impact */
+        background: white;
+        border-radius: 24px;
+        border: 1px solid rgba(0,0,0,0.04);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 25px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.05); /* Soft, luxurious shadow */
+        position: relative;
+        transition: transform 0.3s ease;
+    }
+    
+    .main-media-container:hover {
+        transform: translateY(-5px); /* Subtle lift */
+        box-shadow: 0 30px 60px rgba(0,0,0,0.08);
+    }
+
     .main-media-container img, 
     .main-media-container video {
-        max-width: 100%;  /* Shrink if too big */
-        max-height: 100%; /* Shrink if too tall */
-        width: auto;      /* Do NOT force width to 100% */
-        height: auto;     /* Do NOT force height to 100% */
+        max-width: 90%;
+        max-height: 90%;
+        width: auto; height: auto;
         display: block;
         object-fit: contain;
+        filter: drop-shadow(0 10px 20px rgba(0,0,0,0.08)); /* Inner shadow for depth */
     }
 
     /* Thumbnails Grid */
     .media-thumbnails {
         display: flex;
-        gap: 10px;
+        justify-content: center; /* Center aligned */
+        gap: 15px;
         overflow-x: auto;
-        padding-bottom: 10px;
+        padding: 10px;
     }
 
     .thumb-item {
-        width: 80px;
-        height: 80px;
+        width: 90px; height: 90px;
         flex-shrink: 0;
         border: 2px solid transparent;
-        border-radius: 8px;
+        border-radius: 16px;
         cursor: pointer;
-        opacity: 0.6;
-        transition: 0.2s;
+        opacity: 0.7;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         background: white;
-        padding: 4px;
+        padding: 8px;
         position: relative;
         overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+    }
+
+    .thumb-item:hover {
+        transform: translateY(-3px);
+        opacity: 1;
     }
 
     .thumb-item img, .thumb-item video {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 4px;
+        width: 100%; height: 100%;
+        object-fit: contain;
+        border-radius: 8px;
     }
 
     .thumb-item.active {
         border-color: var(--primary);
         opacity: 1;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        box-shadow: 0 10px 25px rgba(211, 84, 0, 0.2);
     }
     
     .play-icon {
-        position: absolute;
-        top: 50%; left: 50%;
+        position: absolute; top: 50%; left: 50%;
         transform: translate(-50%, -50%);
-        font-size: 24px;
-        color: white;
-        text-shadow: 0 2px 5px rgba(0,0,0,0.5);
-        pointer-events: none;
+        font-size: 24px; color: white;
+        background: rgba(0,0,0,0.3);
+        width: 40px; height: 40px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        backdrop-filter: blur(2px);
     }
 
     /* --- RIGHT: INFO SECTION --- */
+    .product-info {
+        position: sticky;
+        top: 120px; /* Sticks when scrolling on desktop */
+        background: white;
+        padding: 40px;
+        border-radius: 30px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.04);
+        border: 1px solid rgba(0,0,0,0.02);
+    }
+
     .product-info h1 {
-        font-size: 2.2rem;
+        font-family: 'Playfair Display', serif;
+        font-size: 2.8rem;
         font-weight: 700;
         margin-bottom: 15px;
         color: var(--dark);
-        line-height: 1.2;
+        line-height: 1.1;
     }
 
     .stock-badge {
         display: inline-block;
-        background: #e3fcf0;
-        color: #0c8a52;
-        padding: 5px 12px;
+        background: rgba(16, 185, 129, 0.1);
+        color: #059669;
+        padding: 8px 16px;
         border-radius: 50px;
         font-size: 0.85rem;
-        font-weight: 600;
-        margin-bottom: 20px;
+        font-weight: 700;
+        margin-bottom: 25px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
     }
 
     .description {
-        font-size: 1.05rem;
-        color: #636e72;
-        line-height: 1.7;
-        margin-bottom: 30px;
+        font-size: 1.1rem;
+        color: #64748b;
+        line-height: 1.8;
+        margin-bottom: 40px;
+        font-weight: 300;
+    }
+
+    .divider {
+        height: 1px;
+        background: linear-gradient(to right, #f1f5f9 0%, #cbd5e1 50%, #f1f5f9 100%);
+        margin: 30px 0;
+        border: none;
     }
 
     /* Color Swatches */
-    .color-section { margin-bottom: 30px; }
-    .color-label { font-weight: 600; margin-bottom: 10px; display: block; }
+    .color-section { margin-bottom: 40px; }
+    .color-label { 
+        font-weight: 700; 
+        margin-bottom: 15px; 
+        display: block; 
+        font-family: 'Playfair Display', serif;
+        font-size: 1.2rem;
+    }
     
     .color-swatch {
         display: inline-block;
-        width: 30px; height: 30px;
+        width: 40px; height: 40px;
         border-radius: 50%;
-        margin-right: 10px;
-        border: 2px solid #eee;
-        box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+        margin-right: 12px;
+        border: 3px solid white;
+        box-shadow: 0 0 0 2px #e2e8f0; /* Outer ring */
+        cursor: help;
+        transition: transform 0.2s;
     }
+    .color-swatch:hover { transform: scale(1.15); box-shadow: 0 0 0 2px var(--primary); }
 
     /* --- INQUIRY FORM BOX --- */
     .inquiry-card {
-        background: white;
+        background: #f8fafc; /* Subtle contrast background */
         padding: 30px;
-        border-radius: 16px;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        border-radius: 20px;
         border: 1px solid rgba(0,0,0,0.03);
     }
 
-    .inquiry-card h3 { margin-top: 0; font-size: 1.3rem; }
-    .inquiry-card p { color: #888; font-size: 0.9rem; margin-bottom: 20px; }
+    .inquiry-card h3 { 
+        margin-top: 0; 
+        font-family: 'Playfair Display', serif;
+        font-size: 1.5rem; 
+        color: var(--dark);
+    }
+    .inquiry-card p { color: #94a3b8; font-size: 0.95rem; margin-bottom: 25px; }
 
     /* Custom Form Styling */
     .form-group p { margin-bottom: 15px; }
@@ -161,14 +209,14 @@
     .inquiry-card textarea,
     .inquiry-card select {
         width: 100%;
-        padding: 12px 15px;
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
-        font-family: inherit;
-        font-size: 0.95rem;
-        transition: 0.3s;
+        padding: 16px 20px;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        font-family: 'Manrope', sans-serif;
+        font-size: 1rem;
+        transition: all 0.3s;
         box-sizing: border-box; 
-        background: #fdfdfd;
+        background: white;
     }
 
     .inquiry-card input:focus, 
@@ -176,31 +224,47 @@
         border-color: var(--primary);
         outline: none;
         background: white;
-        box-shadow: 0 0 0 3px rgba(211, 84, 0, 0.1);
+        box-shadow: 0 0 0 4px rgba(211, 84, 0, 0.1);
     }
 
     .inquiry-card label {
-        font-weight: 500;
+        font-weight: 600;
         font-size: 0.9rem;
-        margin-bottom: 5px;
+        margin-bottom: 8px;
         display: block;
-        color: var(--dark);
+        color: #475569;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
-    @media (max-width: 768px) {
-        .product-container { grid-template-columns: 1fr; gap: 30px; }
-        .main-media-container { height: 300px; }
+    /* --- MOBILE RESPONSIVE --- */
+    @media (max-width: 992px) {
+        .product-container { 
+            grid-template-columns: 1fr; 
+            gap: 50px; 
+            padding-bottom: 60px;
+        }
+        
+        .product-info { position: static; box-shadow: none; padding: 0; border: none; }
+        .main-media-container { height: 400px; }
+        .breadcrumb-wrapper { display: none; /* Hide breadcrumb on mobile for cleaner look */ }
+        
+        .thumb-item { width: 70px; height: 70px; }
+        .product-info h1 { font-size: 2.2rem; }
     }
 </style>
 
-<div class="container">
-    
-    <div class="breadcrumb">
-        <a href="{% url 'home' %}">Home</a> &nbsp;/&nbsp; 
-        <a href="{% url 'product_list' %}">Catalogue</a> &nbsp;/&nbsp; 
-        <span>{{ product.name }}</span>
+<div class="breadcrumb-wrapper">
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="{% url 'home' %}">Home</a> &nbsp;/&nbsp; 
+            <a href="{% url 'product_list' %}">Catalogue</a> &nbsp;/&nbsp; 
+            <span>{{ product.name }}</span>
+        </div>
     </div>
+</div>
 
+<div class="container">
     <div class="product-container">
         
         <div class="gallery-wrapper">
@@ -230,13 +294,13 @@
 
         <div class="product-info">
             <h1>{{ product.name }}</h1>
-            <span class="stock-badge">Available In: {{ product.available_quantity }}</span>
+            <span class="stock-badge">In Stock: {{ product.available_quantity }}</span>
             <div class="description">{{ product.description|linebreaks }}</div>
 
-            <hr style="border:0; border-top:1px solid #eee; margin: 30px 0;">
+            <hr class="divider">
 
             <div class="color-section">
-                <span class="color-label">Available Colors:</span>
+                <span class="color-label">Available Colors</span>
                 <div>
                     {% for color in colors %}
                         {% if color.hex_code %}
@@ -246,23 +310,25 @@
                             </span>
                         {% endif %}
                     {% empty %}
-                        <span style="color:#888;">N/A</span>
+                        <span style="color:#94a3b8; font-style:italic;">Standard Color</span>
                     {% endfor %}
-                    <div style="font-size:0.85rem; color:#888; margin-top:5px;">
-                        {% for color in colors %}
-                            {{ color.name }}{% if not forloop.last %}, {% endif %}
-                        {% endfor %}
-                    </div>
+                </div>
+                <div style="font-size:0.9rem; color:#64748b; margin-top:10px; font-weight:500;">
+                    {% for color in colors %}
+                        {{ color.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
                 </div>
             </div>
 
             <div class="inquiry-card">
                 <h3>Request a Quote</h3>
-                <p>Fill out the form below to get today's wholesale price.</p>
+                <p>Fill out the form below to receive today's wholesale pricing.</p>
                 <form method="POST" class="form-group">
                     {% csrf_token %}
                     {{ form.as_p }}
-                    <button type="submit" class="btn" style="width: 100%; margin-top: 10px;">Send Inquiry</button>
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 15px; padding: 16px;">
+                        Send Inquiry
+                    </button>
                 </form>
             </div>
         </div>
@@ -272,14 +338,13 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     
-    // 1. Fix Color Swatches (Avoids CSS errors)
+    // 1. Fix Color Swatches
     const swatches = document.querySelectorAll('.color-swatch');
     swatches.forEach(swatch => {
-        // Read color from data attribute and apply it safely via JS
         swatch.style.backgroundColor = swatch.dataset.color;
     });
 
-    // 2. Build Media List from HTML elements
+    // 2. Build Media List
     const thumbElements = document.querySelectorAll('.thumb-item');
     const mediaList = [];
     
@@ -289,7 +354,6 @@ document.addEventListener('DOMContentLoaded', function() {
             url: el.dataset.url
         });
         
-        // Add click listener purely in JS
         el.addEventListener('click', () => manualSelect(index));
     });
 
@@ -301,20 +365,19 @@ document.addEventListener('DOMContentLoaded', function() {
     function showMedia(index) {
         if (mediaList.length === 0) return;
 
-        // Loop boundaries
         if (index >= mediaList.length) index = 0;
         if (index < 0) index = mediaList.length - 1;
         
         currentIndex = index;
         const media = mediaList[index];
 
-        // Clear current view
-        mainDisplay.innerHTML = '';
+        mainDisplay.innerHTML = ''; // Clear current
 
-        // Render new media
+        // Render new media with animation class
         if (media.type === 'image') {
             const img = document.createElement('img');
             img.src = media.url;
+            img.style.animation = "fadeIn 0.5s ease"; // Add fade in
             mainDisplay.appendChild(img);
         } else if (media.type === 'video') {
             const video = document.createElement('video');
@@ -324,7 +387,7 @@ document.addEventListener('DOMContentLoaded', function() {
             mainDisplay.appendChild(video);
         }
 
-        // Update Active Thumbnail class
+        // Update active class
         thumbElements.forEach(el => el.classList.remove('active'));
         if (thumbElements[index]) {
             thumbElements[index].classList.add('active');
@@ -337,7 +400,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 let nextIndex = currentIndex + 1;
                 if (nextIndex >= mediaList.length) nextIndex = 0;
                 showMedia(nextIndex);
-            }, 3000); // 3 seconds
+            }, 4000); // 4 seconds (slower is more elegant)
         }
     }
 
@@ -345,7 +408,6 @@ document.addEventListener('DOMContentLoaded', function() {
         clearInterval(autoSlideInterval);
     }
 
-    // Manual selection function
     window.manualSelect = function(index) {
         stopAutoSlide();
         showMedia(index);
@@ -359,7 +421,6 @@ document.addEventListener('DOMContentLoaded', function() {
         mainDisplay.innerHTML = '<span style="color:#ccc">No Image Available</span>';
     }
 
-    // Optional: Stop slide on hover
     mainDisplay.addEventListener('mouseenter', stopAutoSlide);
     mainDisplay.addEventListener('mouseleave', startAutoSlide);
 });
