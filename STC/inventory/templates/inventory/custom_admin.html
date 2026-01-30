@@ -1,0 +1,387 @@
+{% extends 'inventory/base.html' %}
+
+{% block content %}
+<style>
+    /* --- DASHBOARD LAYOUT --- */
+    .admin-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 20px;
+        min-height: 85vh;
+        font-family: 'Manrope', sans-serif;
+    }
+
+    /* --- PREMIUM GLASS HEADER --- */
+    .admin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 40px;
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(12px); /* Glass Effect */
+        padding: 30px 40px;
+        border-radius: 24px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.04);
+        border: 1px solid rgba(255,255,255,0.5);
+        animation: slideDown 0.6s ease-out;
+    }
+
+    @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .header-left h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.2rem;
+        margin: 0;
+        color: var(--dark);
+        font-weight: 700;
+        letter-spacing: -0.5px;
+    }
+
+    .header-left p {
+        color: #94a3b8; margin-top: 5px; font-size: 0.95rem; font-weight: 500;
+    }
+
+    /* Header Actions Group */
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .admin-badge {
+        background: #e0f2fe; /* Light Blue */
+        color: #0284c7;
+        padding: 8px 16px;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: flex; align-items: center; gap: 6px;
+    }
+    .admin-badge::before {
+        content: ''; width: 8px; height: 8px; background: #0284c7; border-radius: 50%;
+    }
+
+    /* Logout Button */
+    .btn-logout {
+        padding: 10px 24px;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        color: #ef4444; /* Red Text */
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        display: flex; align-items: center; gap: 8px;
+    }
+
+    .btn-logout:hover {
+        background: #ef4444;
+        color: white;
+        border-color: #ef4444;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(239, 68, 68, 0.2);
+    }
+
+    /* --- TABS --- */
+    .tabs {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .tab-btn {
+        padding: 14px 28px;
+        background: transparent;
+        border: none;
+        border-radius: 50px; /* Pill shape */
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #64748b;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .tab-btn:hover { background: #f1f5f9; color: var(--dark); }
+
+    .tab-btn.active {
+        background: var(--dark);
+        color: white;
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.2);
+    }
+
+    /* --- TABLE CARD --- */
+    .data-card {
+        background: white;
+        border-radius: 24px;
+        overflow: hidden; 
+        box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+        border: 1px solid rgba(0,0,0,0.02);
+        display: none; 
+        animation: fadeIn 0.5s ease;
+    }
+
+    .data-card.active { display: block; }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* --- TABLE STYLING --- */
+    .admin-table { width: 100%; border-collapse: collapse; }
+
+    .admin-table th {
+        background: #f8fafc;
+        padding: 25px;
+        text-align: left;
+        font-weight: 700;
+        color: #475569;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 1.2px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .admin-table td {
+        padding: 25px;
+        border-bottom: 1px solid #f1f5f9;
+        color: #334155;
+        font-size: 0.95rem;
+        vertical-align: middle;
+        transition: background 0.2s;
+    }
+
+    .admin-table tr:last-child td { border-bottom: none; }
+    .admin-table tr:hover td { background: #fafafa; }
+
+    /* Action Buttons */
+    .action-group { display: flex; gap: 8px; }
+
+    .action-btn {
+        width: 38px; height: 38px;
+        border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        color: white; text-decoration: none;
+        transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        font-size: 0.9rem;
+    }
+
+    .btn-reply { 
+        background: white; color: #3b82f6; 
+        border: 1px solid #eff6ff;
+        box-shadow: 0 2px 5px rgba(59, 130, 246, 0.1);
+    }
+    .btn-reply:hover { background: #3b82f6; color: white; transform: translateY(-3px); }
+
+    .btn-delete { 
+        background: white; color: #ef4444; 
+        border: 1px solid #fef2f2;
+        box-shadow: 0 2px 5px rgba(239, 68, 68, 0.1);
+    }
+    .btn-delete:hover { background: #ef4444; color: white; transform: translateY(-3px); }
+
+    /* Columns */
+    .customer-cell strong { display: block; color: var(--dark); font-size: 1rem; margin-bottom: 2px; }
+    .customer-cell span { font-size: 0.85rem; color: #94a3b8; }
+    
+    .product-link { 
+        display: inline-block; padding: 6px 12px; 
+        background: #fff7ed; color: var(--primary); 
+        border-radius: 6px; font-weight: 600; font-size: 0.85rem; 
+        text-decoration: none; transition: 0.2s;
+    }
+    .product-link:hover { background: var(--primary); color: white; }
+
+    /* Mobile Responsive */
+    @media (max-width: 992px) {
+        .admin-header { flex-direction: column; text-align: center; gap: 20px; }
+        .header-actions { width: 100%; justify-content: center; }
+        
+        .admin-table thead { display: none; }
+        .admin-table tr { display: block; margin: 20px; border: 1px solid #e2e8f0; border-radius: 16px; padding: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.02); }
+        .admin-table td { display: block; padding: 10px 0; border: none; text-align: right; position: relative; }
+        .admin-table td::before { 
+            content: attr(data-label); 
+            position: absolute; left: 0; top: 12px; 
+            font-weight: 700; color: #94a3b8; font-size: 0.8rem; text-transform: uppercase; 
+        }
+        .action-group { justify-content: flex-end; }
+        .customer-cell { text-align: right; }
+    }
+</style>
+
+<div class="admin-container">
+    
+    <div class="admin-header">
+        <div class="header-left">
+            <h1>Executive Dashboard</h1>
+            <p>Welcome back, {{ request.user.username|title }}</p>
+        </div>
+        
+        <div class="header-actions">
+            <span class="admin-badge">Admin Access</span>
+            
+            <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Sign Out
+                </button>
+            </form>
+        </div>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div style="background:#f0fdf4; color:#15803d; padding:15px 20px; border-radius:12px; margin-bottom:30px; border:1px solid #bbf7d0; display:flex; align-items:center; gap:10px;">
+                <i class="fas fa-check-circle"></i> {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="openTab('inquiries')">
+            <i class="fas fa-shopping-bag" style="margin-right:8px;"></i> Product Inquiries
+        </button>
+        <button class="tab-btn" onclick="openTab('messages')">
+            <i class="fas fa-envelope" style="margin-right:8px;"></i> Contact Messages
+        </button>
+    </div>
+
+    <div id="inquiries" class="data-card active">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Submitted On</th>
+                    <th>Customer Details</th>
+                    <th>Interested Product</th>
+                    <th>Inquiry Message</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in inquiries %}
+                <tr>
+                    <td data-label="Date" style="color:#64748b; font-weight:500;">
+                        {{ item.submitted_at|date:"M d, Y" }}
+                    </td>
+                    
+                    <td data-label="Customer" class="customer-cell">
+                        <strong>{{ item.customer_name }}</strong>
+                        <span>{{ item.customer_email }}</span>
+                    </td>
+                    
+                    <td data-label="Product">
+                        {% if item.product %}
+                            <a href="{% url 'product_detail' item.product.id %}" class="product-link" target="_blank">
+                                {{ item.product.name }} <i class="fas fa-external-link-alt" style="font-size:0.7em; margin-left:4px;"></i>
+                            </a>
+                        {% else %}
+                            <span style="color:#cbd5e1; font-style:italic;">Product Removed</span>
+                        {% endif %}
+                    </td>
+                    
+                    <td data-label="Message" style="max-width:350px; line-height:1.6;">
+                        {{ item.message|truncatechars:120 }}
+                    </td>
+                    
+                    <td data-label="Actions">
+                        <div class="action-group">
+                            <a href="mailto:{{ item.customer_email }}?subject=Re: Inquiry about {{ item.product.name }}" class="action-btn btn-reply" title="Reply via Email">
+                                <i class="fas fa-reply"></i>
+                            </a>
+                            <a href="{% url 'delete_item' 'inquiry' item.id %}" class="action-btn btn-delete" title="Delete Record" onclick="return confirm('Permanently delete this inquiry?');">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" style="text-align:center; padding:60px; color:#94a3b8;">
+                        <i class="fas fa-inbox" style="font-size:2rem; margin-bottom:15px; opacity:0.5;"></i>
+                        <p>No new product inquiries found.</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div id="messages" class="data-card">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Received On</th>
+                    <th>Sender Details</th>
+                    <th>Subject Line</th>
+                    <th>Message Content</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in contact_messages %}
+                <tr>
+                    <td data-label="Date" style="color:#64748b; font-weight:500;">
+                        {{ item.created_at|date:"M d, Y" }}
+                    </td>
+                    
+                    <td data-label="Sender" class="customer-cell">
+                        <strong>{{ item.full_name }}</strong>
+                        <span>{{ item.email }}</span>
+                    </td>
+                    
+                    <td data-label="Subject" style="font-weight:700; color:var(--dark);">
+                        {{ item.subject }}
+                    </td>
+                    
+                    <td data-label="Message" style="max-width:350px; line-height:1.6;">
+                        {{ item.message|truncatechars:120 }}
+                    </td>
+                    
+                    <td data-label="Actions">
+                        <div class="action-group">
+                            <a href="mailto:{{ item.email }}?subject=Re: {{ item.subject }}" class="action-btn btn-reply" title="Reply via Email">
+                                <i class="fas fa-reply"></i>
+                            </a>
+                            <a href="{% url 'delete_item' 'message' item.id %}" class="action-btn btn-delete" title="Delete Record" onclick="return confirm('Permanently delete this message?');">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" style="text-align:center; padding:60px; color:#94a3b8;">
+                        <i class="far fa-envelope-open" style="font-size:2rem; margin-bottom:15px; opacity:0.5;"></i>
+                        <p>No contact messages found.</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+    function openTab(tabName) {
+        // Hide all cards
+        document.querySelectorAll('.data-card').forEach(card => card.classList.remove('active'));
+        // Reset buttons
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        
+        // Activate target
+        document.getElementById(tabName).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+</script>
+
+{% endblock %}

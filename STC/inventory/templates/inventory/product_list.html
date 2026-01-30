@@ -64,6 +64,7 @@
         position: sticky; 
         top: 120px; 
         animation: slideInLeft 0.8s ease-out;
+        z-index: 90; /* Ensure it stays above content if overlapping */
     }
 
     .sidebar-title {
@@ -100,7 +101,6 @@
         overflow: hidden;
     }
 
-    /* Hover Slide Effect */
     .filter-item:hover {
         background: white;
         color: var(--primary);
@@ -116,14 +116,13 @@
         transform: scale(1.02);
     }
     
-    /* Arrow indicator for active item */
     .filter-item.active::after {
         content: '→';
         font-weight: bold;
         margin-left: 10px;
     }
 
-    /* --- SEARCH BAR (Animated) --- */
+    /* --- SEARCH BAR --- */
     .search-wrapper {
         margin-bottom: 50px;
         position: relative;
@@ -161,17 +160,16 @@
     }
     
     .search-input:focus + .search-icon {
-        transform: translateY(-50%) rotate(90deg); /* Playful spin on focus */
+        transform: translateY(-50%) rotate(90deg);
     }
 
-    /* --- PRODUCT GRID (Staggered Animation) --- */
+    /* --- PRODUCT GRID --- */
     .grid { 
         display: grid; 
         grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); 
         gap: 35px; 
     }
 
-    /* Card Styling */
     .card { 
         background: white; 
         border-radius: 24px; 
@@ -181,11 +179,11 @@
         display: flex;
         flex-direction: column;
         position: relative;
-        opacity: 0; /* Hidden initially for animation */
-        animation: fadeUp 0.8s forwards; /* Trigger animation */
+        opacity: 0; 
+        animation: fadeUp 0.8s forwards; 
     }
 
-    /* Staggered Delay Loop */
+    /* Staggered Delay */
     .card:nth-child(1) { animation-delay: 0.1s; }
     .card:nth-child(2) { animation-delay: 0.15s; }
     .card:nth-child(3) { animation-delay: 0.2s; }
@@ -208,7 +206,6 @@
         display: flex; align-items: center; justify-content: center; padding: 25px;
     }
     
-    /* Subtle background circle behind image */
     .card-image-box::before {
         content: ''; position: absolute; width: 150px; height: 150px;
         background: radial-gradient(circle, rgba(0,0,0,0.03) 0%, transparent 70%);
@@ -221,7 +218,6 @@
         transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
         z-index: 1; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.05));
     }
-    
     .card:hover .card-image-box img { transform: scale(1.12) rotate(2deg); }
 
     .card-content {
@@ -262,39 +258,74 @@
         text-transform: uppercase; letter-spacing: 0.5px;
     }
 
-    /* --- MOBILE RESPONSIVE --- */
+    /* --- MOBILE RESPONSIVE TWEAKS --- */
     @media (max-width: 992px) {
+        .catalog-header { padding: 40px 15px 30px; }
+        .catalog-header h2 { font-size: 2.5rem; }
+        
         .catalog-layout {
-            grid-template-columns: 1fr;
-            gap: 40px;
+            grid-template-columns: 1fr; /* Stack Sidebar above Content */
+            gap: 30px;
         }
         
+        /* Turn Sidebar into Horizontal Scroll Bar on Mobile */
         .sidebar {
-            position: relative; top: 0;
-            overflow-x: auto; padding: 20px;
+            position: sticky; top: 85px; /* Stick under navbar */
+            overflow-x: auto; 
+            padding: 15px 20px;
             white-space: nowrap;
-            /* Enhance mobile scrolling */
             -webkit-overflow-scrolling: touch; 
-            scrollbar-width: none;
+            scrollbar-width: none; /* Hide scrollbar */
+            margin: 0 -20px; /* Full width edge-to-edge */
+            border-radius: 0;
+            border-left: none; border-right: none;
+            display: flex;
+            align-items: center;
         }
         .sidebar::-webkit-scrollbar { display: none; }
         
-        .sidebar-title { display: none; }
+        .sidebar-title { 
+            display: none; /* Hide title to save space */ 
+        }
         
         .category-list {
             flex-direction: row; 
             gap: 15px;
+            width: max-content; /* Ensure it expands for scrolling */
         }
         
+        /* Mobile Filter Pills */
         .filter-item {
             background: white;
-            border: 1px solid #f1f5f9;
+            border: 1px solid #e2e8f0;
             box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-            padding: 10px 25px;
+            padding: 10px 20px;
+            font-size: 0.9rem;
         }
         
-        /* Remove arrows on mobile pills to save space */
-        .filter-item.active::after { content: ''; margin: 0; }
+        .filter-item:hover { transform: none; } /* Remove hover slide on touch */
+        
+        .filter-item.active { transform: scale(1.05); }
+        .filter-item.active::after { content: ''; margin: 0; } /* Remove arrow */
+
+        /* Search Bar tweaks */
+        .search-wrapper { margin-bottom: 30px; }
+        .search-input { padding: 15px 50px 15px 20px; font-size: 1rem; }
+        .search-icon { right: 20px; font-size: 1.2rem; }
+        
+        /* Grid tweaks */
+        .grid { 
+            gap: 20px; 
+            /* Ensure cards don't get too squashed */
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+        }
+    }
+
+    /* Small Phone Tweaks */
+    @media (max-width: 576px) {
+        .card-image-box { height: 220px; }
+        .catalog-header h2 { font-size: 2rem; }
+        .grid { grid-template-columns: 1fr; } /* 1 column on small phones */
     }
 </style>
 

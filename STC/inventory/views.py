@@ -98,3 +98,41 @@ def contact(request):
         form = ContactForm()
     
     return render(request, 'inventory/contact.html', {'form': form})
+
+
+
+
+from django.contrib.auth.decorators import login_required, user_passes_test
+from .models import Inquiry, ContactMessage # Ensure these are imported
+
+# Security Check: Only Superusers pass
+def is_superuser(user):
+    return user.is_superuser
+
+@login_required
+@user_passes_test(is_superuser)
+def admin_dashboard(request):
+    # FIX: Use 'submitted_at' for Inquiries
+    inquiries = Inquiry.objects.all().order_by('-submitted_at')
+    
+    # ContactMessage likely still uses 'created_at' (from our previous step)
+    contact_messages = ContactMessage.objects.all().order_by('-created_at')
+
+    context = {
+        'inquiries': inquiries,
+        'contact_messages': contact_messages,
+    }
+    return render(request, 'inventory/custom_admin.html', context)
+
+@login_required
+@user_passes_test(is_superuser)
+def delete_item(request, model_type, pk):
+    # Helper to delete items easily
+    if model_type == 'inquiry':
+        item = get_object_or_404(Inquiry, pk=pk)
+    elif model_type == 'message':
+        item = get_object_or_404(ContactMessage, pk=pk)
+    
+    item.delete()
+    messages.success(request, "Item deleted successfully.")
+    return redirect('admin_dashboard')

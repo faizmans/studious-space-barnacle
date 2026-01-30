@@ -2,10 +2,26 @@
 
 {% block content %}
 <style>
+    /* --- ANIMATIONS --- */
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(40px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes slideInLeft {
+        from { opacity: 0; transform: translateX(-30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
     /* --- HERO BACKGROUND --- */
     .contact-hero-bg {
         background: var(--dark);
-        height: 350px;
+        height: 400px; /* Taller for drama */
         position: relative;
         display: flex;
         justify-content: center;
@@ -15,32 +31,48 @@
         overflow: hidden;
     }
     
+    /* Decorative Background Pattern */
     .contact-hero-bg::before {
         content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
-        background-size: 30px 30px;
-        opacity: 0.5;
+        background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+        background-size: 40px 40px;
+        opacity: 0.6;
+    }
+    
+    /* Golden glow accent */
+    .contact-hero-bg::after {
+        content: ''; position: absolute; top: -50%; left: 50%; transform: translateX(-50%);
+        width: 600px; height: 600px;
+        background: radial-gradient(circle, rgba(211, 84, 0, 0.15) 0%, transparent 70%);
+        pointer-events: none;
     }
 
     .hero-text {
-        position: relative; z-index: 2; margin-bottom: 40px; 
+        position: relative; z-index: 2; margin-bottom: 60px; 
+        animation: fadeUp 0.8s ease-out;
     }
     
     .hero-text h1 { 
         font-family: 'Playfair Display', serif; 
-        font-size: 3.5rem; 
-        margin-bottom: 10px;
-        background: linear-gradient(to right, #fff, #cbd5e1);
+        font-size: 4rem; 
+        font-weight: 700;
+        margin-bottom: 15px;
+        background: linear-gradient(to right, #fff, #e2e8f0);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        text-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
     
-    .hero-text p { font-size: 1.1rem; color: #94a3b8; font-weight: 300; letter-spacing: 0.5px; }
+    .hero-text p { 
+        font-size: 1.25rem; color: rgba(255,255,255,0.8); 
+        font-weight: 300; letter-spacing: 0.5px; 
+        max-width: 600px; margin: 0 auto;
+    }
 
     /* --- MAIN CONTENT CONTAINER --- */
     .contact-wrapper {
         max-width: 1100px;
-        margin: -80px auto 50px; /* Negative margin pulls it up */
+        margin: -100px auto 50px; /* Pull up overlap */
         position: relative;
         z-index: 10;
         padding: 0 20px;
@@ -50,20 +82,34 @@
     .contact-card {
         background: white;
         border-radius: 30px;
-        box-shadow: 0 30px 60px rgba(0,0,0,0.08);
+        box-shadow: 0 30px 80px rgba(0,0,0,0.12); /* Deep luxury shadow */
         overflow: hidden;
         display: grid;
-        grid-template-columns: 1fr 1.5fr;
-        margin-bottom: 80px; /* Space before map */
+        grid-template-columns: 1fr 1.6fr; /* Ratio */
+        margin-bottom: 100px;
+        animation: fadeUp 1s ease-out 0.2s backwards; /* Staggered entrance */
     }
 
-    /* Left Side: Info */
+    /* Left Side: Info Panel */
     .contact-info {
         background: var(--dark-surface);
         color: white;
         padding: 60px;
         position: relative;
         overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+    /* Decorative Circle */
+    .contact-info::before {
+        content: ''; position: absolute; top: -100px; left: -100px;
+        width: 300px; height: 300px; 
+        background: var(--primary);
+        border-radius: 50%;
+        opacity: 0.05;
+        filter: blur(50px);
     }
     
     .contact-info::after {
@@ -74,64 +120,110 @@
         opacity: 0.1;
     }
 
-    .info-group { margin-bottom: 50px; position: relative; z-index: 2; }
+    .info-group { margin-bottom: 50px; position: relative; z-index: 2; animation: slideInLeft 0.8s ease-out; }
+    .info-group:nth-child(2) { animation-delay: 0.1s; }
+    .info-group:nth-child(3) { animation-delay: 0.2s; }
     
     .info-label { 
-        display: block; font-size: 0.85rem; text-transform: uppercase; 
-        letter-spacing: 1.5px; color: var(--primary); margin-bottom: 10px; font-weight: 700;
+        display: flex; align-items: center; gap: 10px;
+        font-size: 0.8rem; text-transform: uppercase; 
+        letter-spacing: 2px; color: var(--primary); margin-bottom: 12px; font-weight: 700;
     }
     
     .info-value { 
-        font-family: 'Playfair Display', serif; font-size: 1.8rem; line-height: 1.2; margin-bottom: 8px;
+        font-family: 'Playfair Display', serif; font-size: 2rem; line-height: 1.1; margin-bottom: 8px;
+        color: white;
     }
     
-    .info-sub { font-family: 'Manrope', sans-serif; color: #94a3b8; font-size: 1rem; line-height: 1.6; }
+    .info-sub { 
+        font-family: 'Manrope', sans-serif; color: #94a3b8; font-size: 1rem; line-height: 1.6; 
+    }
 
     /* Right Side: Form */
-    .contact-form-section { padding: 60px; background: white; }
+    .contact-form-section { 
+        padding: 70px; 
+        background: white; 
+    }
 
     .form-intro { margin-bottom: 40px; }
-    .form-intro h2 { font-size: 2.2rem; margin-bottom: 10px; color: var(--dark); font-family: 'Playfair Display', serif; }
-    .form-intro p { color: #64748b; font-size: 1rem; }
+    .form-intro h2 { 
+        font-size: 2.5rem; margin-bottom: 10px; color: var(--dark); 
+        font-family: 'Playfair Display', serif; 
+        font-weight: 700;
+    }
+    .form-intro p { color: #64748b; font-size: 1.05rem; }
 
-    /* Inputs */
-    .input-group { margin-bottom: 25px; }
-    .input-field {
-        width: 100%; padding: 18px 25px;
-        border: 1px solid #e2e8f0; border-radius: 12px;
+    /* Inputs Styling */
+    .input-group { margin-bottom: 25px; position: relative; }
+    
+    .input-field, 
+    input[type="text"], input[type="email"], textarea {
+        width: 100%; padding: 20px 25px;
+        border: 1px solid #e2e8f0; border-radius: 16px;
         font-family: 'Manrope', sans-serif; font-size: 1rem;
-        transition: all 0.3s ease; background: #fcfcfc;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        background: #f8fafc;
+        color: var(--dark);
+        box-sizing: border-box; /* Fix padding issues */
     }
-    .input-field:focus {
-        border-color: var(--primary); background: white;
-        outline: none; box-shadow: 0 10px 20px rgba(0,0,0,0.03);
+    
+    .input-field:focus,
+    input[type="text"]:focus, input[type="email"]:focus, textarea:focus {
+        border-color: var(--primary); 
+        background: white;
+        outline: none; 
+        box-shadow: 0 10px 25px rgba(211, 84, 0, 0.08);
+        transform: translateY(-2px);
     }
-    textarea.input-field { resize: vertical; min-height: 150px; }
+    
+    textarea { resize: vertical; min-height: 150px; }
 
-    .btn-submit { width: 100%; padding: 18px; font-size: 1rem; margin-top: 10px; }
+    /* Submit Button */
+    .btn-submit { 
+        width: 100%; 
+        padding: 20px; 
+        font-size: 1rem; 
+        margin-top: 10px; 
+        background: var(--primary-gradient);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 20px rgba(211, 84, 0, 0.2);
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(211, 84, 0, 0.35);
+    }
 
     /* --- MAP SECTION --- */
     .map-section {
         margin-bottom: 100px;
         text-align: center;
+        animation: fadeUp 1s ease-out 0.4s backwards;
     }
     
     .map-header { margin-bottom: 40px; }
     .map-header h2 { 
         font-family: 'Playfair Display', serif; 
-        font-size: 2.5rem; 
+        font-size: 2.8rem; 
         color: var(--dark); 
         margin-bottom: 10px; 
     }
-    .map-header p { color: #64748b; }
+    .map-header p { color: #64748b; font-size: 1.1rem; }
 
     .map-container {
         width: 100%;
-        height: 450px;
+        height: 500px;
         border-radius: 30px;
         overflow: hidden;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.08);
-        border: 1px solid rgba(0,0,0,0.05);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+        border: 4px solid white;
         position: relative;
     }
 
@@ -139,24 +231,41 @@
         width: 100%;
         height: 100%;
         border: 0;
-        filter: grayscale(20%) contrast(1.1); /* Subtle premium filter */
+        /* Luxurious muted map tone */
+        filter: grayscale(10%) contrast(1.1) saturate(0.8);
+        transition: filter 0.5s ease;
+    }
+    
+    .map-container:hover iframe {
+        filter: grayscale(0%) contrast(1) saturate(1);
+    }
+
+    /* Success Message */
+    .success-msg {
+        background: #e3fcf0; color: #059669; 
+        padding: 20px; border-radius: 16px; 
+        margin-bottom: 30px; text-align: center; 
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        animation: fadeIn 0.5s ease;
+        display: flex; align-items: center; justify-content: center; gap: 10px;
+        font-weight: 600;
+        box-shadow: 0 10px 20px rgba(16, 185, 129, 0.1);
     }
 
     /* RESPONSIVE */
-    @media(max-width: 900px) {
+    @media(max-width: 992px) {
         .contact-card { grid-template-columns: 1fr; }
-        .contact-info { padding: 50px 30px; text-align: center; }
-        .contact-info::after { display: none; }
+        .contact-info { padding: 60px 40px; text-align: center; align-items: center; }
         .contact-form-section { padding: 50px 30px; }
-        .contact-wrapper { margin-top: -50px; }
-        .map-container { height: 300px; }
+        .hero-text h1 { font-size: 3rem; }
+        .map-container { height: 350px; }
     }
 </style>
 
 <div class="contact-hero-bg">
     <div class="hero-text">
         <h1>Let's Connect</h1>
-        <p>We'd love to hear from you. Reach out for bulk orders or inquiries.</p>
+        <p>We'd love to hear from you. Reach out for bulk orders, partnerships, or just to say hello.</p>
     </div>
 </div>
 
@@ -164,8 +273,8 @@
     
     {% if messages %}
         {% for message in messages %}
-            <div style="background: #e3fcf0; color: #059669; padding: 15px; border-radius: 12px; margin-bottom: 30px; text-align: center; border: 1px solid rgba(16, 185, 129, 0.2);">
-                <strong>Success!</strong> {{ message }}
+            <div class="success-msg">
+                <i class="fas fa-check-circle"></i> <span>{{ message }}</span>
             </div>
         {% endfor %}
     {% endif %}
@@ -174,7 +283,7 @@
         
         <div class="contact-info">
             <div class="info-group">
-                <span class="info-label">Visit Our HQ</span>
+                <span class="info-label"><i class="fas fa-map-marker-alt"></i> Visit HQ</span>
                 <div class="info-value">Ahmedabad</div>
                 <div class="info-sub">
                     123, Bakery Market, Kalupur<br>
@@ -183,13 +292,13 @@
             </div>
             
             <div class="info-group">
-                <span class="info-label">Call Support</span>
+                <span class="info-label"><i class="fas fa-phone-alt"></i> Call Support</span>
                 <div class="info-value">+91 98765 43210</div>
-                <div class="info-sub">Mon-Sat, 9am — 8pm</div>
+                <div class="info-sub">Mon-Sat, 9:00am — 8:00pm</div>
             </div>
 
             <div class="info-group">
-                <span class="info-label">Email Us</span>
+                <span class="info-label"><i class="fas fa-envelope"></i> Email Us</span>
                 <div class="info-value">help@sameer.com</div>
                 <div class="info-sub">Response within 24 hours</div>
             </div>
@@ -198,16 +307,31 @@
         <div class="contact-form-section">
             <div class="form-intro">
                 <h2>Send a Message</h2>
-                <p>Have a question about a specific product? Fill out the form below.</p>
+                <p>Have a question about a specific product or wholesale pricing? Fill out the form below.</p>
             </div>
 
             <form method="POST">
                 {% csrf_token %}
-                <div class="input-group">{{ form.full_name }}</div>
-                <div class="input-group">{{ form.email }}</div>
-                <div class="input-group">{{ form.subject }}</div>
-                <div class="input-group">{{ form.message }}</div>
-                <button type="submit" class="btn btn-submit">Send Message</button>
+                
+                <div class="input-group">
+                    {{ form.full_name }}
+                    </div>
+                
+                <div class="input-group">
+                    {{ form.email }}
+                </div>
+
+                <div class="input-group">
+                    {{ form.subject }}
+                </div>
+
+                <div class="input-group">
+                    {{ form.message }}
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    Send Message <i class="fas fa-paper-plane" style="margin-left: 8px;"></i>
+                </button>
             </form>
         </div>
     </div>
@@ -220,7 +344,7 @@
         
         <div class="map-container">
             <iframe 
-                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d229.49011034448975!2d72.59508971504333!3d23.02958142044998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e85fa8eb1d6bb%3A0x7a65e7dd5c4ae459!2sSameer%20Trading%20Company!5e0!3m2!1sen!2sin!4v1769677074988!5m2!1sen!2sin" 
+                 src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d229.49008791683735!2d72.59512748864947!3d23.029594592923196!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e85fa8eb1d6bb%3A0x7a65e7dd5c4ae459!2sSameer%20Trading%20Company!5e0!3m2!1sen!2sin!4v1769751601209!5m2!1sen!2sin"
                 loading="lazy">
             </iframe>
         </div>
