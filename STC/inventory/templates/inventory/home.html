@@ -2,6 +2,12 @@
 
 {% block content %}
 <style>
+    /* --- GLOBAL ANIMATIONS --- */
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(40px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
     /* --- 1. CINEMATIC HERO SECTION --- */
     .hero {
         position: relative;
@@ -14,347 +20,246 @@
         color: white;
         margin-bottom: 100px;
         overflow: hidden;
-        /* REMOVED: background: url(...) because CSS cannot load videos */
     }
 
     .hero-video {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover; /* Ensures video covers the area without stretching */
-        z-index: 1; /* Sits at the very back */
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        object-fit: cover; z-index: 1;
     }
 
     /* Premium Dark Overlay */
     .hero::before {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; width: 100%; height: 100%;
-        /* Adjusted z-index to sit ON TOP of the video (0) but BEHIND text (2) */
+        content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
         z-index: 1; 
         background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(44, 62, 80, 0.6) 100%);
     }
 
     .hero-content {
-        position: relative;
-        z-index: 2; /* Sits on top of everything */
-        max-width: 900px;
-        padding: 0 30px;
+        position: relative; z-index: 2; max-width: 900px; padding: 0 20px;
         animation: fadeUp 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
     .hero h1 { 
         font-family: 'Playfair Display', serif;
-        font-size: 5rem; 
-        font-weight: 700; 
-        margin-bottom: 25px; 
-        line-height: 1.1;
+        font-size: 4.5rem; font-weight: 700; margin-bottom: 20px; line-height: 1.1;
         background: linear-gradient(to right, #ffffff, #e2e8f0);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         text-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
     
     .hero p { 
-        font-family: 'Manrope', sans-serif;
-        font-size: 1.35rem; 
-        margin-bottom: 50px; 
-        color: rgba(255,255,255,0.9);
-        font-weight: 300;
-        letter-spacing: 0.5px;
-        line-height: 1.6;
+        font-family: 'Manrope', sans-serif; font-size: 1.25rem; 
+        margin-bottom: 40px; color: rgba(255,255,255,0.9);
+        font-weight: 300; letter-spacing: 0.5px; line-height: 1.6;
     }
 
     /* Luxury "Gold" Button */
     .btn-hero {
-        display: inline-block;
-        background: white;
-        color: var(--dark);
-        padding: 18px 50px;
-        font-size: 1.1rem;
-        font-weight: 700;
-        border-radius: 50px;
-        transition: all 0.4s ease;
+        display: inline-block; background: white; color: var(--dark);
+        padding: 16px 45px; font-size: 1rem; font-weight: 700;
+        border-radius: 50px; transition: all 0.4s ease;
         box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-        text-transform: uppercase;
-        letter-spacing: 1px;
+        text-transform: uppercase; letter-spacing: 1px;
     }
     .btn-hero:hover {
-        transform: translateY(-5px);
-        background: var(--primary); /* Gold/Orange from base */
-        color: white;
+        transform: translateY(-5px); background: var(--primary); color: white;
         box-shadow: 0 15px 40px rgba(211, 84, 0, 0.4);
+    }
+
+    /* --- SECTION HEADERS (Centered & Styled) --- */
+    .section-header {
+        text-align: center;
+        margin-bottom: 60px;
+        position: relative;
+        padding: 0 20px;
+    }
+
+    .section-title { 
+        font-size: 2.8rem; font-weight: 700; color: var(--dark); 
+        margin-bottom: 15px; position: relative; display: inline-block;
+    }
+    
+    /* Gold Underline Accent */
+    .section-title::after {
+        content: ''; display: block; width: 60px; height: 4px;
+        background: var(--primary); margin: 15px auto 0;
+        border-radius: 2px;
     }
 
     /* --- 2. CATEGORY SECTION --- */
     .category-section { margin-bottom: 120px; }
     
     .category-grid { 
-        display: flex; 
-        justify-content: center; 
-        gap: 60px; 
-        flex-wrap: wrap; 
+        display: flex; justify-content: center; gap: 50px; flex-wrap: wrap; 
+        padding: 0 20px;
     }
     
     .cat-card-link { text-decoration: none; color: inherit; display: block; }
 
     .cat-card { 
-        text-align: center; 
-        width: 180px; 
-        transition: all 0.4s ease;
+        text-align: center; width: 160px; transition: all 0.4s ease;
     }
     
     .cat-img-wrapper {
-        width: 160px; 
-        height: 160px; 
-        border-radius: 50%; 
-        padding: 8px; /* Gap between image and border */
-        border: 2px solid rgba(0,0,0,0.08);
-        margin: 0 auto 25px;
-        transition: all 0.5s ease;
-        position: relative;
+        width: 150px; height: 150px; border-radius: 50%; 
+        padding: 6px; border: 2px solid rgba(0,0,0,0.08);
+        margin: 0 auto 20px; transition: all 0.5s ease; position: relative;
     }
 
     .cat-img-box {
-        width: 100%; 
-        height: 100%; 
-        border-radius: 50%; 
-        overflow: hidden; 
-        background: white;
-        position: relative;
+        width: 100%; height: 100%; border-radius: 50%; 
+        overflow: hidden; background: white;
     }
     
     .cat-img-box img { 
-        width: 100%; 
-        height: 100%; 
-        object-fit: cover; 
+        width: 100%; height: 100%; object-fit: cover; 
         transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
     
-    /* Hover Animation */
     .cat-card:hover .cat-img-wrapper { 
-        border-color: var(--primary); 
-        transform: scale(1.05);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        border-color: var(--primary); transform: scale(1.05);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
     }
     .cat-card:hover img { transform: scale(1.15); }
     
     .cat-title { 
-        font-family: 'Playfair Display', serif;
-        font-weight: 600; 
-        color: var(--dark); 
-        font-size: 1.3rem; 
-        letter-spacing: 0.5px;
+        font-weight: 600; color: var(--dark); font-size: 1.1rem; letter-spacing: 0.5px;
     }
 
-    /* --- 3. PRODUCT GRID (Ultra Premium) --- */
+    /* --- 3. PRODUCT GRID --- */
     .product-grid { 
         display: grid; 
-        /* Intelligent Responsive Grid */
-        grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); 
-        gap: 50px; 
-        margin-bottom: 140px;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+        gap: 40px; margin-bottom: 140px; padding: 0 20px;
     }
     
     .product-card { 
-        background: white; 
-        border-radius: 24px; 
-        overflow: hidden; 
+        background: white; border-radius: 24px; overflow: hidden; 
         transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-        display: flex;
-        flex-direction: column;
+        display: flex; flex-direction: column;
         border: 1px solid rgba(0,0,0,0.03);
         box-shadow: 0 10px 30px rgba(0,0,0,0.04);
-        position: relative;
     }
     
-    /* Hover Lift */
     .product-card:hover { 
-        transform: translateY(-15px); 
-        box-shadow: 0 30px 60px rgba(0,0,0,0.12);
-        border-color: transparent;
+        transform: translateY(-10px); 
+        box-shadow: 0 25px 50px rgba(0,0,0,0.1); border-color: transparent;
     }
     
     .p-img-box {
-        width: 100%;
-        height: 320px; /* Tall, airy image space */
-        position: relative;
-        overflow: hidden;
-        background: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 30px;
+        width: 100%; height: 280px; position: relative; overflow: hidden;
+        background: white; display: flex; align-items: center; justify-content: center; padding: 25px;
     }
 
     .p-img { 
-        width: 100%; 
-        height: 100%; 
-        object-fit: contain; 
+        width: 100%; height: 100%; object-fit: contain; 
         transition: transform 0.8s ease;
-        filter: drop-shadow(0 10px 20px rgba(0,0,0,0.08)); /* Realism shadow */
+        filter: drop-shadow(0 10px 20px rgba(0,0,0,0.08));
     }
     
     .product-card:hover .p-img { transform: scale(1.1); }
     
     .p-details { 
-        padding: 30px; 
-        flex-grow: 1; 
-        display: flex; 
-        flex-direction: column; 
-        background: white;
-        position: relative;
-        z-index: 2;
+        padding: 25px; flex-grow: 1; display: flex; flex-direction: column; 
+        background: white; z-index: 2;
     }
     
     .p-title { 
-        font-family: 'Playfair Display', serif;
-        font-size: 1.5rem; 
-        margin: 0 0 10px; 
-        font-weight: 700; 
-        color: var(--dark);
-        line-height: 1.2;
+        font-family: 'Playfair Display', serif; font-size: 1.4rem; 
+        margin: 0 0 10px; font-weight: 700; color: var(--dark); line-height: 1.2;
     }
     
     .p-desc { 
-        font-size: 0.95rem; 
-        color: #94a3b8; 
-        margin-bottom: 30px; 
-        line-height: 1.6;
-        flex-grow: 1;
+        font-size: 0.95rem; color: #94a3b8; margin-bottom: 25px; line-height: 1.6; flex-grow: 1;
     }
 
-    /* Actions Row */
     .card-actions {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-top: 20px;
-        border-top: 1px solid #f1f5f9;
+        display: flex; justify-content: space-between; align-items: center;
+        padding-top: 20px; border-top: 1px solid #f1f5f9;
     }
 
     .stock-pill {
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        background: #f8fafc;
-        color: #64748b;
-        padding: 8px 16px;
-        border-radius: 40px;
-        font-weight: 700;
-        letter-spacing: 1px;
+        font-size: 0.75rem; text-transform: uppercase; background: #f8fafc;
+        color: #64748b; padding: 6px 14px; border-radius: 40px; font-weight: 700;
     }
 
     .view-link {
-        color: var(--primary);
-        font-weight: 700;
-        font-size: 0.9rem;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
+        color: var(--primary); font-weight: 700; font-size: 0.9rem;
+        display: flex; align-items: center; gap: 8px; text-transform: uppercase;
         transition: gap 0.3s;
     }
     .view-link:hover { gap: 12px; }
 
-    /* --- 4. TRUST FEATURES (Floating Card Style) --- */
+    /* --- 4. FEATURES SECTION --- */
     .features-section {
-        position: relative;
-        background: white;
-        padding: 100px 0;
-        border-radius: 40px;
-        margin: 0 20px 80px; 
-        /* Subtle glow shadow */
-        box-shadow: 0 20px 80px rgba(0,0,0,0.06);
-        border: 1px solid rgba(0,0,0,0.02);
+        position: relative; background: white; padding: 80px 0;
+        border-radius: 40px; margin: 0 20px 80px; 
+        box-shadow: 0 20px 60px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.02);
         overflow: hidden;
     }
 
-    /* Decorative background blobs */
-    .features-section::before {
-        content: ''; position: absolute; top: -50%; left: -20%; width: 500px; height: 500px;
-        background: radial-gradient(circle, rgba(211,84,0,0.05) 0%, transparent 70%);
-        border-radius: 50%; pointer-events: none;
-    }
-    
     .features-grid {
-        display: flex; 
-        justify-content: center; 
-        gap: 80px;
-        flex-wrap: wrap; 
+        display: flex; justify-content: center; gap: 60px; flex-wrap: wrap; 
         position: relative; z-index: 2;
     }
     
     .feature-box { 
-        text-align: center; 
-        padding: 20px;
-        transition: 0.3s;
-        width: 280px;
+        text-align: center; padding: 20px; width: 280px;
     }
     
     .icon-circle {
-        width: 100px; height: 100px;
-        background: #fff;
-        border: 1px solid rgba(0,0,0,0.05);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 25px;
-        
-        /* Typography for Icons */
-        font-size: 2.5rem; 
-        color: var(--primary); /* <--- This makes the icons Gold/Orange */
-        
-        transition: all 0.5s ease;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        width: 90px; height: 90px; background: #fff;
+        border: 1px solid rgba(0,0,0,0.05); border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 20px; font-size: 2rem; color: var(--primary);
+        transition: all 0.5s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.05);
     }
     
     .feature-box:hover .icon-circle { 
-        transform: rotate(15deg) scale(1.1); 
-        border-color: var(--primary);
-        box-shadow: 0 20px 40px rgba(211,84,0,0.15);
+        transform: rotate(10deg) scale(1.1); border-color: var(--primary);
+        box-shadow: 0 15px 30px rgba(211,84,0,0.15);
     }
     
     .feature-box strong { 
-        display: block; 
-        font-size: 1.4rem; 
-        color: var(--dark); 
-        margin-bottom: 10px;
+        display: block; font-size: 1.25rem; color: var(--dark); margin-bottom: 8px;
         font-family: 'Playfair Display', serif;
     }
 
-    .feature-box span {
-        color: #94a3b8;
-        font-size: 1rem;
-        line-height: 1.5;
-    }
+    .feature-box span { color: #94a3b8; font-size: 0.95rem; line-height: 1.5; }
 
-    /* --- MOBILE RESPONSIVE RULES --- */
+    /* --- MOBILE RESPONSIVE --- */
     @media (max-width: 992px) {
         .hero h1 { font-size: 3.5rem; }
-        .hero p { font-size: 1.2rem; }
     }
 
     @media (max-width: 768px) {
-        .hero { height: 70vh; }
-        .hero h1 { font-size: 2.8rem; }
-        
+        /* Hero Mobile */
+        .hero { height: 75vh; }
+        .hero h1 { font-size: 2.8rem; margin-bottom: 15px; }
+        .hero p { font-size: 1.1rem; margin-bottom: 30px; }
+        .btn-hero { padding: 14px 35px; font-size: 0.95rem; }
+
+        /* Headers Mobile */
+        .section-header { margin-bottom: 40px; }
+        .section-title { font-size: 2.2rem; }
+
+        /* Category Mobile */
         .category-grid { gap: 30px; }
-        .cat-card { width: 140px; }
-        .cat-img-wrapper { width: 120px; height: 120px; }
-        
-        /* 1 Column on Mobile for Products */
+        .cat-card { width: 130px; } /* Fits 2 per row comfortably */
+        .cat-img-wrapper { width: 110px; height: 110px; margin-bottom: 15px; }
+        .cat-title { font-size: 1rem; }
+
+        /* Product Grid Mobile - 1 Column for focus */
         .product-grid { 
             grid-template-columns: 1fr; 
             gap: 40px; 
-            padding: 0 15px;
+            margin-bottom: 80px;
         }
-        
-        .features-grid { flex-direction: column; align-items: center; gap: 50px; }
-        .features-section { padding: 60px 0; margin: 0 10px 60px; }
+        .p-img-box { height: 240px; } /* Adjusted height */
+
+        /* Features Mobile */
+        .features-section { margin: 0 10px 60px; padding: 60px 0; }
+        .features-grid { flex-direction: column; align-items: center; gap: 40px; }
     }
 </style>
 
@@ -375,10 +280,12 @@
 
     {% if categories %}
     <div class="category-section">
-        <h2 class="section-title">Curated Categories</h2>
+        <div class="section-header">
+            <h2 class="section-title">Curated Categories</h2>
+        </div>
+        
         <div class="category-grid">
             {% for cat in categories %}
-            
             <a href="{% url 'category_filter' category_id=cat.id %}" class="cat-card-link">
                 <div class="cat-card">
                     <div class="cat-img-wrapper">
@@ -393,40 +300,44 @@
                     <div class="cat-title">{{ cat.name }}</div>
                 </div>
             </a>
-            
             {% endfor %}
         </div>
     </div>
     {% endif %}
 
-    <h2 class="section-title" id="products">Latest Arrivals</h2>
-    <div class="product-grid">
-        {% for product in products %}
-        <div class="product-card">
-            
-            <a href="{% url 'product_detail' pk=product.pk %}" class="p-img-box">
-                {% if product.images.first %}
-                    <img src="{{ product.images.first.image.url }}" class="p-img" alt="{{ product.name }}">
-                {% else %}
-                    <div style="color:#cbd5e1; font-weight:500; font-size: 0.9rem; letter-spacing: 1px;">NO IMAGE</div>
-                {% endif %}
-            </a>
-            
-            <div class="p-details">
-                <h3 class="p-title">{{ product.name }}</h3>
-                <p class="p-desc">{{ product.description|truncatewords:10 }}</p>
+    <div id="products">
+        <div class="section-header">
+            <h2 class="section-title">Latest Arrivals</h2>
+        </div>
+
+        <div class="product-grid">
+            {% for product in products %}
+            <div class="product-card">
                 
-                <div class="card-actions">
-                    <span class="stock-pill">
-                        {{ product.available_quantity }}
-                    </span>
-                    <a href="{% url 'product_detail' pk=product.pk %}" class="view-link">
-                        View Details <span>&rarr;</span>
-                    </a>
+                <a href="{% url 'product_detail' pk=product.pk %}" class="p-img-box">
+                    {% if product.images.first %}
+                        <img src="{{ product.images.first.image.url }}" class="p-img" alt="{{ product.name }}">
+                    {% else %}
+                        <div style="color:#cbd5e1; font-weight:500; font-size: 0.9rem; letter-spacing: 1px;">NO IMAGE</div>
+                    {% endif %}
+                </a>
+                
+                <div class="p-details">
+                    <h3 class="p-title">{{ product.name }}</h3>
+                    <p class="p-desc">{{ product.description|truncatewords:10 }}</p>
+                    
+                    <div class="card-actions">
+                        <span class="stock-pill">
+                            Available: {{ product.available_quantity }}
+                        </span>
+                        <a href="{% url 'product_detail' pk=product.pk %}" class="view-link">
+                            View Details <span>&rarr;</span>
+                        </a>
+                    </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
 
 </div>
