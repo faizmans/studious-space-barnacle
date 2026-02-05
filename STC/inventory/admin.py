@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import Product, ProductImage, ProductVideo, Color, Inquiry, ContactMessage
-from .models import Category
+from .models import Product, ProductImage, ProductVideo, Color, Inquiry, ContactMessage, Flavour, Category
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
@@ -13,8 +12,11 @@ class ProductVideoInline(admin.TabularInline):
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     inlines = [ProductImageInline, ProductVideoInline]
-    list_display = ('name', 'available_quantity')
-    filter_horizontal = ('available_colors',)
+    list_display = ('name', 'category', 'available_quantity', 'created_at')
+    search_fields = ('name', 'description')
+    list_filter = ('category',)
+    filter_horizontal = ('available_colors', 'available_flavours',)
+
 
 @admin.register(Inquiry)
 class InquiryAdmin(admin.ModelAdmin):
@@ -23,11 +25,12 @@ class InquiryAdmin(admin.ModelAdmin):
 
 @admin.register(ContactMessage)
 class ContactMessageAdmin(admin.ModelAdmin):
-    list_display = ('full_name', 'email', 'subject', 'created_at') # Columns to show
-    search_fields = ('full_name', 'email', 'subject')              # Search bar
-    readonly_fields = ('full_name', 'email', 'subject', 'message', 'created_at') # Make read-only so you don't accidentally edit them
+    list_display = ('full_name', 'email', 'subject', 'created_at') 
+    search_fields = ('full_name', 'email', 'subject')             
+    readonly_fields = ('full_name', 'email', 'subject', 'message', 'created_at')
     list_filter = ('created_at',)
 
 admin.site.register(Color)
 admin.site.register(Category)
+admin.site.register(Flavour)
 

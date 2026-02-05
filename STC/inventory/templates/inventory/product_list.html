@@ -327,6 +327,71 @@
         .catalog-header h2 { font-size: 2rem; }
         .grid { grid-template-columns: 1fr; } /* 1 column on small phones */
     }
+
+    /* --- PAGINATION STYLING --- */
+    .pagination-wrapper {
+        display: flex;
+        justify-content: center;
+        margin-top: 60px;
+        margin-bottom: 20px;
+    }
+
+    .pagination {
+        display: flex;
+        gap: 10px;
+        background: white;
+        padding: 10px 20px;
+        border-radius: 50px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        border: 1px solid rgba(0,0,0,0.03);
+    }
+
+    .page-btn {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        color: #64748b;
+        font-weight: 700;
+        font-size: 0.9rem;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
+        cursor: pointer;
+    }
+
+    /* Hover State */
+    a.page-btn:hover {
+        background: #f8fafc;
+        color: var(--primary);
+        transform: translateY(-2px);
+        border-color: #e2e8f0;
+    }
+
+    /* Active State (Current Page) */
+    .page-btn.active {
+        background: var(--primary-gradient);
+        color: white;
+        box-shadow: 0 5px 15px rgba(211, 84, 0, 0.3);
+        transform: scale(1.1);
+    }
+
+    /* Disabled State */
+    .page-btn.disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
+    /* Mobile Adjustment */
+    @media (max-width: 768px) {
+        .page-btn {
+            width: 35px;
+            height: 35px;
+            font-size: 0.85rem;
+        }
+    }
 </style>
 
 <div class="container">
@@ -406,6 +471,40 @@
                     </div>
                 {% endfor %}
             </div>
+
+            {% if products.has_other_pages %}
+    <div class="pagination-wrapper">
+        <div class="pagination">
+            
+            {% if products.has_previous %}
+                <a href="?page={{ products.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}" class="page-btn">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+            {% else %}
+                <span class="page-btn disabled"><i class="fas fa-chevron-left"></i></span>
+            {% endif %}
+
+            {% for num in products.paginator.page_range %}
+                {% if products.number == num %}
+                    <span class="page-btn active">{{ num }}</span>
+                {% elif num > products.number|add:'-3' and num < products.number|add:'3' %}
+                    <a href="?page={{ num }}{% if search_query %}&q={{ search_query }}{% endif %}" class="page-btn">
+                        {{ num }}
+                    </a>
+                {% endif %}
+            {% endfor %}
+
+            {% if products.has_next %}
+                <a href="?page={{ products.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}" class="page-btn">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            {% else %}
+                <span class="page-btn disabled"><i class="fas fa-chevron-right"></i></span>
+            {% endif %}
+            
+        </div>
+    </div>
+    {% endif %}
 
         </div> 
     </div> 

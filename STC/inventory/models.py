@@ -1,13 +1,11 @@
 from django.db import models
 
-# --- NEW: Category Model ---
 class Category(models.Model):
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to='categories/', blank=True, null=True)
 
     def __str__(self):
         return self.name
-# ---------------------------
 
 class Color(models.Model):
     name = models.CharField(max_length=50)
@@ -16,15 +14,19 @@ class Color(models.Model):
     def __str__(self):
         return self.name
 
+class Flavour(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Product(models.Model):
-    # --- NEW: Link to Category ---
-    category = models.ForeignKey(Category, related_name='products', on_delete=models.SET_NULL, null=True, blank=True)
-    # -----------------------------
-    
+    category = models.ForeignKey(Category, related_name='products', on_delete=models.SET_NULL, null=True, blank=True)    
     name = models.CharField(max_length=200)
     description = models.TextField()
-    # No price field as requested
     available_quantity = models.CharField(max_length=100, help_text="e.g., 500kg, 200 packets")
+    available_flavours = models.ManyToManyField(Flavour, blank=True, null=True)
     available_colors = models.ManyToManyField(Color, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 

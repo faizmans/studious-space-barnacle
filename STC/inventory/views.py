@@ -23,30 +23,40 @@ def home(request):
 
 from django.db.models import Q # Import Q for advanced lookups
 
+from django.core.paginator import Paginator # <--- Import this at the top
+from django.shortcuts import render, get_object_or_404
+from .models import Product, Category
+
 def product_list(request, category_id=None):
-    # 1. Start with ALL products
-    products = Product.objects.all().order_by('-created_at')
+    # 1. Start with ALL products (Ordered)
+    products_list = Product.objects.all().order_by('-created_at')
     
-    # 2. Setup Categories for the filter bar
+    # 2. Setup Categories
     categories = Category.objects.all()
     category = None
 
-    # 3. Apply Category Filter (if selected)
+    # 3. Apply Category Filter
     if category_id:
         category = get_object_or_404(Category, id=category_id)
-        products = products.filter(category=category)
+        products_list = products_list.filter(category=category)
 
-    # 4. Apply Search Filter (Live Search Logic)
-    search_query = request.GET.get('q') # Get the 'q' parameter from URL
+    # 4. Apply Search Filter
+    search_query = request.GET.get('q')
     if search_query:
-        # Filter by name (case-insensitive)
-        products = products.filter(name__icontains=search_query)
+        products_list = products_list.filter(name__icontains=search_query)
+
+    # --- 5. PAGINATION LOGIC (NEW) ---
+    # Show 12 products per page (Change 12 to whatever number you prefer)
+    paginator = Paginator(products_list, 12) 
+    
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     context = {
-        'products': products,
+        'products': page_obj, # Pass the page object, not the full list
         'categories': categories,
         'current_category': category,
-        'search_query': search_query # Pass back so we can keep text in input
+        'search_query': search_query
     }
     return render(request, 'inventory/product_list.html', context)
 def product_detail(request, pk):

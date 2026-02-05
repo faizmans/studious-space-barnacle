@@ -235,7 +235,7 @@
         .footer-col h3 { font-size: 1.3rem; margin-bottom: 20px; color: var(--white); }
         .footer-col p { color: #94a3b8; font-size: 0.95rem; line-height: 1.7; max-width: 350px; }
         
-        .footer-bottom { border-top: 1px solid rgba(255,255,255,0.05); padding-top: 25px; text-align: center; color: #64748b; font-size: 0.85rem; display: flex; justify-content: space-between; }
+        .footer-bottom { border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 25px; text-align: center; color: #d1d7df; font-size: 0.85rem; display: flex; justify-content: space-between; }
         
         /* Contact List */
         .contact-list { list-style: none; padding: 0; }
@@ -258,6 +258,62 @@
             .social-icons { justify-content: center; }
             .footer-bottom { flex-direction: column; gap: 15px; }
         }
+    /* --- DEVELOPER SIGNATURE (Responsive) --- */
+    .dev-signature {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.85rem;
+        color: #9ca6b4; /* Muted Gray */
+        text-decoration: none;
+        transition: all 0.3s ease;
+        padding: 6px 12px; /* Slightly more padding for touch */
+        border-radius: 20px;
+        white-space: nowrap; /* Prevents name from breaking to new line */
+    }
+
+    .dev-signature:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: white;
+        transform: translateY(-1px); /* Subtle lift */
+    }
+
+    /* Gradient Name Effect */
+    .dev-name {
+        font-weight: 800;
+        /* Instagram Gradient */
+        background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); 
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        position: relative;
+    }
+
+    /* Icon Animation */
+    .dev-signature i {
+        color: #E1306C; /* Instagram Pink */
+        font-size: 1rem;
+        transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy effect */
+    }
+
+    .dev-signature:hover i {
+        transform: rotate(360deg) scale(1.2);
+    }
+
+    /* --- MOBILE RESPONSIVE TWEAKS --- */
+    @media (max-width: 768px) {
+        .dev-signature {
+            font-size: 0.9rem; /* Slightly larger text for mobile readability */
+            margin-top: 8px;   /* Space between copyright and signature */
+            background: rgba(255, 255, 255, 0.02); /* Faint background by default on mobile */
+            border: 1px solid rgba(255, 255, 255, 0.05); /* Thin border for definition */
+        }
+        
+        /* Ensure icon doesn't shrink on small screens */
+        .dev-signature i {
+            flex-shrink: 0; 
+        }
+    }
     </style>
 </head>
 <body>
@@ -355,10 +411,15 @@
             </div>
         </div>
 
-        <div class="footer-bottom">
-            <span>&copy; {% now "Y" %} Sameer Trading Company.</span>
-            <span>Crafted for Bakers.</span>
-        </div>
+       <div class="footer-bottom">
+    <span>&copy; {% now "Y" %} Sameer Trading Company.</span>
+    
+    <a href="https://www.instagram.com/faxiz.___/" target="_blank" class="dev-signature" title="Visit Developer Ig'Profile">
+        <span>Crafted for Bakers by</span>
+        <span class="dev-name">Faiz</span>
+        <i class="fab fa-instagram"></i>
+    </a>
+</div>
     </div>
 </footer>
 
