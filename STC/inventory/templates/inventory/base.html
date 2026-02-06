@@ -335,6 +335,142 @@
     </style>
 </head>
 <body>
+    <div id="page-loader">
+    <div class="loader-content">
+        <div class="spinner-premium"></div>
+        <div class="loader-logo">STC</div> </div>
+</div>
+
+<style>
+    /* --- LOADER CONTAINER --- */
+    #page-loader {
+        position: fixed; 
+        top: 0; left: 0; 
+        width: 100%; height: 100%; 
+        background: rgba(255, 255, 255, 0.98); /* Slight transparency for glass feel */
+        backdrop-filter: blur(10px); /* Premium Blur Effect */
+        z-index: 99999; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.5s;
+    }
+
+    /* --- PREMIUM ANIMATION --- */
+    .loader-content {
+        position: relative;
+        width: 80px; height: 80px;
+        display: flex; align-items: center; justify-content: center;
+    }
+
+    .spinner-premium {
+        position: absolute;
+        width: 100%; height: 100%;
+        border-radius: 50%;
+        border: 3px solid transparent;
+        border-top-color: #ea580c; /* Primary Orange */
+        animation: spin-smooth 1.2s cubic-bezier(0.55, 0.055, 0.675, 0.19) infinite;
+    }
+
+    .spinner-premium::before {
+        content: "";
+        position: absolute;
+        top: 5px; left: 5px; right: 5px; bottom: 5px;
+        border-radius: 50%;
+        border: 3px solid transparent;
+        border-top-color: #fb923c; /* Lighter Orange */
+        animation: spin-smooth 2s cubic-bezier(0.55, 0.055, 0.675, 0.19) infinite reverse;
+    }
+
+    .spinner-premium::after {
+        content: "";
+        position: absolute;
+        top: 15px; left: 15px; right: 15px; bottom: 15px;
+        border-radius: 50%;
+        border: 3px solid transparent;
+        border-top-color: #fed7aa; /* Very Light Orange */
+        animation: spin-smooth 3s cubic-bezier(0.55, 0.055, 0.675, 0.19) infinite;
+    }
+
+    /* Brand Logo Inside Spinner */
+    .loader-logo {
+        font-family: 'Playfair Display', serif;
+        font-weight: 800;
+        color: #1e293b;
+        font-size: 1.1rem;
+        animation: pulse-fade 2s infinite ease-in-out;
+    }
+
+    /* --- KEYFRAMES --- */
+    @keyframes spin-smooth {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    @keyframes pulse-fade {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.5; transform: scale(0.95); }
+    }
+
+    /* --- RESPONSIVE TWEAKS --- */
+    @media (max-width: 768px) {
+        .loader-content { width: 60px; height: 60px; }
+        .loader-logo { font-size: 0.9rem; }
+    }
+</style>
+
+<script>
+    // 1. HIDE LOADER ON PAGE LOAD
+    window.addEventListener('load', function() {
+        hideLoader();
+    });
+
+    // 2. SHOW LOADER ON LINK CLICK
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const target = this.getAttribute('target');
+                const href = this.getAttribute('href');
+                
+                // Logic: Internal link + Not a hashtag + Not opening in new tab + Not a "mailto/tel" link
+                if (
+                    href && 
+                    !href.startsWith('#') && 
+                    !href.startsWith('mailto:') && 
+                    !href.startsWith('tel:') && 
+                    target !== '_blank'
+                ) {
+                    showLoader();
+                }
+            });
+        });
+    });
+
+    // 3. FIX: HANDLE "BACK BUTTON" NAVIGATION (Safari/Mobile Bug Fix)
+    // Without this, if a user hits "Back", the loader stays stuck on screen.
+    window.addEventListener('pageshow', function(event) {
+        if (event.persisted) {
+            hideLoader();
+        }
+    });
+
+    // --- HELPER FUNCTIONS ---
+    function hideLoader() {
+        const loader = document.getElementById('page-loader');
+        if(loader) {
+            loader.style.opacity = '0';
+            loader.style.visibility = 'hidden'; // Better than display:none for transitions
+        }
+    }
+
+    function showLoader() {
+        const loader = document.getElementById('page-loader');
+        if(loader) {
+            loader.style.visibility = 'visible';
+            loader.style.opacity = '1';
+        }
+    }
+</script>
 
 <nav class="navbar">
     <a href="{% url 'home' %}" class="logo">
