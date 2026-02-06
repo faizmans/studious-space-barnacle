@@ -1,0 +1,273 @@
+{% extends 'inventory/base.html' %}
+
+{% block content %}
+<div id="progressBar" style="position:fixed; top:0; left:0; height:4px; background:var(--primary); width:0%; z-index:9999; transition:width 0.1s;"></div>
+
+<style>
+    /* --- CSS VARIABLES FOR FLUID DESIGN --- */
+    :root {
+        --text-color: #334155;
+        --heading-color: #1e293b;
+        --accent-color: #d97706;
+    }
+
+    /* --- EDITORIAL LAYOUT --- */
+    .article-wrapper {
+        max-width: 800px; /* Optimal reading width */
+        margin: 0 auto;
+        padding: 80px 20px 120px;
+        position: relative;
+    }
+
+    /* --- HEADER SECTION --- */
+    .article-header { 
+        text-align: center; 
+        margin-bottom: clamp(40px, 8vw, 70px); /* Responsive margin */
+    }
+    
+    .article-meta {
+        color: var(--accent-color); 
+        font-weight: 700; 
+        text-transform: uppercase; 
+        font-size: 0.85rem; 
+        letter-spacing: 2px;
+        margin-bottom: 20px; 
+        display: block;
+    }
+
+    .main-title {
+        font-family: 'Playfair Display', serif; 
+        /* Fluid Font Size: Scales between 2rem and 3.5rem depending on screen width */
+        font-size: clamp(2rem, 5vw, 3.8rem); 
+        line-height: 1.1;
+        color: var(--heading-color); 
+        margin-bottom: 30px; 
+        letter-spacing: -0.03em;
+    }
+
+    /* --- HERO IMAGE --- */
+    .hero-image {
+        width: 100%; 
+        height: auto; 
+        border-radius: 24px; 
+        margin-bottom: clamp(40px, 8vw, 70px);
+        box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15);
+        display: block;
+    }
+
+    /* --- CONTENT TYPOGRAPHY (The Magazine Look) --- */
+    .article-body {
+        /* Fluid Font Size for Body */
+        font-size: clamp(1.1rem, 2vw, 1.25rem); 
+        color: var(--text-color); 
+        line-height: 1.8; 
+        font-family: 'Georgia', serif; /* Serif is best for long reading */
+    }
+    
+    /* Paragraphs */
+    .article-body p { 
+        margin-bottom: 30px; 
+    }
+
+    /* Drop Cap (First letter huge) */
+    .article-body > p:first-of-type::first-letter {
+        float: left;
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(4rem, 10vw, 5.5rem); /* Responsive Drop Cap */
+        line-height: 0.8;
+        padding-right: 15px;
+        padding-top: 8px;
+        color: var(--primary); 
+        font-weight: 700;
+    }
+
+    /* Headings inside article */
+    .article-body h2 { 
+        font-family: 'Playfair Display', serif; 
+        font-size: clamp(1.8rem, 4vw, 2.2rem); 
+        margin-top: 60px; 
+        margin-bottom: 20px; 
+        color: var(--heading-color); 
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        line-height: 1.3;
+    }
+
+    .article-body h3 { 
+        font-family: 'Playfair Display', serif; 
+        font-size: clamp(1.4rem, 3vw, 1.7rem);
+        margin-top: 40px; 
+        margin-bottom: 15px; 
+        color: var(--text-color); 
+        font-weight: 700;
+    }
+
+    /* Lists */
+    .article-body ul, .article-body ol { 
+        margin-bottom: 30px; 
+        padding-left: 20px; 
+    }
+    .article-body li { 
+        margin-bottom: 12px; 
+        padding-left: 10px; 
+    }
+
+    /* Highlights */
+    .article-body strong {
+        color: #0f172a; 
+        font-weight: 700;
+    }
+    
+    .article-body em {
+        background: linear-gradient(120deg, #fff7ed 0%, #ffedd5 100%);
+        padding: 0 4px;
+        font-style: italic;
+        border-radius: 4px;
+    }
+
+    /* Dividers */
+    .article-body hr {
+        border: 0;
+        height: 1px;
+        background: linear-gradient(to right, transparent, #cbd5e1, transparent);
+        margin: 60px 0;
+    }
+
+    /* Links inside text */
+    .article-body a {
+        color: var(--primary);
+        text-decoration: none;
+        border-bottom: 2px solid rgba(249, 115, 22, 0.3);
+        transition: all 0.2s;
+        font-weight: 600;
+    }
+    .article-body a:hover {
+        background: #fff7ed;
+        border-color: var(--primary);
+        color: #c2410c;
+    }
+
+    /* Images inside text (Prevent overflow on mobile) */
+    .article-body img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 16px;
+        margin: 30px 0;
+        display: block;
+    }
+
+    /* --- SHARE SECTION --- */
+    .share-box {
+        margin-top: 80px; 
+        padding-top: 40px; 
+        border-top: 1px solid #e2e8f0;
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center;
+        flex-wrap: wrap; /* Wraps on tiny screens */
+        gap: 20px;
+    }
+    
+    .share-label {
+        font-weight: 700; 
+        color: #1e293b; 
+        font-family: 'Manrope', sans-serif;
+    }
+
+    .share-icons {
+        display: flex; 
+        gap: 12px;
+    }
+
+    .share-btn {
+        width: 45px; height: 45px; 
+        border-radius: 50%; 
+        border: 1px solid #e2e8f0;
+        display: flex; align-items: center; justify-content: center; 
+        color: #64748b;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        text-decoration: none; 
+        font-size: 1.1rem;
+        background: white;
+    }
+
+    /* Branded Hover Colors */
+    .share-btn.fb:hover { background: #1877F2; color: white; border-color: #1877F2; transform: translateY(-3px); }
+    .share-btn.tw:hover { background: #1DA1F2; color: white; border-color: #1DA1F2; transform: translateY(-3px); }
+    .share-btn.wa:hover { background: #25D366; color: white; border-color: #25D366; transform: translateY(-3px); }
+    .share-btn.em:hover { background: #333; color: white; border-color: #333; transform: translateY(-3px); }
+
+    /* --- MOBILE RESPONSIVE TWEAKS --- */
+    @media (max-width: 768px) {
+        .article-wrapper {
+            padding: 40px 20px 80px; /* Less padding on mobile */
+        }
+        
+        .article-body {
+            text-align: left; /* Ensure readability */
+        }
+
+        /* Adjust drop cap spacing for mobile */
+        .article-body > p:first-of-type::first-letter {
+            padding-right: 10px;
+            padding-top: 4px;
+        }
+        
+        /* Stack share section if screen is very narrow */
+        @media (max-width: 400px) {
+            .share-box {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    }
+</style>
+
+<article class="article-wrapper">
+    
+    <header class="article-header">
+        <span class="article-meta">
+            {{ post.created_at|date:"F d, Y" }} • {{ post.read_time }} Min Read
+        </span>
+        <h1 class="main-title">{{ post.title }}</h1>
+    </header>
+
+    {% if post.cover_image %}
+        <img src="{{ post.cover_image.url }}" alt="{{ post.title }}" class="hero-image">
+    {% endif %}
+
+    <div class="article-body">
+        {{ post.content|safe }}
+    </div>
+
+    <div class="share-box">
+        <span class="share-label">Share this article:</span>
+        <div class="share-icons">
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank" class="share-btn fb"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://twitter.com/intent/tweet?text={{ post.title }}&url={{ request.build_absolute_uri }}" target="_blank" class="share-btn tw"><i class="fab fa-twitter"></i></a>
+            <a href="https://wa.me/?text={{ post.title }} {{ request.build_absolute_uri }}" target="_blank" class="share-btn wa"><i class="fab fa-whatsapp"></i></a>
+            <a href="mailto:?subject={{ post.title }}&body=Check out this article: {{ request.build_absolute_uri }}" class="share-btn em"><i class="far fa-envelope"></i></a>
+        </div>
+    </div>
+    
+    <div style="margin-top:50px; text-align:center;">
+        <a href="{% url 'blog_list' %}" style="display: inline-block; padding: 12px 30px; background: #f8fafc; border-radius: 50px; color:var(--text-color); font-weight:700; text-decoration:none; font-family:'Manrope', sans-serif; letter-spacing:0.5px; transition: all 0.3s;">
+            &larr; Back to Journal
+        </a>
+    </div>
+
+</article>
+
+<script>
+    // --- SCROLL PROGRESS BAR LOGIC ---
+    window.onscroll = function() { updateProgressBar() };
+
+    function updateProgressBar() {
+        var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        var scrolled = (winScroll / height) * 100;
+        document.getElementById("progressBar").style.width = scrolled + "%";
+    }
+</script>
+
+{% endblock %}

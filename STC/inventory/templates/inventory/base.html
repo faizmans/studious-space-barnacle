@@ -152,6 +152,24 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(211, 84, 0, 0.35);
         }
+        /* --- CUSTOM SCROLLBAR --- */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9; 
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1; 
+    border-radius: 5px;
+    border: 2px solid #f1f5f9; /* Creates a padding effect */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #d35400; /* Turns Gold/Orange on hover */
+}
 
         /* --- MOBILE MENU COMPONENTS --- */
         .menu-toggle { display: none; }
@@ -331,6 +349,7 @@
     <ul class="nav-links">
         <li><a href="{% url 'home' %}">Home</a></li>
         <li><a href="{% url 'about' %}">About Us</a></li>
+        <li><a href="{% url 'blog_list' %}">Journal</a></li>
         <li><a href="{% url 'contact' %}">Contact</a></li>
 
         {% if request.user.is_superuser %}
@@ -344,6 +363,19 @@
         <li>
             <a href="{% url 'product_list' %}" class="nav-cta">Catalogue</a>
         </li>
+    
+
+        <li>
+    <a href="{% url 'quote_list' %}" style="position:relative;">
+        <i class="fas fa-shopping-basket"></i>
+        {% if cart_count > 0 %}
+            <span style="position:absolute; top:-8px; right:-12px; background:var(--primary); color:white; font-size:0.7rem; padding:2px 6px; border-radius:50%; font-weight:700;">
+                {{ cart_count }}
+            </span>
+        {% endif %}
+    </a>
+</li>
+
     </ul>
 </nav>
 
@@ -369,6 +401,7 @@
 <main>
     {% block content %}{% endblock %}
 </main>
+
 
 <footer id="contact">
     <div class="container">
@@ -422,6 +455,412 @@
 </div>
     </div>
 </footer>
+<style>
+    .floating-widget {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-end;
+    }
 
+    /* Common Button Style */
+    .float-btn {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        color: white;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        text-decoration: none;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+    }
+
+    /* WhatsApp - Brand Green but slightly darkened for premium feel */
+    .btn-whatsapp {
+        background: #25D366;
+        background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+        border: 2px solid white;
+    }
+
+    /* Phone - Uses your Brand Gold */
+    .btn-phone {
+        background: var(--primary);
+        background: var(--primary-gradient);
+        border: 2px solid white;
+        display: none; /* Hidden initially, shows on hover/click interaction logic if desired, or keep visible */
+    }
+
+    /* Tooltip Text */
+    .float-tooltip {
+        position: absolute;
+        right: 75px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: white;
+        color: var(--dark);
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        white-space: nowrap;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        pointer-events: none;
+    }
+    
+    .float-tooltip::after {
+        content: ''; position: absolute; right: -6px; top: 50%; transform: translateY(-50%);
+        border-width: 6px; border-style: solid;
+        border-color: transparent transparent transparent white;
+    }
+
+    /* Hover Effects */
+    .float-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+    }
+    
+    .float-btn:hover .float-tooltip {
+        opacity: 1; visibility: visible; right: 80px;
+    }
+
+    /* Pulse Animation for WhatsApp */
+    @keyframes pulse-gold {
+        0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+        70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+    }
+
+    .btn-whatsapp {
+        animation: pulse-gold 2s infinite;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        .floating-widget { bottom: 20px; right: 20px; gap: 10px; }
+        .float-btn { width: 50px; height: 50px; font-size: 1.5rem; }
+        .float-tooltip { display: none; } /* Hide tooltip on mobile to save space */
+    }
+</style>
+
+<div class="floating-widget">
+    
+    <a href="tel:+911234567890" class="float-btn btn-phone">
+        <i class="fas fa-phone-alt"></i>
+        <span class="float-tooltip">Call Sales</span>
+    </a>
+
+    <a href="https://wa.me/911234567890?text=Hi%20Sameer%20Trading,%20I%20am%20interested%20in%20your%20bakery%20supplies." target="_blank" class="float-btn btn-whatsapp">
+        <i class="fab fa-whatsapp"></i>
+        <span class="float-tooltip">Chat on WhatsApp</span>
+    </a>
+</div>
+
+<div id="exitPopup" class="exit-modal" role="dialog" aria-modal="true">
+    <div class="exit-modal-overlay" onclick="closeExitPopup()"></div>
+    
+    <div class="exit-modal-content">
+        <button class="exit-close" onclick="closeExitPopup()" aria-label="Close Modal">&times;</button>
+        
+        <div class="exit-grid">
+            <div class="exit-visual">
+                <div class="exit-badge">Free 2026 Guide</div>
+                <h3 class="visual-title">Wait! Don't Miss Out.</h3>
+                <p class="visual-text">Get our complete <strong>Wholesale Price List</strong> sent directly to your inbox today.</p>
+                
+                <div class="doc-icon">
+                    <div class="doc-page">
+                        <div class="doc-lines"></div>
+                        <div class="doc-lines"></div>
+                        <div class="doc-badge">%</div>
+                    </div>
+                    <div class="doc-shadow"></div>
+                </div>
+            </div>
+
+            <div class="exit-form-side">
+                <div class="mobile-header">
+                    <span class="mobile-badge">Exclusive Offer</span>
+                </div>
+                
+                <h4 class="form-title">Unlock Wholesale Rates </h4>
+                <p class="form-subtitle">Join 2,000+ bakers getting the best raw material deals in Ahmedabad.</p>
+                
+                <form method="POST" action="{% url 'subscribe' %}" onsubmit="handleExitSubmit(event)" class="premium-form"> 
+                    {% csrf_token %}
+                    
+                    <div class="input-group">
+                        <i class="far fa-envelope input-icon"></i>
+                        <input type="email" name="email" placeholder="Enter your email address" required class="premium-input">
+                    </div>
+                    
+                    <button type="submit" class="premium-btn">
+                        <span>Send Me The Price List</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </form>
+                
+                <div class="form-footer">
+                    <p class="spam-note"><i class="fas fa-lock"></i> No spam. Unsubscribe anytime.</p>
+                    <button class="no-thanks-btn" onclick="closeExitPopup()">No thanks, I don't want savings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* --- VARIABLES --- */
+    :root {
+        --popup-primary: #ea580c;
+        --popup-dark: #1e293b;
+        --popup-bg: #ffffff;
+    }
+
+    /* --- MODAL CONTAINER --- */
+    .exit-modal {
+        display: none; position: fixed; z-index: 10000;
+        left: 0; top: 0; width: 100%; height: 100%;
+        align-items: center; justify-content: center;
+        padding: 20px; box-sizing: border-box;
+    }
+
+    .exit-modal-overlay {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background-color: rgba(15, 23, 42, 0.7);
+        backdrop-filter: blur(8px);
+        animation: fadeIn 0.5s ease forwards;
+    }
+
+    .exit-modal-content {
+        background: var(--popup-bg);
+        width: 100%; max-width: 850px;
+        border-radius: 24px;
+        position: relative; z-index: 10001;
+        overflow: hidden;
+        box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.4);
+        animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        max-height: 90vh; /* Prevent cut-off on small landscape screens */
+        overflow-y: auto;
+    }
+
+    .exit-grid { display: grid; grid-template-columns: 1fr 1.2fr; min-height: 450px; }
+
+    /* --- CLOSE BUTTON --- */
+    .exit-close {
+        position: absolute; top: 20px; right: 20px;
+        width: 40px; height: 40px;
+        border-radius: 50%; background: rgba(0,0,0,0.05);
+        border: none; cursor: pointer; z-index: 10;
+        font-size: 1.5rem; color: #64748b;
+        display: flex; align-items: center; justify-content: center;
+        transition: all 0.2s;
+    }
+    .exit-close:hover { background: #fee2e2; color: #ef4444; transform: rotate(90deg); }
+
+    /* --- LEFT VISUAL SIDE --- */
+    .exit-visual {
+        background: radial-gradient(circle at 0% 0%, #fff7ed 0%, #ffedd5 100%);
+        padding: 50px 40px;
+        display: flex; flex-direction: column; justify-content: center;
+        position: relative; overflow: hidden;
+    }
+    
+    .exit-badge {
+        display: inline-block; align-self: flex-start;
+        background: white; color: var(--popup-primary); 
+        font-weight: 800; font-size: 0.7rem; letter-spacing: 1px;
+        padding: 6px 14px; border-radius: 50px; text-transform: uppercase;
+        box-shadow: 0 4px 10px rgba(234, 88, 12, 0.15); margin-bottom: 20px;
+    }
+
+    .visual-title {
+        font-family: 'Playfair Display', serif; font-size: 2.2rem; color: var(--popup-dark);
+        margin: 0 0 15px 0; line-height: 1.1;
+    }
+    .visual-text { color: #7c2d12; font-size: 1rem; line-height: 1.6; z-index: 2; position: relative; }
+
+    /* Premium Document CSS Art */
+    .doc-icon { position: relative; margin: 40px auto 0; width: 120px; height: 150px; }
+    .doc-page {
+        width: 100%; height: 100%; background: white; border-radius: 12px;
+        position: absolute; top: 0; left: 0; z-index: 2;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        display: flex; flex-direction: column; justify-content: center; align-items: center;
+        animation: float 4s ease-in-out infinite;
+    }
+    .doc-badge {
+        width: 50px; height: 50px; background: var(--popup-primary); border-radius: 50%;
+        color: white; font-weight: 800; font-size: 1.5rem;
+        display: flex; align-items: center; justify-content: center; margin-bottom: 10px;
+    }
+    .doc-lines { width: 60%; height: 6px; background: #f1f5f9; border-radius: 4px; margin-bottom: 8px; }
+    .doc-shadow {
+        position: absolute; bottom: -20px; left: 20%; width: 60%; height: 10px;
+        background: rgba(0,0,0,0.1); border-radius: 50%; filter: blur(5px);
+        animation: shadowScale 4s ease-in-out infinite;
+    }
+
+    /* --- RIGHT FORM SIDE --- */
+    .exit-form-side { 
+        padding: 50px; 
+        display: flex; flex-direction: column; justify-content: center; 
+        background: white;
+    }
+
+    .mobile-header { display: none; margin-bottom: 15px; }
+    .mobile-badge { 
+        background: #fff7ed; color: var(--popup-primary); font-size: 0.75rem; 
+        font-weight: 700; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; 
+    }
+
+    .form-title {
+        font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--popup-dark);
+        margin: 0 0 10px 0;
+    }
+    .form-subtitle { font-size: 1rem; color: #64748b; margin: 0 0 30px 0; line-height: 1.5; }
+
+    /* Input Styling */
+    .input-group { position: relative; margin-bottom: 20px; }
+    .input-icon {
+        position: absolute; left: 20px; top: 50%; transform: translateY(-50%);
+        color: #94a3b8; font-size: 1.1rem;
+    }
+    .premium-input {
+        width: 100%; padding: 16px 20px 16px 50px;
+        border: 2px solid #f1f5f9; border-radius: 12px;
+        font-size: 1rem; outline: none; transition: 0.3s;
+        color: var(--popup-dark); box-sizing: border-box;
+    }
+    .premium-input:focus { border-color: var(--popup-primary); background: #fffcf8; }
+
+    /* Button Styling */
+    .premium-btn {
+        width: 100%; padding: 18px;
+        background: var(--popup-primary); color: white;
+        border: none; border-radius: 12px;
+        font-weight: 700; font-size: 1rem; cursor: pointer;
+        display: flex; align-items: center; justify-content: center; gap: 10px;
+        transition: all 0.3s; box-shadow: 0 10px 20px rgba(234, 88, 12, 0.2);
+    }
+    .premium-btn:hover { 
+        background: #c2410c; transform: translateY(-3px); 
+        box-shadow: 0 15px 30px rgba(234, 88, 12, 0.3);
+    }
+
+    /* Footer Links */
+    .form-footer { margin-top: 20px; text-align: center; }
+    .spam-note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 10px 0; }
+    .no-thanks-btn {
+        background: none; border: none; color: #cbd5e1; font-size: 0.85rem;
+        cursor: pointer; text-decoration: underline; transition: 0.3s;
+    }
+    .no-thanks-btn:hover { color: #64748b; }
+
+    /* --- ANIMATIONS --- */
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    @keyframes shadowScale { 0%, 100% { transform: scale(1); opacity: 0.1; } 50% { transform: scale(0.8); opacity: 0.2; } }
+
+    /* --- RESPONSIVE BREAKPOINTS --- */
+    
+    /* Tablet Portrait */
+    @media (max-width: 900px) {
+        .exit-grid { grid-template-columns: 1fr 1fr; }
+        .exit-visual { padding: 30px; }
+        .exit-form-side { padding: 30px; }
+        .visual-title { font-size: 1.8rem; }
+        .form-title { font-size: 1.6rem; }
+    }
+
+    /* Mobile Devices */
+    @media (max-width: 768px) {
+        .exit-modal { align-items: flex-end; padding: 0; } /* Bottom Sheet Style */
+        .exit-modal-content { border-radius: 24px 24px 0 0; max-width: 100%; max-height: 85vh; }
+        .exit-grid { grid-template-columns: 1fr; min-height: auto; }
+        
+        .exit-visual { display: none; } /* Hide visual on mobile */
+        
+        .exit-form-side { padding: 40px 25px; text-align: center; }
+        .form-title { font-size: 1.8rem; }
+        .mobile-header { display: block; }
+        
+        .exit-close { 
+            top: 15px; right: 15px; background: #f1f5f9; 
+        }
+        
+        /* Adjust input for fat fingers */
+        .premium-input { padding: 18px 20px 18px 50px; font-size: 16px; /* Prevents zoom on iOS */ }
+    }
+</style>
+
+<script>
+    // --- CONFIGURATION ---
+    const POPUP_ID = 'exitPopup';
+    const STORAGE_KEY = 'stc_exit_popup_seen';
+    const DAYS_TO_WAIT = 1; // Show once every 24 hours
+
+    function showExitPopup() {
+        const lastSeen = localStorage.getItem(STORAGE_KEY);
+        const now = new Date().getTime();
+
+        // Check if user has seen popup recently
+        if (lastSeen && (now - lastSeen) < (DAYS_TO_WAIT * 24 * 60 * 60 * 1000)) {
+            return; // Too soon, don't show
+        }
+
+        document.getElementById(POPUP_ID).style.display = 'flex';
+        localStorage.setItem(STORAGE_KEY, now); // Record the time shown
+        
+        // Trap focus for accessibility
+        const input = document.querySelector('.premium-input');
+        if(input) setTimeout(() => input.focus(), 100);
+    }
+
+    function closeExitPopup() {
+        document.getElementById(POPUP_ID).style.display = 'none';
+    }
+
+    function handleExitSubmit(e) {
+        // e.preventDefault(); // Uncomment if you want to handle via AJAX
+        // For now, let the form submit normally to the Django view
+        alert("Success! Your price list is on the way.");
+        closeExitPopup();
+    }
+
+    // --- TRIGGER 1: DESKTOP MOUSE EXIT (Top Boundary) ---
+    document.addEventListener('mouseleave', (e) => {
+        if (e.clientY < 0) {
+            showExitPopup();
+        }
+    });
+
+    // --- TRIGGER 2: MOBILE TIMER (15s Delay) ---
+    setTimeout(() => {
+        // Only trigger on small screens if not already triggered
+        if (window.innerWidth < 768) {
+            showExitPopup();
+        }
+    }, 15000); 
+
+    // --- USER FRIENDLINESS: CLOSE ON ESCAPE KEY ---
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeExitPopup();
+        }
+    });
+
+</script>
 </body>
 </html>

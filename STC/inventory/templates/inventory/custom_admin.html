@@ -49,7 +49,7 @@
     }
     .btn-logout:hover { background: #ef4444; color: white; border-color: #ef4444; }
 
-    /* --- 2. QUICK STATS ROW (New) --- */
+    /* --- 2. QUICK STATS ROW --- */
     .stats-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -77,7 +77,7 @@
     .stat-info h3 { font-size: 2rem; margin: 0; color: var(--dark); font-weight: 800; line-height: 1; }
     .stat-info p { color: #64748b; margin: 5px 0 0; font-size: 0.9rem; font-weight: 600; text-transform: uppercase; }
 
-    /* --- 3. CONTROLS BAR (Tabs & Search) --- */
+    /* --- 3. CONTROLS BAR --- */
     .controls-bar {
         display: flex; justify-content: space-between; align-items: center;
         margin-bottom: 20px; flex-wrap: wrap; gap: 20px;
@@ -92,11 +92,7 @@
     }
     .tab-btn.active { background: white; color: var(--dark); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 
-    /* Search Input */
-    .search-box {
-        position: relative;
-        min-width: 300px;
-    }
+    .search-box { position: relative; min-width: 300px; }
     .search-box input {
         width: 100%; padding: 12px 20px 12px 45px;
         border: 1px solid #e2e8f0; border-radius: 50px;
@@ -104,10 +100,7 @@
         outline: none; transition: all 0.3s;
     }
     .search-box input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(211, 84, 0, 0.1); }
-    .search-box i {
-        position: absolute; left: 18px; top: 50%; transform: translateY(-50%);
-        color: #94a3b8;
-    }
+    .search-box i { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
 
     /* --- 4. TABLE STYLING --- */
     .data-card {
@@ -134,6 +127,38 @@
     }
     .admin-table tr:hover td { background: #fafafa; }
 
+    /* Tags for Products */
+    .product-link {
+        font-weight: 600; color: var(--primary); text-decoration: none;
+        background: #fff7ed; padding: 5px 12px; border-radius: 6px; font-size: 0.85rem;
+        display: inline-block;
+    }
+    .badge-bulk {
+        font-weight: 700; color: #7c3aed; background: #f5f3ff;
+        padding: 5px 12px; border-radius: 6px; font-size: 0.85rem;
+        display: inline-block; border: 1px solid #ddd6fe;
+    }
+
+    /* --- SCROLLABLE MESSAGE BOX --- */
+    .scrollable-message {
+        max-height: 100px; /* Shows about 4-5 lines */
+        overflow-y: auto;  /* Adds scrollbar if content is taller */
+        font-size: 0.85rem;
+        color: #475569;
+        line-height: 1.5;
+        white-space: pre-wrap; /* Keeps the list formatting */
+        padding-right: 5px;    /* Space for scrollbar */
+        background: #f8fafc;
+        padding: 8px;
+        border-radius: 8px;
+        border: 1px solid #f1f5f9;
+    }
+
+    /* Custom Scrollbar Styling (Webkit) */
+    .scrollable-message::-webkit-scrollbar { width: 4px; }
+    .scrollable-message::-webkit-scrollbar-track { background: transparent; }
+    .scrollable-message::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .scrollable-message::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     /* Action Buttons */
     .action-group { display: flex; gap: 8px; }
     .action-btn {
@@ -145,11 +170,6 @@
     .btn-reply:hover { background: #3b82f6; color: white; }
     .btn-delete { background: #fef2f2; color: #ef4444; }
     .btn-delete:hover { background: #ef4444; color: white; }
-
-    .product-link {
-        font-weight: 600; color: var(--primary); text-decoration: none;
-        background: #fff7ed; padding: 5px 12px; border-radius: 6px; font-size: 0.85rem;
-    }
 
     /* Mobile Responsive */
     @media (max-width: 768px) {
@@ -193,7 +213,7 @@
             </div>
             <div class="stat-info">
                 <h3>{{ inquiries.count }}</h3>
-                <p>Product Inquiries</p>
+                <p>Total Inquiries</p>
             </div>
         </div>
         <div class="stat-card">
@@ -215,7 +235,7 @@
         
         <div class="search-box">
             <i class="fas fa-search"></i>
-            <input type="text" id="tableSearch" placeholder="Search customer, email or product..." onkeyup="filterTable()">
+            <input type="text" id="tableSearch" placeholder="Search customer, email or type..." onkeyup="filterTable()">
         </div>
     </div>
 
@@ -225,9 +245,8 @@
                 <tr>
                     <th>Date</th>
                     <th>Customer</th>
-                    <th>Product</th>
-                    <th>Message</th>
-                    <th>Actions</th>
+                    <th>Type / Product</th>
+                    <th>Full Message Detail</th> <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -240,21 +259,27 @@
                         <strong style="display:block; color:var(--dark);">{{ item.customer_name }}</strong>
                         <span style="font-size:0.85rem; color:#94a3b8;">{{ item.customer_email }}</span>
                     </td>
-                    <td data-label="Product">
+                    <td data-label="Type">
                         {% if item.product %}
                             <a href="{% url 'product_detail' item.product.id %}" class="product-link" target="_blank">
-                                {{ item.product.name }} ↗
+                                <i class="fas fa-tag"></i> {{ item.product.name }}
                             </a>
                         {% else %}
-                            <span style="color:#ccc;">Removed</span>
+                            <span class="badge-bulk">
+                                <i class="fas fa-layer-group"></i> Bulk Basket
+                            </span>
                         {% endif %}
                     </td>
-                    <td data-label="Message" style="max-width:300px;">
-                        {{ item.message|truncatechars:80 }}
+                    
+                    <td data-label="Message" style="max-width:350px; min-width:250px;">
+                        <div class="scrollable-message">
+                            {{ item.message }} 
+                        </div>
                     </td>
+                    
                     <td data-label="Actions">
                         <div class="action-group">
-                            <a href="mailto:{{ item.customer_email }}?subject=Re: Inquiry about {{ item.product.name }}" class="action-btn btn-reply" title="Reply">
+                            <a href="mailto:{{ item.customer_email }}?subject=Re: Inquiry about {{ item.product.name|default:'Bulk Order' }}" class="action-btn btn-reply" title="Reply">
                                 <i class="fas fa-reply"></i>
                             </a>
                             <a href="{% url 'delete_item' 'inquiry' item.id %}" class="action-btn btn-delete" title="Delete" onclick="return confirm('Permanently delete this inquiry?');">
@@ -277,8 +302,7 @@
                     <th>Date</th>
                     <th>Sender</th>
                     <th>Subject</th>
-                    <th>Message</th>
-                    <th>Actions</th>
+                    <th>Full Message Detail</th> <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -294,9 +318,13 @@
                     <td data-label="Subject" style="font-weight:600; color:var(--dark);">
                         {{ item.subject }}
                     </td>
-                    <td data-label="Message" style="max-width:300px;">
-                        {{ item.message|truncatechars:80 }}
+                    
+                    <td data-label="Message" style="max-width:350px; min-width:250px;">
+                        <div class="scrollable-message">
+                            {{ item.message }}
+                        </div>
                     </td>
+                    
                     <td data-label="Actions">
                         <div class="action-group">
                             <a href="mailto:{{ item.email }}?subject=Re: {{ item.subject }}" class="action-btn btn-reply" title="Reply">
@@ -326,7 +354,6 @@
         document.getElementById(tabName).classList.add('active');
         event.currentTarget.classList.add('active');
         
-        // Clear search when switching tabs
         document.getElementById('tableSearch').value = '';
         filterTable();
     }
@@ -336,12 +363,10 @@
         let input = document.getElementById('tableSearch');
         let filter = input.value.toLowerCase();
         
-        // Get the active table
         let activeCard = document.querySelector('.data-card.active');
         let tr = activeCard.getElementsByTagName('tr');
 
-        // Loop through all table rows, and hide those who don't match the search query
-        for (let i = 1; i < tr.length; i++) { // Start at 1 to skip header
+        for (let i = 1; i < tr.length; i++) { 
             let text = tr[i].textContent.toLowerCase();
             if (text.includes(filter)) {
                 tr[i].style.display = "";
@@ -352,4 +377,4 @@
     }
 </script>
 
-{% endblock %} 
+{% endblock %}

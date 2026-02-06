@@ -283,41 +283,117 @@
             </div>
         </div>
 
-        <div class="product-right-col">
+       <div class="product-right-col" style="position: sticky; top: 100px; z-index: 10;">
+    
+    <style>
+        /* Input Styling */
+        .premium-input input, .premium-input textarea {
+            width: 100%;
+            padding: 16px 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            font-family: 'Manrope', sans-serif;
+            font-size: 1rem;
+            color: #334155;
+            background: #f8fafc;
+            transition: all 0.3s ease;
+            outline: none;
+            box-sizing: border-box;
+        }
+        .premium-input input:focus, .premium-input textarea:focus {
+            background: white;
+            border-color: #d35400; /* Gold/Orange */
+            box-shadow: 0 0 0 4px rgba(211, 84, 0, 0.1);
+        }
+        .premium-input textarea { resize: vertical; min-height: 120px; }
+        
+        /* Button Hover Animation */
+        .hover-lift:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.2) !important;
+        }
+    </style>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div style="background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; border-radius: 16px; padding: 16px; margin-bottom: 24px; box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.15); display: flex; align-items: center; gap: 12px; font-size: 0.95rem; font-weight: 600; animation: fadeIn 0.5s ease;">
+                <i class="fas fa-check-circle" style="font-size: 1.2rem;"></i> 
+                <span>{{ message }}</span>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div style="background: linear-gradient(145deg, #fff7ed 0%, #ffffff 100%); border: 1px solid rgba(249, 115, 22, 0.15); border-radius: 24px; padding: 30px; margin-bottom: 30px; box-shadow: 0 20px 40px -10px rgba(249, 115, 22, 0.1); position: relative; overflow: hidden;">
+        <div style="position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; background: rgba(249, 115, 22, 0.05); border-radius: 50%;"></div>
+        
+        <h3 style="font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; color: #9a3412; margin: 0 0 8px 0; position: relative;">
+            Building a List?
+        </h3>
+        <p style="font-family: 'Manrope', sans-serif; font-size: 0.95rem; color: #7c2d12; margin: 0 0 25px 0; opacity: 0.85; line-height: 1.5; position: relative;">
+            Add multiple items to your basket and send one single inquiry for everything.
+        </p>
+        
+        <form action="{% url 'add_to_quote' product.id %}" method="POST" style="display: flex; gap: 12px; position: relative;">
+            {% csrf_token %}
+            <div style="flex-shrink: 0;">
+                <input type="number" name="quantity" value="10" min="1" 
+                       style="width: 80px; padding: 14px; border: 1px solid #fed7aa; border-radius: 12px; font-weight: 700; text-align: center; color: #9a3412; outline: none; background: white; font-size: 1rem;">
+            </div>
+            <button type="submit" class="hover-lift" 
+                    style="flex-grow: 1; padding: 14px; background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 0.95rem; cursor: pointer; box-shadow: 0 10px 20px -5px rgba(234, 88, 12, 0.3); transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
+                <i class="fas fa-cart-plus"></i> Add to Quote
+            </button>
+        </form>
+    </div>
+
+    <div style="background: #ffffff; border-radius: 24px; padding: 35px; box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.08); border: 1px solid rgba(0,0,0,0.03); position: relative;">
+        
+        <h3 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: #1e293b; margin: 0 0 10px 0;">
+            Direct Inquiry
+        </h3>
+        <p style="font-family: 'Manrope', sans-serif; font-size: 1rem; color: #64748b; margin: 0 0 30px 0; line-height: 1.6;">
+            Ask about <strong style="color: #0f172a;">{{ product.name }}</strong> right now.
+        </p>
+        
+        <form method="POST">
+            {% csrf_token %}
             
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="success-alert">
-                        <i class="fas fa-check-circle"></i> <span>{{ message }}</span>
-                    </div>
-                {% endfor %}
-            {% endif %}
+            <div class="premium-input" style="margin-bottom: 20px;">
+                {{ form.customer_name }}
+            </div>
+            <div class="premium-input" style="margin-bottom: 20px;">
+                {{ form.customer_email }}
+            </div>
+            <div class="premium-input" style="margin-bottom: 20px;">
+                {{ form.customer_phone }}
+            </div>
+            <div class="premium-input" style="margin-bottom: 25px;">
+                {{ form.message }}
+            </div>
 
-            <div class="inquiry-card">
-                <div class="inquiry-header">
-                    <h3>Request a Quote</h3>
-                    <p>Direct wholesale pricing for your business.</p>
-                </div>
-                
-                <form method="POST" class="form-group">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    
-                    <button type="submit" class="btn-submit">
-                        Send Inquiry
-                    </button>
-                </form>
+            <button type="submit" class="hover-lift" 
+                    style="width: 100%; padding: 18px; background: #0f172a; color: white; border: none; border-radius: 50px; font-weight: 700; font-size: 1rem; cursor: pointer; box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.25); text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease;">
+                Send Direct Message <i class="fas fa-paper-plane" style="margin-left: 8px;"></i>
+            </button>
+        </form>
 
-                <div class="trust-row">
-                    <div class="trust-item"><i class="fas fa-bolt"></i> Fast Reply</div>
-                    <div class="trust-item"><i class="fas fa-shield-alt"></i> Secure</div>
-                    <div class="trust-item"><i class="fas fa-tag"></i> Best Rates</div>
-                </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 35px; padding-top: 25px; border-top: 1px solid #f1f5f9;">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">
+                <i class="fas fa-bolt" style="font-size: 1.2rem; color: #d35400;"></i> Fast Reply
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">
+                <i class="fas fa-shield-alt" style="font-size: 1.2rem; color: #d35400;"></i> Secure
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">
+                <i class="fas fa-tag" style="font-size: 1.2rem; color: #d35400;"></i> Best Rates
             </div>
         </div>
+    </div>
 
+</div>
     </div>
 </div>
+
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -388,5 +464,241 @@ document.addEventListener('DOMContentLoaded', function() {
     mainDisplay.addEventListener('mouseleave', startAutoSlide);
 });
 </script>
+<style>
+    .related-section {
+        margin-top: 120px;
+        margin-bottom: 80px;
+        position: relative;
+    }
+
+    /* Decorative Title */
+    .related-header {
+        text-align: center;
+        margin-bottom: 50px;
+        position: relative;
+    }
+
+    .related-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.5rem;
+        color: var(--dark);
+        font-weight: 700;
+        margin-bottom: 15px;
+        letter-spacing: -0.5px;
+    }
+
+    .related-subtitle {
+        font-size: 1rem;
+        color: #94a3b8;
+        font-family: 'Manrope', sans-serif;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        display: inline-block;
+        position: relative;
+    }
+    
+    /* Gold underline for subtitle */
+    .related-subtitle::after {
+        content: ''; display: block; width: 40px; height: 2px;
+        background: var(--primary); margin: 8px auto 0;
+    }
+
+    .related-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 35px;
+    }
+
+    /* --- PREMIUM MINI CARD --- */
+    .mini-card {
+        background: white;
+        border-radius: 24px;
+        overflow: hidden;
+        border: 1px solid rgba(0,0,0,0.03);
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        display: flex;
+        flex-direction: column;
+        text-decoration: none;
+        position: relative;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+    }
+
+    /* Hover Lift & Shadow */
+    .mini-card:hover {
+        transform: translateY(-12px);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+        border-color: rgba(211, 84, 0, 0.2); /* Subtle Gold Border */
+    }
+
+    /* Image Container */
+    .mini-img-box {
+        height: 260px;
+        width: 100%;
+        background: #f8fafc; /* Subtle contrast background */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 30px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .mini-img-box img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        transition: transform 0.6s ease;
+        mix-blend-mode: multiply; /* Helps blend white bg images */
+    }
+
+    /* Image Zoom on Hover */
+    .mini-card:hover .mini-img-box img {
+        transform: scale(1.12);
+    }
+
+    /* Hover Overlay Icon */
+    .hover-overlay {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.03);
+        display: flex; align-items: center; justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .view-icon {
+        width: 50px; height: 50px;
+        background: white;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        color: var(--primary);
+        font-size: 1.2rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transform: translateY(20px);
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .mini-card:hover .hover-overlay { opacity: 1; }
+    .mini-card:hover .view-icon { transform: translateY(0); }
+
+    /* Details Section */
+    .mini-details {
+        padding: 25px;
+        background: white;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        border-top: 1px solid #f1f5f9;
+    }
+
+    .mini-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.2rem;
+        color: var(--dark);
+        font-weight: 700;
+        margin-bottom: 12px;
+        display: block;
+        line-height: 1.3;
+        transition: color 0.3s;
+    }
+
+    .mini-card:hover .mini-title {
+        color: var(--primary); /* Title turns gold on hover */
+    }
+
+    /* Stock Pill */
+    .mini-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .stock-pill {
+        font-size: 0.75rem;
+        color: #64748b;
+        font-family: 'Manrope', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 700;
+        background: #f1f5f9;
+        padding: 6px 12px;
+        border-radius: 30px;
+    }
+
+    .arrow-link {
+        font-size: 1rem;
+        color: var(--primary);
+        opacity: 0;
+        transform: translateX(-10px);
+        transition: all 0.3s ease;
+    }
+
+    .mini-card:hover .arrow-link {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        .related-section { margin-top: 80px; }
+        .related-title { font-size: 2rem; }
+        .related-grid { 
+            grid-template-columns: repeat(2, 1fr); /* 2 Columns */
+            gap: 15px; 
+        }
+        .mini-img-box { height: 180px; padding: 15px; }
+        .mini-details { padding: 15px; }
+        .mini-title { font-size: 1rem; }
+        .stock-pill { font-size: 0.65rem; padding: 4px 8px; }
+        .view-icon { display: none; } /* Hide hover icon on mobile */
+    }
+</style>
+
+{% if related_products %}
+<div class="container">
+    <div class="related-section">
+        
+        <div class="related-header">
+            <span class="related-subtitle">Explore More</span>
+            <h2 class="related-title">You Might Also Like</h2>
+        </div>
+        
+        <div class="related-grid">
+            {% for rel_prod in related_products %}
+            <a href="{% url 'product_detail' rel_prod.pk %}" class="mini-card">
+                
+                <div class="mini-img-box">
+                    {% if rel_prod.images.first %}
+                        <img src="{{ rel_prod.images.first.image.url }}" alt="{{ rel_prod.name }}">
+                    {% else %}
+                        <div style="color:#cbd5e1; font-weight:600; font-size:0.9rem;">No Image</div>
+                    {% endif %}
+                    
+                    <div class="hover-overlay">
+                        <div class="view-icon"><i class="fas fa-eye"></i></div>
+                    </div>
+                </div>
+                
+                <div class="mini-details">
+                    <span class="mini-title">{{ rel_prod.name|truncatechars:35 }}</span>
+                    
+                    <div class="mini-meta">
+                        <span class="stock-pill">
+                            {% if rel_prod.available_quantity %}
+                                Qty: {{ rel_prod.available_quantity }}
+                            {% else %}
+                                In Stock
+                            {% endif %}
+                        </span>
+                        <span class="arrow-link">&rarr;</span>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
 
 {% endblock %}

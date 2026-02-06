@@ -1,0 +1,286 @@
+{% extends 'inventory/base.html' %}
+
+{% block content %}
+<style>
+    /* --- CSS VARIABLES & FLUID TYPOGRAPHY --- */
+    :root {
+        --bg-gradient: radial-gradient(circle at 50% 0%, #fff 0%, #f8fafc 100%);
+        --primary-dark: #1e293b;
+        --text-grey: #64748b;
+        --brand-orange: #ea580c;
+    }
+
+    /* --- HERO HEADER --- */
+    .blog-header {
+        text-align: center;
+        padding: clamp(60px, 10vw, 100px) 20px 40px;
+        background: var(--bg-gradient);
+        position: relative;
+    }
+    .header-content { max-width: 800px; margin: 0 auto; }
+    
+    .blog-badge {
+        display: inline-block; background: #fff7ed; color: var(--brand-orange);
+        padding: 6px 16px; border-radius: 50px; font-weight: 700;
+        font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase;
+        margin-bottom: 20px; border: 1px solid #ffedd5;
+    }
+
+    .blog-title {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(2.5rem, 5vw, 4rem); /* Fluid Font Size */
+        color: var(--primary-dark); margin-bottom: 15px;
+        line-height: 1.1; letter-spacing: -1px;
+    }
+    .blog-subtitle {
+        color: var(--text-grey); font-size: clamp(1rem, 2vw, 1.2rem); 
+        letter-spacing: 0.2px; line-height: 1.6; font-weight: 400;
+        max-width: 600px; margin: 0 auto;
+    }
+
+    /* --- GRID LAYOUT --- */
+    .blog-container { max-width: 1200px; margin: 0 auto 120px; padding: 0 20px; }
+    
+    .blog-grid {
+        display: grid;
+        /* Intelligent wrapping: 300px min width */
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 40px;
+    }
+
+    /* --- FEATURED CARD (First Item) --- */
+    .featured-wrapper { margin-bottom: 80px; }
+    
+    .featured-card {
+        display: grid; grid-template-columns: 1.2fr 1fr; gap: 0;
+        background: white; border-radius: 30px; overflow: hidden;
+        box-shadow: 0 25px 60px -15px rgba(0,0,0,0.1);
+        border: 1px solid rgba(0,0,0,0.04);
+        text-decoration: none; color: inherit;
+        transition: transform 0.4s ease;
+    }
+    .featured-card:hover { transform: translateY(-8px); }
+    
+    .feat-img { 
+        height: 100%; min-height: 400px; position: relative; overflow: hidden; 
+    }
+    .feat-img img { 
+        width: 100%; height: 100%; object-fit: cover; 
+        transition: transform 0.7s cubic-bezier(0.25, 0.8, 0.25, 1); 
+    }
+    .featured-card:hover .feat-img img { transform: scale(1.05); }
+
+    .feat-content { 
+        padding: clamp(30px, 5vw, 60px); 
+        display: flex; flex-direction: column; justify-content: center; 
+        position: relative;
+    }
+
+    /* --- STANDARD CARD --- */
+    .blog-card {
+        background: white; border-radius: 24px; overflow: hidden;
+        border: 1px solid rgba(0,0,0,0.04);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        display: flex; flex-direction: column; height: 100%;
+        text-decoration: none; color: inherit; position: relative;
+    }
+    .blog-card:hover { 
+        transform: translateY(-10px); 
+        box-shadow: 0 25px 50px -12px rgba(0,0,0,0.1);
+    }
+
+    .blog-img-box {
+        height: 240px; overflow: hidden; position: relative;
+        /* Aspect Ratio lock for performance */
+        aspect-ratio: 16/10;
+    }
+    .blog-img-box img {
+        width: 100%; height: 100%; object-fit: cover;
+        transition: transform 0.6s ease;
+    }
+    .blog-card:hover .blog-img-box img { transform: scale(1.1); }
+
+    /* Floating Read Time */
+    .read-time-badge {
+        position: absolute; top: 15px; right: 15px;
+        background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(5px);
+        padding: 6px 14px; border-radius: 50px;
+        font-size: 0.75rem; font-weight: 700; color: var(--primary-dark);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1); z-index: 2;
+    }
+
+    .blog-content { padding: 30px; flex-grow: 1; display: flex; flex-direction: column; }
+    
+    .blog-meta {
+        font-size: 0.8rem; color: #94a3b8; font-weight: 700; text-transform: uppercase;
+        margin-bottom: 15px; display: flex; align-items: center; gap: 8px;
+    }
+    .dot { width: 4px; height: 4px; background: #cbd5e1; border-radius: 50%; }
+
+    .article-title {
+        font-family: 'Playfair Display', serif; 
+        font-size: clamp(1.3rem, 2vw, 1.6rem);
+        color: var(--primary-dark); font-weight: 700; margin-bottom: 12px;
+        line-height: 1.3; transition: color 0.3s;
+    }
+    .blog-card:hover .article-title { color: var(--brand-orange); }
+
+    .excerpt {
+        color: var(--text-grey); font-size: 0.95rem; line-height: 1.6; 
+        margin-bottom: 25px; display: -webkit-box; -webkit-line-clamp: 3;
+        line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+    }
+
+    .read-more-link {
+        margin-top: auto; color: var(--primary-dark); font-weight: 700; font-size: 0.9rem;
+        display: flex; align-items: center; gap: 8px; transition: gap 0.3s;
+    }
+    .blog-card:hover .read-more-link { gap: 12px; color: var(--brand-orange); }
+
+    /* --- PAGINATION UI --- */
+    .pagination-wrapper {
+        margin-top: 80px; display: flex; justify-content: center; gap: 10px;
+        align-items: center;
+    }
+    .page-btn {
+        width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;
+        border-radius: 50%; border: 1px solid #e2e8f0; background: white;
+        color: var(--primary-dark); text-decoration: none; font-weight: 700;
+        transition: all 0.2s;
+    }
+    .page-btn:hover { border-color: var(--brand-orange); color: var(--brand-orange); }
+    .page-btn.active { background: var(--brand-orange); color: white; border-color: var(--brand-orange); }
+    .page-btn.disabled { opacity: 0.5; pointer-events: none; background: #f8fafc; }
+
+
+    /* --- RESPONSIVE MEDIA QUERIES --- */
+    
+    /* Tablet/Small Desktop */
+    @media (max-width: 1024px) {
+        .featured-card { grid-template-columns: 1fr; }
+        .feat-img { min-height: 350px; height: 350px; }
+        .feat-content { padding: 40px; }
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+        .blog-header { padding: 60px 20px 20px; }
+        .blog-grid { grid-template-columns: 1fr; gap: 30px; }
+        
+        /* Filters scroll horizontally on mobile */
+        .filter-bar { 
+            justify-content: flex-start; overflow-x: auto; 
+            padding-bottom: 10px; flex-wrap: nowrap; 
+        }
+        
+        /* Adjust Font Sizes */
+        .article-title { font-size: 1.5rem; }
+        .feat-img { min-height: 250px; height: 250px; }
+    }
+</style>
+
+<div class="blog-header">
+    <div class="header-content">
+        <span class="blog-badge">The Editorial</span>
+        <h1 class="blog-title">Journal & Insights</h1>
+        <p class="blog-subtitle">Curated stories on bakery trends, business growth, and wholesale market shifts.</p>
+    </div>
+</div>
+
+<div class="blog-container">
+    
+    {% if page_obj %}
+        
+        {% if page_obj.number == 1 %}
+        <div class="featured-wrapper">
+            {% with first_post=page_obj.0 %}
+            <a href="{% url 'blog_detail' first_post.slug %}" class="featured-card">
+                <div class="feat-img">
+                    {% if first_post.cover_image %}
+                        <img src="{{ first_post.cover_image.url }}" alt="{{ first_post.title }}">
+                    {% else %}
+                        <div style="width:100%; height:100%; background:#f1f5f9; display:flex; align-items:center; justify-content:center; color:#cbd5e1;">Feature Image</div>
+                    {% endif %}
+                    <span class="read-time-badge"><i class="far fa-clock"></i> {{ first_post.read_time }} Min</span>
+                </div>
+                <div class="feat-content">
+                    <div class="blog-meta">
+                        <span style="color:#ea580c;">Featured Story</span>
+                        <div class="dot"></div>
+                        <span>{{ first_post.created_at|date:"M d, Y" }}</span>
+                    </div>
+                    <h2 class="article-title" style="font-size: clamp(1.8rem, 3vw, 2.5rem); margin-bottom: 20px;">{{ first_post.title }}</h2>
+                    <p class="excerpt" style="display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; line-clamp: 4; overflow: hidden;">{{ first_post.meta_description|default:first_post.content|truncatechars:180 }}</p>
+                    <div class="read-more-link" style="margin-top: 30px;">Read Full Story <i class="fas fa-arrow-right"></i></div>
+                </div>
+            </a>
+            {% endwith %}
+        </div>
+        {% endif %}
+
+        <div class="blog-grid">
+            {% for post in page_obj %}
+                {% if page_obj.number != 1 or not forloop.first %}
+                <a href="{% url 'blog_detail' post.slug %}" class="blog-card">
+                    <div class="blog-img-box">
+                        {% if post.cover_image %}
+                            <img src="{{ post.cover_image.url }}" alt="{{ post.title }}">
+                        {% else %}
+                            <div style="width:100%; height:100%; background:#f1f5f9; display:flex; align-items:center; justify-content:center; color:#cbd5e1;">No Image</div>
+                        {% endif %}
+                        <span class="read-time-badge">{{ post.read_time }} Min</span>
+                    </div>
+                    
+                    <div class="blog-content">
+                        <div class="blog-meta">
+                            <span>{{ post.created_at|date:"M d, Y" }}</span>
+                        </div>
+                        
+                        <h3 class="article-title">{{ post.title }}</h3>
+                        <p class="excerpt">
+                            {{ post.meta_description|default:post.content|truncatechars:100 }}
+                        </p>
+
+                        <div class="read-more-link">Read Article <i class="fas fa-arrow-right"></i></div>
+                    </div>
+                </a>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        {% if page_obj.paginator.num_pages > 1 %}
+        <div class="pagination-wrapper">
+            
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="page-btn"><i class="fas fa-chevron-left"></i></a>
+            {% else %}
+                <span class="page-btn disabled"><i class="fas fa-chevron-left"></i></span>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <span class="page-btn active">{{ num }}</span>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <a href="?page={{ num }}" class="page-btn">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="page-btn"><i class="fas fa-chevron-right"></i></a>
+            {% else %}
+                <span class="page-btn disabled"><i class="fas fa-chevron-right"></i></span>
+            {% endif %}
+        </div>
+        {% endif %}
+
+    {% else %}
+        <div style="text-align:center; padding:100px 20px; background:white; border-radius:24px; border:1px solid #f1f5f9;">
+            <i class="far fa-newspaper" style="font-size:3rem; color:#e2e8f0; margin-bottom:20px;"></i>
+            <h3 style="color:#64748b; font-family:'Manrope', sans-serif;">The journal is currently empty.</h3>
+            <p style="color:#94a3b8;">Check back soon for new articles.</p>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

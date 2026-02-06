@@ -1,0 +1,329 @@
+{% extends 'inventory/base.html' %}
+
+{% block content %}
+<style>
+    /* --- ANIMATIONS --- */
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .quote-wrapper {
+        max-width: 1200px;
+        margin: 60px auto;
+        padding: 0 20px;
+        animation: fadeUp 0.8s ease-out;
+    }
+
+    /* --- HEADER --- */
+    .quote-header {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+    .quote-header h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 3rem;
+        color: var(--dark);
+        margin-bottom: 10px;
+    }
+    .quote-header p {
+        color: #64748b;
+        font-size: 1.1rem;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    /* --- LAYOUT GRID --- */
+    .quote-grid {
+        display: grid;
+        grid-template-columns: 1.8fr 1fr; /* Table on Left, Form on Right */
+        gap: 40px;
+        align-items: start;
+    }
+
+    /* --- TABLE SECTION --- */
+    .table-card {
+        background: white;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+        border: 1px solid rgba(0,0,0,0.03);
+    }
+
+    .quote-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .quote-table th {
+        background: #f8fafc;
+        padding: 20px 25px;
+        text-align: left;
+        font-weight: 700;
+        color: #475569;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+    }
+
+    .quote-table td {
+        padding: 25px;
+        border-bottom: 1px solid #f1f5f9;
+        vertical-align: middle;
+    }
+
+    .quote-table tr:last-child td { border-bottom: none; }
+
+    .item-flex {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .item-thumb {
+        width: 70px;
+        height: 70px;
+        border-radius: 12px;
+        object-fit: contain;
+        border: 1px solid #e2e8f0;
+        padding: 5px;
+        background: white;
+    }
+
+    .item-name {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--dark);
+        text-decoration: none;
+        display: block;
+        margin-bottom: 4px;
+    }
+    .item-meta { font-size: 0.85rem; color: #94a3b8; }
+
+    .qty-badge {
+        background: #f1f5f9;
+        color: var(--dark);
+        padding: 8px 16px;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+
+    .btn-remove {
+        width: 35px; height: 35px;
+        display: flex; align-items: center; justify-content: center;
+        border-radius: 50%;
+        color: #ef4444;
+        background: #fef2f2;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+    .btn-remove:hover {
+        background: #ef4444; color: white; transform: rotate(90deg);
+    }
+
+    /* --- FORM SECTION --- */
+    .quote-sidebar {
+        position: sticky;
+        top: 120px;
+    }
+
+    .quote-form-box {
+        background: white;
+        border: 1px solid rgba(0,0,0,0.05);
+        border-radius: 24px;
+        padding: 40px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+    }
+
+    .quote-form-box h3 {
+        font-family: 'Playfair Display', serif;
+        margin: 0 0 10px;
+        font-size: 1.8rem;
+        color: var(--dark);
+    }
+    .quote-form-box p { color: #64748b; font-size: 0.95rem; margin-bottom: 25px; line-height: 1.6; }
+
+    .form-group { margin-bottom: 15px; }
+    
+    .form-group input, .form-group textarea {
+        width: 100%; padding: 16px 20px;
+        border: 1px solid #e2e8f0; border-radius: 12px;
+        font-family: 'Manrope', sans-serif; font-size: 1rem;
+        background: #fcfcfc; transition: all 0.3s;
+    }
+    
+    .form-group input:focus, .form-group textarea:focus {
+        border-color: var(--primary); background: white; outline: none;
+        box-shadow: 0 0 0 4px rgba(211, 84, 0, 0.1);
+    }
+
+    .btn-send-quote {
+        width: 100%; padding: 18px;
+        background: var(--primary-gradient); color: white;
+        border: none; border-radius: 50px;
+        font-weight: 700; font-size: 1rem; cursor: pointer;
+        text-transform: uppercase; letter-spacing: 1px;
+        box-shadow: 0 10px 25px rgba(211, 84, 0, 0.25);
+        transition: all 0.3s ease; margin-top: 10px;
+    }
+    .btn-send-quote:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 40px rgba(211, 84, 0, 0.35);
+    }
+
+    /* Trust Signals */
+    .trust-box {
+        margin-top: 30px;
+        padding-top: 25px;
+        border-top: 1px solid #f1f5f9;
+        display: flex;
+        justify-content: space-between;
+    }
+    .trust-item {
+        font-size: 0.75rem; color: #94a3b8; font-weight: 600;
+        display: flex; flex-direction: column; align-items: center; gap: 5px;
+    }
+    .trust-item i { font-size: 1.2rem; color: var(--primary); }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center; padding: 100px 20px;
+        background: white; border-radius: 24px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+    }
+    .empty-icon {
+        width: 100px; height: 100px; background: #f8fafc;
+        border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 30px; color: #cbd5e1; font-size: 3rem;
+    }
+
+    /* --- RESPONSIVE --- */
+    @media (max-width: 992px) {
+        .quote-grid { grid-template-columns: 1fr; gap: 50px; }
+        .quote-sidebar { position: static; }
+    }
+
+    @media (max-width: 768px) {
+        .quote-table thead { display: none; }
+        .quote-table tr { display: block; border-bottom: 1px solid #e2e8f0; padding: 20px; }
+        .quote-table td { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border: none; }
+        .item-flex { width: 100%; }
+        .quote-header h1 { font-size: 2.5rem; }
+    }
+</style>
+
+<div class="quote-wrapper">
+    
+    <div class="quote-header">
+        <h1>Your Inquiry Basket</h1>
+        <p>Review your selected items before requesting a consolidated quote.</p>
+    </div>
+
+    {% if cart|length > 0 %}
+    <div class="quote-grid">
+        
+        <div class="table-card">
+            <table class="quote-table">
+                <thead>
+                    <tr>
+                        <th>Product Details</th>
+                        <th>Qty Required</th>
+                        <th style="text-align:right;">Remove</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart %}
+                    <tr>
+                        <td>
+                            <div class="item-flex">
+                                {% if item.product.images.first %}
+                                    <img src="{{ item.product.images.first.image.url }}" class="item-thumb" alt="{{ item.product.name }}">
+                                {% else %}
+                                    <div class="item-thumb" style="display:flex; align-items:center; justify-content:center; color:#ccc; font-size:0.7rem;">No Img</div>
+                                {% endif %}
+                                
+                                <div>
+                                    <a href="{% url 'product_detail' item.product.id %}" class="item-name">{{ item.product.name }}</a>
+                                    <span class="item-meta">Category: {{ item.product.category.name|default:"General" }}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="qty-badge">{{ item.quantity }} Units</span>
+                        </td>
+                        <td style="text-align:right;">
+                            <a href="{% url 'remove_from_quote' item.product.id %}" class="btn-remove" title="Remove Item">
+                                <i class="fas fa-times"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="quote-sidebar">
+            <div class="quote-form-box">
+                <h3>Finalize Request</h3>
+                <p>We'll review your list and send a formal price quotation to your email within 24 hours.</p>
+                
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        {{ form.customer_name }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form.customer_email }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form.customer_phone }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form.message }}
+                    </div>
+                    
+                    <button type="submit" class="btn-send-quote">
+                        Request Quote <i class="fas fa-paper-plane" style="margin-left:8px;"></i>
+                    </button>
+                </form>
+
+                <div class="trust-box">
+                    <div class="trust-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>No Payment</span>
+                    </div>
+                    <div class="trust-item">
+                        <i class="fas fa-bolt"></i>
+                        <span>Fast Reply</span>
+                    </div>
+                    <div class="trust-item">
+                        <i class="fas fa-percentage"></i>
+                        <span>Bulk Rates</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-shopping-basket"></i>
+            </div>
+            <h3>Your basket is empty</h3>
+            <p style="color:#64748b; margin-bottom:30px;">Browse our wholesale collection to start building your order.</p>
+            <a href="{% url 'product_list' %}" class="btn-send-quote" style="display:inline-block; width:auto; padding:15px 40px; text-decoration:none;">
+                Browse Catalogue
+            </a>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

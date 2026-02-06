@@ -371,5 +371,320 @@
 
     </div>
 </section>
+<style>
+    /* --- SECTION BACKGROUND --- */
+    .testi-section {
+        padding: 120px 0;
+        /* Subtle spotlight effect */
+        background: radial-gradient(circle at 50% 0%, #f8fafc 0%, #ffffff 70%);
+        overflow: hidden;
+        position: relative;
+    }
+
+    /* Decorative Background Elements */
+    .testi-section::before {
+        content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(0,0,0,0.05), transparent);
+    }
+
+    /* --- HEADER --- */
+    .testi-header {
+        text-align: center;
+        margin-bottom: 70px;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .testi-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 3rem;
+        color: var(--dark);
+        margin-bottom: 10px;
+        letter-spacing: -0.5px;
+    }
+
+    .testi-subtitle {
+        display: inline-block;
+        color: #d97706; /* Gold/Amber */
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-size: 0.8rem;
+        background: rgba(217, 119, 6, 0.1);
+        padding: 6px 16px;
+        border-radius: 50px;
+        margin-bottom: 20px;
+    }
+
+    /* --- CAROUSEL TRACK --- */
+    .carousel-wrapper {
+        position: relative;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 20px;
+        z-index: 5;
+    }
+
+    .testi-track-container {
+        overflow: hidden;
+        padding: 40px 0 60px 0; /* Extra padding for hover lift */
+    }
+
+    .testi-track {
+        display: flex;
+        gap: 30px; /* IMPORTANT: Matches JS cardWidth calculation */
+        transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        cursor: grab;
+    }
+
+    .testi-track:active { cursor: grabbing; }
+
+    /* --- CARD DESIGN --- */
+    .testi-card {
+        min-width: 350px;
+        max-width: 350px;
+        background: white;
+        border-radius: 24px;
+        padding: 40px;
+        /* Soft, diffuse premium shadow */
+        box-shadow: 0 10px 40px -10px rgba(0,0,0,0.06);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        display: flex;
+        flex-direction: column;
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+        user-select: none;
+    }
+
+    .testi-card:hover {
+        transform: translateY(-12px);
+        box-shadow: 0 30px 60px -15px rgba(0,0,0,0.1);
+        border-color: rgba(0,0,0,0.02);
+    }
+
+    /* GIANT WATERMARK QUOTE */
+    .watermark-quote {
+        position: absolute;
+        top: -10px;
+        right: 20px;
+        font-family: 'Playfair Display', serif;
+        font-size: 10rem;
+        line-height: 1;
+        color: #f1f5f9;
+        opacity: 0.5;
+        z-index: 0;
+        pointer-events: none;
+        transition: transform 0.5s ease;
+    }
+    .testi-card:hover .watermark-quote {
+        transform: translateY(-10px) scale(1.1);
+        color: #e2e8f0;
+    }
+
+    /* Content Z-Index to sit above watermark */
+    .card-content { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; }
+
+    .stars {
+        color: #f59e0b;
+        font-size: 1rem;
+        margin-bottom: 20px;
+        display: flex; gap: 4px;
+    }
+
+    .review-text {
+        font-family: 'Manrope', sans-serif;
+        font-size: 1.05rem;
+        color: #334155;
+        line-height: 1.8;
+        margin-bottom: 30px;
+        flex-grow: 1;
+        font-weight: 500;
+    }
+
+    /* --- USER PROFILE --- */
+    .user-profile {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        border-top: 1px solid #f1f5f9;
+        padding-top: 25px;
+        margin-top: auto;
+    }
+
+    .user-img {
+        width: 55px; height: 55px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid white;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+
+    .user-info h4 {
+        margin: 0;
+        font-family: 'Playfair Display', serif;
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--dark);
+        display: flex; align-items: center; gap: 8px;
+    }
+
+    /* Verified Badge */
+    .verified-badge {
+        color: #10b981; /* Green */
+        font-size: 0.9rem;
+    }
+
+    .user-info span {
+        font-size: 0.8rem;
+        color: #94a3b8;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        display: block;
+        margin-top: 4px;
+    }
+
+    /* --- GLASS CONTROLS --- */
+    .carousel-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 60px; height: 60px;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(8px); /* Glass Effect */
+        border-radius: 50%;
+        border: 1px solid rgba(255,255,255,0.8);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        cursor: pointer;
+        z-index: 10;
+        display: flex; align-items: center; justify-content: center;
+        color: var(--dark);
+        font-size: 1.2rem;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    .carousel-btn:hover {
+        background: var(--dark);
+        color: white;
+        transform: translateY(-50%) scale(1.1);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+    .btn-prev { left: -30px; }
+    .btn-next { right: -30px; }
+
+    @media(max-width: 992px) {
+        .carousel-btn { display: none; } /* Mobile: Swipe only */
+        .btn-prev { left: 10px; }
+        .btn-next { right: 10px; }
+    }
+    
+    @media(max-width: 768px) {
+        .testi-card { min-width: 300px; max-width: 300px; padding: 30px; }
+        .testi-title { font-size: 2.2rem; }
+    }
+</style>
+
+{% if testimonials %}
+<div class="testi-section">
+    <div class="testi-header">
+        <span class="testi-subtitle">Client Stories</span>
+        <h2 class="testi-title">Trusted by Industry Leaders</h2>
+    </div>
+
+    <div class="carousel-wrapper">
+        <button class="carousel-btn btn-prev" onclick="moveSlide(-1)" title="Previous">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <button class="carousel-btn btn-next" onclick="moveSlide(1)" title="Next">
+            <i class="fas fa-arrow-right"></i>
+        </button>
+
+        <div class="testi-track-container" id="trackContainer">
+            <div class="testi-track" id="track">
+                
+                {% for review in testimonials %}
+                <div class="testi-card">
+                    <div class="watermark-quote">”</div>
+
+                    <div class="card-content">
+                        <div class="stars">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= review.rating %}
+                                    <i class="fas fa-star"></i>
+                                {% else %}
+                                    <i class="far fa-star" style="color:#cbd5e1;"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                        <p class="review-text">{{ review.review_text|truncatechars:180 }}</p>
+                        
+                        <div class="user-profile">
+                            {% if review.image %}
+                                <img src="{{ review.image.url }}" alt="{{ review.customer_name }}" class="user-img">
+                            {% else %}
+                                <div class="user-img" style="display:flex; align-items:center; justify-content:center; background:#f1f5f9; color:#64748b; font-weight:800; font-size:1.2rem;">
+                                    {{ review.customer_name|first }}
+                                </div>
+                            {% endif %}
+                            
+                            <div class="user-info">
+                                <h4>
+                                    {{ review.customer_name }} 
+                                    <i class="fas fa-check-circle verified-badge" title="Verified Customer"></i>
+                                </h4>
+                                <span>{{ review.designation|default:"Verified Buyer" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const track = document.getElementById('track');
+    const container = document.getElementById('trackContainer');
+    let scrollAmount = 0;
+    
+    // Width (350px) + Gap (30px) = 380px per slide
+    const cardWidth = 380; 
+
+    function moveSlide(direction) {
+        const maxScroll = track.scrollWidth - container.clientWidth;
+        scrollAmount += direction * cardWidth;
+
+        if (scrollAmount < 0) scrollAmount = 0;
+        if (scrollAmount > maxScroll) scrollAmount = maxScroll;
+
+        track.style.transform = `translateX(-${scrollAmount}px)`;
+    }
+
+    // Auto Scroll Feature
+    let autoScroll = setInterval(() => {
+        const maxScroll = track.scrollWidth - container.clientWidth;
+        if (scrollAmount >= maxScroll) {
+            scrollAmount = 0; // Reset loop
+        } else {
+            scrollAmount += cardWidth;
+        }
+        track.style.transform = `translateX(-${scrollAmount}px)`;
+    }, 4500); // Slightly slower for better reading time
+
+    // Pause on Hover
+    track.addEventListener('mouseenter', () => clearInterval(autoScroll));
+    track.addEventListener('mouseleave', () => {
+        autoScroll = setInterval(() => {
+            const maxScroll = track.scrollWidth - container.clientWidth;
+            if (scrollAmount >= maxScroll) scrollAmount = 0;
+            else scrollAmount += cardWidth;
+            track.style.transform = `translateX(-${scrollAmount}px)`;
+        }, 4500);
+    });
+</script>
+{% endif %}
 
 {% endblock %}

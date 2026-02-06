@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, ProductImage, ProductVideo, Color, Inquiry, ContactMessage, Flavour, Category
+from .models import Product, ProductImage, ProductVideo, Color, Inquiry, ContactMessage, Flavour, Category, Testimonial, BlogPost
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
@@ -29,6 +29,18 @@ class ContactMessageAdmin(admin.ModelAdmin):
     search_fields = ('full_name', 'email', 'subject')             
     readonly_fields = ('full_name', 'email', 'subject', 'message', 'created_at')
     list_filter = ('created_at',)
+
+@admin.register(Testimonial)
+class TestimonialAdmin(admin.ModelAdmin):
+    list_display = ('customer_name', 'rating', 'designation', 'is_active')
+    list_filter = ('rating', 'is_active')
+    search_fields = ('customer_name', 'review_text')
+
+@admin.register(BlogPost)
+class BlogPostAdmin(admin.ModelAdmin):
+    list_display = ('title', 'is_published', 'created_at')
+    prepopulated_fields = {'slug': ('title',)} # Auto-fill slug from title
+    search_fields = ('title', 'content')
 
 admin.site.register(Color)
 admin.site.register(Category)
