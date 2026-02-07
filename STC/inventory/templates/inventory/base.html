@@ -442,33 +442,32 @@
 </style>
 
 <script>
-    // 1. HIDE LOADER ON PAGE LOAD
-    window.addEventListener('load', function() {
-        // Slight delay to ensure smooth exit transition
+    // 1. HIDE LOADER AFTER EXACTLY 3 SECONDS
+    // This runs as soon as the HTML is ready, starts a 3s timer
+    document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             hideLoader();
-        }, 150); 
+        }, 3000); // 3000 milliseconds = 3 seconds
     });
 
-    // 2. SHOW LOADER ON LINK CLICK
-    document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                const target = this.getAttribute('target');
-                const href = this.getAttribute('href');
-                
-                // Smart Logic: Only show for real internal navigation
-                if (
-                    href && 
-                    !href.startsWith('#') && 
-                    !href.startsWith('mailto:') && 
-                    !href.startsWith('tel:') && 
-                    !href.startsWith('javascript:') &&
-                    target !== '_blank'
-                ) {
-                    showLoader();
-                }
-            });
+    // 2. SHOW LOADER ON LINK CLICK (Optional: Keep this if you want it on navigation too)
+    document.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            const target = this.getAttribute('target');
+            const href = this.getAttribute('href');
+            
+            // Smart Logic: Only show for real internal navigation
+            if (
+                href && 
+                !href.startsWith('#') && 
+                !href.startsWith('mailto:') && 
+                !href.startsWith('tel:') && 
+                !href.startsWith('javascript:') &&
+                target !== '_blank'
+            ) {
+                showLoader();
+                // Note: On the NEXT page, the 3-second timer above will run again.
+            }
         });
     });
 
@@ -719,7 +718,7 @@
         <span class="float-tooltip">Call Sales</span>
     </a>
 
-    <a href="https://wa.me/911234567890?text=Hi%20Sameer%20Trading,%20I%20am%20interested%20in%20your%20bakery%20supplies." target="_blank" class="float-btn btn-whatsapp">
+    <a href="https://wa.me/9898864651?text=Hi%20Sameer%20Trading,%20I%20am%20interested%20in%20your%20bakery%20supplies." target="_blank" class="float-btn btn-whatsapp">
         <i class="fab fa-whatsapp"></i>
         <span class="float-tooltip">Chat on WhatsApp</span>
     </a>
