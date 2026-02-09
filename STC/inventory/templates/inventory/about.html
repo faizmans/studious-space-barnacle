@@ -2,7 +2,7 @@
 
 {% block content %}
 <style>
-    /* --- 1. CINEMATIC HERO --- */
+    /* --- 1. CINEMATIC HERO (Safari Optimized) --- */
     .about-hero {
         position: relative;
         height: 60vh;
@@ -11,8 +11,17 @@
         justify-content: center;
         text-align: center;
         color: white;
-        background: url("/media/products/images/our1.jpg") center/cover no-repeat fixed;
+        /* FIX: Changed 'fixed' to 'scroll' by default for Mobile Stability */
+        background: url("/media/products/images/our1.jpg") center/cover no-repeat scroll;
         margin-bottom: 100px;
+        will-change: transform; /* Hint to Safari to optimize rendering */
+    }
+
+    /* Only enable fixed parallax on Desktop (Non-Touch) */
+    @media (min-width: 1024px) {
+        .about-hero {
+            background-attachment: fixed;
+        }
     }
 
     .about-hero::before {
@@ -91,55 +100,24 @@
         margin-top: 40px;
         display: flex;
         align-items: center;
-        gap: 15px; /* Space between photo and text */
-        border-left: 4px solid var(--primary); /* Gold accent line */
+        gap: 15px; 
+        border-left: 4px solid var(--primary); 
         padding-left: 20px;
     }
 
     .profile-block img {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%; /* Makes it a circle */
+        width: 60px; height: 60px;
+        border-radius: 50%;
         object-fit: cover;
         box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        border: 2px solid white; /* Clean white ring */
+        border: 2px solid white;
     }
 
-    .profile-text {
-        display: flex;
-        flex-direction: column;
-    }
+    .profile-text { display: flex; flex-direction: column; }
+    .profile-text strong { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--dark); line-height: 1.2; }
+    .profile-text span { font-size: 0.85rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; font-weight: 500; }
 
-    .profile-text strong {
-        font-family: 'Playfair Display', serif;
-        font-size: 1.1rem;
-        color: var(--dark);
-        line-height: 1.2;
-    }
-
-    .profile-text span {
-        font-size: 0.85rem;
-        color: #94a3b8;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        font-weight: 500;
-    }
-
-    /* Mobile Adjustment */
-    @media(max-width: 992px) {
-        .profile-block {
-            justify-content: center; /* Center on mobile */
-            border-left: none;
-            padding-left: 0;
-            border-bottom: 4px solid var(--primary);
-            padding-bottom: 15px;
-            display: inline-flex;
-            text-align: left; /* Keep text aligned left relative to image */
-        }
-    }
-   
-
-    /* --- 3. LIVE STATS COUNTER --- */
+    /* --- 3. LIVE STATS COUNTER (Safari Fixed) --- */
     .stats-container {
         background: var(--dark);
         border-radius: 30px;
@@ -163,40 +141,37 @@
         text-align: center;
         position: relative;
         z-index: 2;
-        flex-wrap: wrap; /* Important for mobile */
+        flex-wrap: wrap; 
         gap: 40px;
     }
 
-    /* --- FIXED: COUNTER STYLES --- */
-    /* This ensures 24 and h are aligned and visible */
+    /* FIX: Removed 'display: flex' from H3 to fix Safari Gradient Text Bug */
     .stat-box h3, 
     .combined-stat { 
         font-family: 'Playfair Display', serif;
-        font-size: 5rem; /* Big luxury size */
+        font-size: 5rem;
         font-weight: 700;
         margin-bottom: 5px;
         line-height: 1;
         
-        /* Gold Gradient */
+        /* Gradient Text */
         background: var(--primary-gradient);
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
         color: var(--primary);
         
-        /* Flexbox fixes the invisibility issue */
-        display: flex;
-        justify-content: center;
-        align-items: baseline; 
+        /* Safari Fix: Use inline-block instead of flex for text clipping */
+        display: inline-block; 
+        position: relative;
     }
     
-    /* Smaller 'h' unit */
     .stat-unit {
         font-size: 3rem; 
         margin-left: 5px;
         font-weight: 400;
-        -webkit-text-fill-color: initial; /* Reset gradient for 'h' if needed, or keep it */
-        color: rgba(206, 112, 24, 0.8); /* Make 'h' slightly softer white */
+        -webkit-text-fill-color: initial; 
+        color: rgba(206, 112, 24, 0.8);
     }
     
     .stat-box span:not(.counter):not(.stat-unit) { 
@@ -217,7 +192,11 @@
         .story-section { grid-template-columns: 1fr; gap: 50px; }
         .story-img { height: 400px; }
         .story-content { text-align: center; }
-        .signature-block { border-left: none; border-bottom: 4px solid var(--primary); padding-left: 0; padding-bottom: 15px; display: inline-block; }
+        .profile-block { 
+            justify-content: center; border-left: none; padding-left: 0;
+            border-bottom: 4px solid var(--primary); padding-bottom: 15px; 
+            display: inline-flex; text-align: left; 
+        }
     }
 
     @media(max-width: 768px) {
@@ -250,11 +229,11 @@
             <p>Today, we are proud to serve as the backbone for over 500+ successful retail businesses and professional kitchens across Ahmedabad and beyond.</p>
             
             <div class="profile-block">
-    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="CEO Profile">
-    <div class="profile-text">
-        <strong>Sameer Mansuri</strong> <span>Founder & CEO</span>
-    </div>
-</div>
+                <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="CEO Profile">
+                <div class="profile-text">
+                    <strong>Sameer Mansuri</strong> <span>Founder & CEO</span>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -271,9 +250,8 @@
             </div>
             
             <div class="stat-box">
-                <div class="combined-stat">
-                    <span class="counter" data-target="24">0</span>
-                    <span class="stat-unit">h</span>
+                <div style="display:inline-block;"> <span class="combined-stat counter" data-target="24">0</span>
+                    <span class="stat-unit" style="font-family:'Playfair Display', serif; color:#ea580c; font-size:3rem;">h</span>
                 </div>
                 <span>Fast Delivery</span>
             </div>
@@ -281,134 +259,74 @@
     </div>
 
 </div>
+
 <style>
     .insta-section {
         padding: 80px 20px;
-        background: #fff; /* Or #f8fafc for light gray contrast */
+        background: #fff;
         text-align: center;
     }
-
-    /* Header Styling */
     .insta-header { margin-bottom: 50px; }
     
     .insta-title {
-        font-family: 'Playfair Display', serif;
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin-bottom: 10px;
-        color: var(--dark);
+        font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 700;
+        margin-bottom: 10px; color: var(--dark);
     }
 
     .insta-handle {
-        font-family: 'Manrope', sans-serif;
-        font-size: 1.1rem;
-        font-weight: 700;
+        font-family: 'Manrope', sans-serif; font-size: 1.1rem; font-weight: 700;
         background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        display: inline-block;
-        margin-bottom: 10px;
-        text-decoration: none;
-        transition: opacity 0.3s;
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        display: inline-block; margin-bottom: 10px; text-decoration: none; transition: opacity 0.3s;
     }
     .insta-handle:hover { opacity: 0.8; }
 
-    /* The Reel Grid */
     .reel-grid {
-        display: grid;
-        /* Desktop: 6 columns */
-        grid-template-columns: repeat(6, 1fr); 
-        gap: 20px;
-        max-width: 1400px;
-        margin: 0 auto;
+        display: grid; grid-template-columns: repeat(6, 1fr); 
+        gap: 20px; max-width: 1400px; margin: 0 auto;
     }
 
-    /* Individual Reel Card */
     .reel-item {
-        position: relative;
-        display: block;
-        width: 100%;
-        /* Aspect Ratio 9:16 for Reels */
-        padding-top: 177.77%; 
-        border-radius: 16px;
-        overflow: hidden;
-        background: #000;
+        position: relative; display: block; width: 100%;
+        padding-top: 177.77%; /* 9:16 Aspect Ratio */
+        border-radius: 16px; overflow: hidden; background: #000;
         box-shadow: 0 10px 20px rgba(0,0,0,0.05);
         transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        cursor: pointer;
     }
 
-    /* The Image */
     .reel-item img {
-        position: absolute;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        object-fit: cover;
-        transition: transform 0.6s ease;
-        opacity: 0.9;
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        object-fit: cover; transition: transform 0.6s ease; opacity: 0.9;
     }
 
-    /* Hover Overlay */
     .reel-overlay {
-        position: absolute;
-        top: 0; left: 0; width: 100%; height: 100%;
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
         background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 50%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        z-index: 2;
+        display: flex; align-items: center; justify-content: center;
+        opacity: 0; transition: opacity 0.3s ease; z-index: 2;
     }
 
     .play-icon {
-        font-size: 2rem;
-        color: white;
-        transform: scale(0.8);
+        font-size: 2rem; color: white; transform: scale(0.8);
         transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    /* Interactions */
-    .reel-item:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-    }
+    .reel-item:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
     .reel-item:hover img { transform: scale(1.1); opacity: 0.7; }
     .reel-item:hover .reel-overlay { opacity: 1; }
     .reel-item:hover .play-icon { transform: scale(1); }
 
-    /* Instagram Stats (Optional cosmetic touch) */
-    .reel-stats {
-        position: absolute;
-        bottom: 15px; left: 0; width: 100%;
-        display: flex; justify-content: center; gap: 15px;
-        color: white; font-size: 0.85rem; font-weight: 600;
-        z-index: 3; opacity: 0; transform: translateY(10px);
-        transition: all 0.3s ease 0.1s;
-    }
-    .reel-item:hover .reel-stats { opacity: 1; transform: translateY(0); }
-
-    /* --- RESPONSIVE BREAKPOINTS --- */
-    
-    /* Tablet: 3 columns (2 rows) */
     @media (max-width: 992px) {
-        .reel-grid {
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            padding: 0 20px;
-        }
+        .reel-grid { grid-template-columns: repeat(3, 1fr); gap: 15px; padding: 0 20px; }
         .insta-title { font-size: 2rem; }
     }
 
-    /* Mobile: 2 columns (3 rows) - Classic Insta look */
     @media (max-width: 576px) {
-        .reel-grid {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            padding: 0 15px;
-        }
+        .reel-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 15px; }
         .insta-section { padding: 50px 0; }
         .insta-title { font-size: 1.8rem; }
-        .reel-item:hover { transform: none; } /* Remove lift on touch devices */
+        .reel-item:hover { transform: none; }
     }
 </style>
 
@@ -421,39 +339,30 @@
         </div>
 
         <div class="reel-grid">
-            
             <a href="https://www.instagram.com/p/DUP9aj3ErYe/" target="_blank" class="reel-item">
                 <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=1000&auto=format&fit=crop" alt="Reel 1">
-                <div class="reel-overlay">
-                    <i class="fas fa-play play-icon"></i>
-                </div>
+                <div class="reel-overlay"><i class="fas fa-play play-icon"></i></div>
             </a>
-
             <a href="https://www.instagram.com/p/DUYOnF-iFXQ/" target="_blank" class="reel-item">
                 <img src="https://images.unsplash.com/photo-1621303837174-89787a7d4729?q=80&w=1000&auto=format&fit=crop" alt="Reel 2">
                 <div class="reel-overlay"><i class="fas fa-play play-icon"></i></div>
             </a>
-
             <a href="https://www.instagram.com/p/DULS-0FCBAP/" target="_blank" class="reel-item">
                 <img src="https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?q=80&w=800&auto=format&fit=crop" alt="Reel 3">              
                   <div class="reel-overlay"><i class="fas fa-play play-icon"></i></div>
             </a>
-
             <a href="https://www.instagram.com/p/DUAg1hqiOYi/" target="_blank" class="reel-item">
                 <img src="https://images.unsplash.com/photo-1586985289688-ca3cf47d3e6e?q=80&w=1000&auto=format&fit=crop" alt="Reel 4">
                 <div class="reel-overlay"><i class="fas fa-play play-icon"></i></div>
             </a>
-
             <a href="https://www.instagram.com/p/DT-eB1rEl86/" target="_blank" class="reel-item">
                 <img src="https://images.unsplash.com/photo-1517433670267-08bbd4be890f?q=80&w=1000&auto=format&fit=crop" alt="Reel 5">
                 <div class="reel-overlay"><i class="fas fa-play play-icon"></i></div>
             </a>
-
             <a href="https://www.instagram.com/p/DUDg9EjEqNw/" target="_blank" class="reel-item">
                 <img src="https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?q=80&w=1000&auto=format&fit=crop" alt="Reel 6">
                 <div class="reel-overlay"><i class="fas fa-play play-icon"></i></div>
             </a>
-
         </div>
         
         <div style="margin-top:40px;">
@@ -472,7 +381,10 @@
 
         const animateCounters = () => {
             counters.forEach(counter => {
-                const target = +counter.getAttribute('data-target');
+                const targetStr = counter.getAttribute('data-target');
+                if(!targetStr) return; // Safari Safety Check
+
+                const target = +targetStr;
                 const suffix = (target === 500) ? '+' : ''; 
                 
                 // --- SMALL NUMBER LOGIC (e.g., 24) ---
@@ -482,12 +394,12 @@
                         count++;
                         counter.innerText = count + suffix;
                         if(count >= target) clearInterval(interval);
-                    }, 50); // Speed for small numbers
+                    }, 50); 
                 } 
                 // --- BIG NUMBER LOGIC (e.g., 500) ---
                 else {
-                    const duration = 2000; // 2 seconds total
-                    const stepTime = 20;   // Update every 20ms
+                    const duration = 2000;
+                    const stepTime = 20;
                     const steps = duration / stepTime;
                     const increment = target / steps;
                     let count = 0;
@@ -505,15 +417,21 @@
             });
         };
 
-        const observer = new IntersectionObserver((entries) => {
-            if (entries[0].isIntersecting && !hasAnimated) {
-                animateCounters();
-                hasAnimated = true;
-            }
-        }, { threshold: 0.2 }); // 20% visibility required
+        // Check if IntersectionObserver is supported (Safari safety)
+        if ('IntersectionObserver' in window) {
+            const observer = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting && !hasAnimated) {
+                    animateCounters();
+                    hasAnimated = true;
+                }
+            }, { threshold: 0.2 });
 
-        if(statsSection) {
-            observer.observe(statsSection);
+            if(statsSection) {
+                observer.observe(statsSection);
+            }
+        } else {
+            // Fallback for very old Safari: Run animation immediately
+            animateCounters();
         }
     });
 </script>

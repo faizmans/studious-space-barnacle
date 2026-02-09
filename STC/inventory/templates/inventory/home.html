@@ -8,18 +8,74 @@
         to { opacity: 1; transform: translateY(0); }
     }
 
+    /* --- HOLOGRAPHIC & 3D CORE STYLES --- */
+    /* This class turns any element into a 3D Holographic Card */
+    .holo-card {
+        position: relative;
+        transform-style: preserve-3d;
+        perspective: 1000px;
+        transition: transform 0.1s ease, box-shadow 0.3s ease;
+        background: rgba(255, 255, 255, 0.85); /* Glass base */
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        overflow: visible !important; /* Allow 3D pop-out */
+    }
+
+    /* The iridescent border effect */
+    .holo-card::after {
+        content: "";
+        position: absolute; inset: -1px;
+        border-radius: inherit;
+        padding: 1px;
+        background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0), rgba(255,255,255,0.4));
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+        z-index: 2;
+    }
+
+    /* Dynamic Glare Layer (Injected via JS) */
+    .holo-glare {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 60%);
+        mix-blend-mode: overlay;
+        opacity: 0;
+        pointer-events: none;
+        border-radius: inherit;
+        z-index: 10;
+        transition: opacity 0.2s ease;
+        will-change: opacity, transform;
+    }
+
+    /* Content layers for depth */
+    .holo-content-layer {
+        transform: translateZ(20px);
+        position: relative;
+        z-index: 5;
+    }
+    .holo-pop-layer {
+        transform: translateZ(50px);
+        transition: transform 0.3s ease;
+        z-index: 6;
+        filter: drop-shadow(0 15px 30px rgba(0,0,0,0.15));
+    }
+    
+    /* Hover State enhancements */
+    .holo-card:hover {
+        z-index: 100; /* Bring to front */
+        box-shadow: 
+            0 20px 50px rgba(0,0,0,0.1),
+            0 0 0 1px rgba(255,255,255,0.5) inset;
+    }
+
     /* --- 1. CINEMATIC HERO SECTION --- */
     .hero {
         position: relative;
         height: 85vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        color: white;
-        margin-bottom: 100px;
-        overflow: hidden;
+        display: flex; flex-direction: column; justify-content: center; align-items: center;
+        text-align: center; color: white; margin-bottom: 100px; overflow: hidden;
     }
 
     .hero-video {
@@ -27,7 +83,6 @@
         object-fit: cover; z-index: 1;
     }
 
-    /* Premium Dark Overlay */
     .hero::before {
         content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
         z-index: 1; 
@@ -53,7 +108,6 @@
         font-weight: 300; letter-spacing: 0.5px; line-height: 1.6;
     }
 
-    /* Luxury "Gold" Button */
     .btn-hero {
         display: inline-block; background: white; color: var(--dark);
         padding: 16px 45px; font-size: 1rem; font-weight: 700;
@@ -66,200 +120,92 @@
         box-shadow: 0 15px 40px rgba(211, 84, 0, 0.4);
     }
 
-    /* --- SECTION HEADERS (Centered & Styled) --- */
-    .section-header {
-        text-align: center;
-        margin-bottom: 60px;
-        position: relative;
-        padding: 0 20px;
-    }
-
+    /* --- SECTIONS --- */
+    .section-header { text-align: center; margin-bottom: 60px; position: relative; padding: 0 20px; }
     .section-title { 
         font-size: 2.8rem; font-weight: 700; color: var(--dark); 
         margin-bottom: 15px; position: relative; display: inline-block;
     }
-    
-    /* Gold Underline Accent */
     .section-title::after {
         content: ''; display: block; width: 60px; height: 4px;
-        background: var(--primary); margin: 15px auto 0;
-        border-radius: 2px;
+        background: var(--primary); margin: 15px auto 0; border-radius: 2px;
     }
 
-    /* --- 2. CATEGORY SECTION --- */
+    /* --- 2. CATEGORY SECTION (Holographic) --- */
     .category-section { margin-bottom: 120px; }
-    
-    .category-grid { 
-        display: flex; justify-content: center; gap: 50px; flex-wrap: wrap; 
-        padding: 0 20px;
-    }
-    
+    .category-grid { display: flex; justify-content: center; gap: 50px; flex-wrap: wrap; padding: 0 20px; }
     .cat-card-link { text-decoration: none; color: inherit; display: block; }
 
     .cat-card { 
-        text-align: center; width: 160px; transition: all 0.4s ease;
+        text-align: center; width: 180px; padding: 20px; 
+        border-radius: 30px; /* Specific radius for holo-card */
     }
     
     .cat-img-wrapper {
-        width: 150px; height: 150px; border-radius: 50%; 
-        padding: 6px; border: 2px solid rgba(0,0,0,0.08);
-        margin: 0 auto 20px; transition: all 0.5s ease; position: relative;
+        width: 120px; height: 120px; border-radius: 50%; 
+        margin: 0 auto 15px; position: relative;
     }
-
     .cat-img-box {
         width: 100%; height: 100%; border-radius: 50%; 
         overflow: hidden; background: white;
     }
-    
-    .cat-img-box img { 
-        width: 100%; height: 100%; object-fit: cover; 
-        transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-    }
-    
-    .cat-card:hover .cat-img-wrapper { 
-        border-color: var(--primary); transform: scale(1.05);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-    }
-    .cat-card:hover img { transform: scale(1.15); }
-    
-    .cat-title { 
-        font-weight: 600; color: var(--dark); font-size: 1.1rem; letter-spacing: 0.5px;
-    }
+    .cat-img-box img { width: 100%; height: 100%; object-fit: cover; }
+    .cat-title { font-weight: 700; color: var(--dark); font-size: 1.1rem; letter-spacing: 0.5px; }
 
-    /* --- 3. PRODUCT GRID --- */
+    /* --- 3. PRODUCT GRID (Holographic) --- */
     .product-grid { 
-        display: grid; 
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
         gap: 40px; margin-bottom: 140px; padding: 0 20px;
     }
     
     .product-card { 
-        background: white; border-radius: 24px; overflow: hidden; 
-        transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-        display: flex; flex-direction: column;
-        border: 1px solid rgba(0,0,0,0.03);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.04);
-    }
-    
-    .product-card:hover { 
-        transform: translateY(-10px); 
-        box-shadow: 0 25px 50px rgba(0,0,0,0.1); border-color: transparent;
+        border-radius: 24px; display: flex; flex-direction: column;
+        /* Holo-card class handles background and borders */
     }
     
     .p-img-box {
-        width: 100%; height: 280px; position: relative; overflow: hidden;
-        background: white; display: flex; align-items: center; justify-content: center; padding: 25px;
+        width: 100%; height: 280px; position: relative; 
+        display: flex; align-items: center; justify-content: center; padding: 25px;
+        border-radius: 20px; /* Inner radius */
     }
 
-    .p-img { 
-        width: 100%; height: 100%; object-fit: contain; 
-        transition: transform 0.8s ease;
-        filter: drop-shadow(0 10px 20px rgba(0,0,0,0.08));
-    }
+    .p-img { width: 100%; height: 100%; object-fit: contain; }
     
-    .product-card:hover .p-img { transform: scale(1.1); }
-    
-    .p-details { 
-        padding: 25px; flex-grow: 1; display: flex; flex-direction: column; 
-        background: white; z-index: 2;
-    }
-    
-    .p-title { 
-        font-family: 'Playfair Display', serif; font-size: 1.4rem; 
-        margin: 0 0 10px; font-weight: 700; color: var(--dark); line-height: 1.2;
-    }
-    
-    .p-desc { 
-        font-size: 0.95rem; color: #94a3b8; margin-bottom: 25px; line-height: 1.6; flex-grow: 1;
-    }
+    .p-details { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; }
+    .p-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin: 0 0 10px; font-weight: 700; color: var(--dark); }
+    .p-desc { font-size: 0.95rem; color: #94a3b8; margin-bottom: 25px; line-height: 1.6; flex-grow: 1; }
 
-    .card-actions {
-        display: flex; justify-content: space-between; align-items: center;
-        padding-top: 20px; border-top: 1px solid #f1f5f9;
-    }
+    .card-actions { display: flex; justify-content: space-between; align-items: center; padding-top: 20px; border-top: 1px solid rgba(0,0,0,0.05); }
+    .stock-pill { font-size: 0.75rem; text-transform: uppercase; background: #f8fafc; color: #64748b; padding: 6px 14px; border-radius: 40px; font-weight: 700; }
+    .view-link { color: var(--primary); font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; text-transform: uppercase; }
 
-    .stock-pill {
-        font-size: 0.75rem; text-transform: uppercase; background: #f8fafc;
-        color: #64748b; padding: 6px 14px; border-radius: 40px; font-weight: 700;
-    }
-
-    .view-link {
-        color: var(--primary); font-weight: 700; font-size: 0.9rem;
-        display: flex; align-items: center; gap: 8px; text-transform: uppercase;
-        transition: gap 0.3s;
-    }
-    .view-link:hover { gap: 12px; }
-
-    /* --- 4. FEATURES SECTION --- */
+    /* --- 4. FEATURES SECTION (Holographic) --- */
     .features-section {
-        position: relative; background: white; padding: 80px 0;
+        position: relative; padding: 80px 0;
         border-radius: 40px; margin: 0 20px 80px; 
-        box-shadow: 0 20px 60px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.02);
-        overflow: hidden;
+        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
     }
 
-    .features-grid {
-        display: flex; justify-content: center; gap: 60px; flex-wrap: wrap; 
-        position: relative; z-index: 2;
-    }
-    
-    .feature-box { 
-        text-align: center; padding: 20px; width: 280px;
-    }
+    .features-grid { display: flex; justify-content: center; gap: 60px; flex-wrap: wrap; position: relative; z-index: 2; }
+    .feature-box { text-align: center; padding: 30px; width: 280px; border-radius: 24px; }
     
     .icon-circle {
-        width: 90px; height: 90px; background: #fff;
-        border: 1px solid rgba(0,0,0,0.05); border-radius: 50%;
-        display: flex; align-items: center; justify-content: center;
+        width: 90px; height: 90px; background: white;
+        border-radius: 50%; display: flex; align-items: center; justify-content: center;
         margin: 0 auto 20px; font-size: 2rem; color: var(--primary);
-        transition: all 0.5s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
     }
-    
-    .feature-box:hover .icon-circle { 
-        transform: rotate(10deg) scale(1.1); border-color: var(--primary);
-        box-shadow: 0 15px 30px rgba(211,84,0,0.15);
-    }
-    
-    .feature-box strong { 
-        display: block; font-size: 1.25rem; color: var(--dark); margin-bottom: 8px;
-        font-family: 'Playfair Display', serif;
-    }
-
+    .feature-box strong { display: block; font-size: 1.25rem; color: var(--dark); margin-bottom: 8px; font-family: 'Playfair Display', serif; }
     .feature-box span { color: #94a3b8; font-size: 0.95rem; line-height: 1.5; }
 
-    /* --- MOBILE RESPONSIVE --- */
-    @media (max-width: 992px) {
-        .hero h1 { font-size: 3.5rem; }
-    }
-
+    /* --- RESPONSIVE --- */
+    @media (max-width: 992px) { .hero h1 { font-size: 3.5rem; } }
     @media (max-width: 768px) {
-        /* Hero Mobile */
         .hero { height: 75vh; }
-        .hero h1 { font-size: 2.8rem; margin-bottom: 15px; }
-        .hero p { font-size: 1.1rem; margin-bottom: 30px; }
-        .btn-hero { padding: 14px 35px; font-size: 0.95rem; }
-
-        /* Headers Mobile */
-        .section-header { margin-bottom: 40px; }
-        .section-title { font-size: 2.2rem; }
-
-        /* Category Mobile */
-        .category-grid { gap: 30px; }
-        .cat-card { width: 130px; } /* Fits 2 per row comfortably */
-        .cat-img-wrapper { width: 110px; height: 110px; margin-bottom: 15px; }
-        .cat-title { font-size: 1rem; }
-
-        /* Product Grid Mobile - 1 Column for focus */
-        .product-grid { 
-            grid-template-columns: 1fr; 
-            gap: 40px; 
-            margin-bottom: 80px;
-        }
-        .p-img-box { height: 240px; } /* Adjusted height */
-
-        /* Features Mobile */
-        .features-section { margin: 0 10px 60px; padding: 60px 0; }
-        .features-grid { flex-direction: column; align-items: center; gap: 40px; }
+        .hero h1 { font-size: 2.8rem; }
+        .category-grid { gap: 20px; }
+        .product-grid { grid-template-columns: 1fr; }
+        .features-grid { flex-direction: column; align-items: center; gap: 30px; }
     }
 </style>
 
@@ -287,8 +233,8 @@
         <div class="category-grid">
             {% for cat in categories %}
             <a href="{% url 'category_filter' category_id=cat.id %}" class="cat-card-link">
-                <div class="cat-card">
-                    <div class="cat-img-wrapper">
+                <div class="cat-card holo-card js-3d-tilt">
+                    <div class="cat-img-wrapper holo-pop-layer">
                         <div class="cat-img-box">
                             {% if cat.image %}
                                 <img src="{{ cat.image.url }}" alt="{{ cat.name }}">
@@ -297,7 +243,7 @@
                             {% endif %}
                         </div>
                     </div>
-                    <div class="cat-title">{{ cat.name }}</div>
+                    <div class="cat-title holo-content-layer">{{ cat.name }}</div>
                 </div>
             </a>
             {% endfor %}
@@ -312,9 +258,9 @@
 
         <div class="product-grid">
             {% for product in products %}
-            <div class="product-card">
+            <div class="product-card holo-card js-3d-tilt">
                 
-                <a href="{% url 'product_detail' pk=product.pk %}" class="p-img-box">
+                <a href="{% url 'product_detail' pk=product.pk %}" class="p-img-box holo-pop-layer">
                     {% if product.images.first %}
                         <img src="{{ product.images.first.image.url }}" class="p-img" alt="{{ product.name }}">
                     {% else %}
@@ -322,14 +268,12 @@
                     {% endif %}
                 </a>
                 
-                <div class="p-details">
+                <div class="p-details holo-content-layer">
                     <h3 class="p-title">{{ product.name }}</h3>
                     <p class="p-desc">{{ product.description|truncatewords:10 }}</p>
                     
                     <div class="card-actions">
-                        <span class="stock-pill">
-                            Available: {{ product.available_quantity }}
-                        </span>
+                        <span class="stock-pill">Available: {{ product.available_quantity }}</span>
                         <a href="{% url 'product_detail' pk=product.pk %}" class="view-link">
                             View Details <span>&rarr;</span>
                         </a>
@@ -344,244 +288,94 @@
 
 <section class="features-section">
     <div class="features-grid">
-        
-        <div class="feature-box">
-            <div class="icon-circle">
+        <div class="feature-box holo-card js-3d-tilt">
+            <div class="icon-circle holo-pop-layer">
                 <i class="fas fa-tags"></i>
             </div>
-            <strong>Wholesale Pricing</strong>
-            <span>Direct rates for bulk orders</span>
+            <strong class="holo-content-layer">Wholesale Pricing</strong>
+            <span class="holo-content-layer">Direct rates for bulk orders</span>
         </div>
 
-        <div class="feature-box">
-            <div class="icon-circle">
+        <div class="feature-box holo-card js-3d-tilt">
+            <div class="icon-circle holo-pop-layer">
                 <i class="fas fa-shipping-fast"></i>
             </div>
-            <strong>Fast Delivery</strong>
-            <span>Dispatched within 24 hours</span>
+            <strong class="holo-content-layer">Fast Delivery</strong>
+            <span class="holo-content-layer">Dispatched within 24 hours</span>
         </div>
 
-        <div class="feature-box">
-            <div class="icon-circle">
+        <div class="feature-box holo-card js-3d-tilt">
+            <div class="icon-circle holo-pop-layer">
                 <i class="fas fa-gem"></i>
             </div>
-            <strong>Premium Quality</strong>
-            <span>Verified, high-grade materials</span>
+            <strong class="holo-content-layer">Premium Quality</strong>
+            <span class="holo-content-layer">Verified, high-grade materials</span>
         </div>
-
     </div>
 </section>
+
 <style>
-    /* --- SECTION BACKGROUND --- */
     .testi-section {
         padding: 120px 0;
-        /* Subtle spotlight effect */
         background: radial-gradient(circle at 50% 0%, #f8fafc 0%, #ffffff 70%);
-        overflow: hidden;
-        position: relative;
+        overflow: hidden; position: relative;
     }
-
-    /* Decorative Background Elements */
     .testi-section::before {
         content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 1px;
         background: linear-gradient(90deg, transparent, rgba(0,0,0,0.05), transparent);
     }
 
-    /* --- HEADER --- */
-    .testi-header {
-        text-align: center;
-        margin-bottom: 70px;
-        position: relative;
-        z-index: 2;
-    }
-    
-    .testi-title {
-        font-family: 'Playfair Display', serif;
-        font-size: 3rem;
-        color: var(--dark);
-        margin-bottom: 10px;
-        letter-spacing: -0.5px;
-    }
-
+    .testi-header { text-align: center; margin-bottom: 70px; position: relative; z-index: 2; }
+    .testi-title { font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--dark); margin-bottom: 10px; }
     .testi-subtitle {
-        display: inline-block;
-        color: #d97706; /* Gold/Amber */
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        font-size: 0.8rem;
-        background: rgba(217, 119, 6, 0.1);
-        padding: 6px 16px;
-        border-radius: 50px;
-        margin-bottom: 20px;
+        display: inline-block; color: #d97706; font-weight: 700; text-transform: uppercase;
+        letter-spacing: 2px; font-size: 0.8rem; background: rgba(217, 119, 6, 0.1);
+        padding: 6px 16px; border-radius: 50px; margin-bottom: 20px;
     }
 
-    /* --- CAROUSEL TRACK --- */
-    .carousel-wrapper {
-        position: relative;
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 0 20px;
-        z-index: 5;
-    }
-
-    .testi-track-container {
-        overflow: hidden;
-        padding: 40px 0 60px 0; /* Extra padding for hover lift */
-    }
-
-    .testi-track {
-        display: flex;
-        gap: 30px; /* IMPORTANT: Matches JS cardWidth calculation */
-        transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-        cursor: grab;
-    }
-
+    .carousel-wrapper { position: relative; max-width: 1400px; margin: 0 auto; padding: 0 20px; z-index: 5; }
+    .testi-track-container { overflow: hidden; padding: 40px 0 60px 0; }
+    .testi-track { display: flex; gap: 30px; transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); cursor: grab; }
     .testi-track:active { cursor: grabbing; }
 
-    /* --- CARD DESIGN --- */
+    /* Testimonial Card Holographic Override */
     .testi-card {
-        min-width: 350px;
-        max-width: 350px;
-        background: white;
-        border-radius: 24px;
-        padding: 40px;
-        /* Soft, diffuse premium shadow */
-        box-shadow: 0 10px 40px -10px rgba(0,0,0,0.06);
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        display: flex;
-        flex-direction: column;
-        transition: all 0.4s ease;
-        position: relative;
-        overflow: hidden;
+        min-width: 350px; max-width: 350px; padding: 40px;
+        border-radius: 24px; display: flex; flex-direction: column;
         user-select: none;
+        /* Inherits holo-card properties */
     }
 
-    .testi-card:hover {
-        transform: translateY(-12px);
-        box-shadow: 0 30px 60px -15px rgba(0,0,0,0.1);
-        border-color: rgba(0,0,0,0.02);
-    }
-
-    /* GIANT WATERMARK QUOTE */
     .watermark-quote {
-        position: absolute;
-        top: -10px;
-        right: 20px;
-        font-family: 'Playfair Display', serif;
-        font-size: 10rem;
-        line-height: 1;
-        color: #f1f5f9;
-        opacity: 0.5;
-        z-index: 0;
-        pointer-events: none;
-        transition: transform 0.5s ease;
+        position: absolute; top: -10px; right: 20px; font-family: 'Playfair Display', serif;
+        font-size: 10rem; line-height: 1; color: #f1f5f9; opacity: 0.5;
+        z-index: 0; pointer-events: none; transition: transform 0.5s ease;
     }
-    .testi-card:hover .watermark-quote {
-        transform: translateY(-10px) scale(1.1);
-        color: #e2e8f0;
-    }
-
-    /* Content Z-Index to sit above watermark */
     .card-content { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; }
+    
+    .stars { color: #f59e0b; font-size: 1rem; margin-bottom: 20px; display: flex; gap: 4px; }
+    .review-text { font-family: 'Manrope', sans-serif; font-size: 1.05rem; color: #334155; line-height: 1.8; margin-bottom: 30px; flex-grow: 1; font-weight: 500; }
 
-    .stars {
-        color: #f59e0b;
-        font-size: 1rem;
-        margin-bottom: 20px;
-        display: flex; gap: 4px;
-    }
+    .user-profile { display: flex; align-items: center; gap: 15px; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 25px; margin-top: auto; }
+    .user-img { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 3px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
+    .user-info h4 { margin: 0; font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; color: var(--dark); display: flex; align-items: center; gap: 8px; }
+    .verified-badge { color: #10b981; font-size: 0.9rem; }
+    .user-info span { font-size: 0.8rem; color: #94a3b8; font-weight: 600; text-transform: uppercase; display: block; margin-top: 4px; }
 
-    .review-text {
-        font-family: 'Manrope', sans-serif;
-        font-size: 1.05rem;
-        color: #334155;
-        line-height: 1.8;
-        margin-bottom: 30px;
-        flex-grow: 1;
-        font-weight: 500;
-    }
-
-    /* --- USER PROFILE --- */
-    .user-profile {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        border-top: 1px solid #f1f5f9;
-        padding-top: 25px;
-        margin-top: auto;
-    }
-
-    .user-img {
-        width: 55px; height: 55px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 3px solid white;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-    }
-
-    .user-info h4 {
-        margin: 0;
-        font-family: 'Playfair Display', serif;
-        font-size: 1.15rem;
-        font-weight: 700;
-        color: var(--dark);
-        display: flex; align-items: center; gap: 8px;
-    }
-
-    /* Verified Badge */
-    .verified-badge {
-        color: #10b981; /* Green */
-        font-size: 0.9rem;
-    }
-
-    .user-info span {
-        font-size: 0.8rem;
-        color: #94a3b8;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
-        display: block;
-        margin-top: 4px;
-    }
-
-    /* --- GLASS CONTROLS --- */
     .carousel-btn {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 60px; height: 60px;
-        background: rgba(255, 255, 255, 0.8);
-        backdrop-filter: blur(8px); /* Glass Effect */
-        border-radius: 50%;
-        border: 1px solid rgba(255,255,255,0.8);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-        cursor: pointer;
-        z-index: 10;
-        display: flex; align-items: center; justify-content: center;
-        color: var(--dark);
-        font-size: 1.2rem;
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        position: absolute; top: 50%; transform: translateY(-50%); width: 60px; height: 60px;
+        background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(8px);
+        border-radius: 50%; border: 1px solid rgba(255,255,255,0.8);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08); cursor: pointer; z-index: 10;
+        display: flex; align-items: center; justify-content: center; color: var(--dark);
+        font-size: 1.2rem; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
-    .carousel-btn:hover {
-        background: var(--dark);
-        color: white;
-        transform: translateY(-50%) scale(1.1);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-    }
+    .carousel-btn:hover { background: var(--dark); color: white; transform: translateY(-50%) scale(1.1); }
     .btn-prev { left: -30px; }
     .btn-next { right: -30px; }
 
-    @media(max-width: 992px) {
-        .carousel-btn { display: none; } /* Mobile: Swipe only */
-        .btn-prev { left: 10px; }
-        .btn-next { right: 10px; }
-    }
-    
-    @media(max-width: 768px) {
-        .testi-card { min-width: 300px; max-width: 300px; padding: 30px; }
-        .testi-title { font-size: 2.2rem; }
-    }
+    @media(max-width: 992px) { .carousel-btn { display: none; } .btn-prev { left: 10px; } .btn-next { right: 10px; } }
+    @media(max-width: 768px) { .testi-card { min-width: 300px; max-width: 300px; padding: 30px; } .testi-title { font-size: 2.2rem; } }
 </style>
 
 {% if testimonials %}
@@ -592,21 +386,16 @@
     </div>
 
     <div class="carousel-wrapper">
-        <button class="carousel-btn btn-prev" onclick="moveSlide(-1)" title="Previous">
-            <i class="fas fa-arrow-left"></i>
-        </button>
-        <button class="carousel-btn btn-next" onclick="moveSlide(1)" title="Next">
-            <i class="fas fa-arrow-right"></i>
-        </button>
+        <button class="carousel-btn btn-prev" onclick="moveSlide(-1)"><i class="fas fa-arrow-left"></i></button>
+        <button class="carousel-btn btn-next" onclick="moveSlide(1)"><i class="fas fa-arrow-right"></i></button>
 
         <div class="testi-track-container" id="trackContainer">
             <div class="testi-track" id="track">
-                
                 {% for review in testimonials %}
-                <div class="testi-card">
-                    <div class="watermark-quote">”</div>
+                <div class="testi-card holo-card js-3d-tilt">
+                    <div class="watermark-quote holo-content-layer">”</div>
 
-                    <div class="card-content">
+                    <div class="card-content holo-pop-layer">
                         <div class="stars">
                             {% for i in "12345" %}
                                 {% if forloop.counter <= review.rating %}
@@ -629,52 +418,40 @@
                             {% endif %}
                             
                             <div class="user-info">
-                                <h4>
-                                    {{ review.customer_name }} 
-                                    <i class="fas fa-check-circle verified-badge" title="Verified Customer"></i>
-                                </h4>
+                                <h4>{{ review.customer_name }} <i class="fas fa-check-circle verified-badge"></i></h4>
                                 <span>{{ review.designation|default:"Verified Buyer" }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 {% endfor %}
-
             </div>
         </div>
     </div>
 </div>
 
 <script>
+    // --- CAROUSEL LOGIC ---
     const track = document.getElementById('track');
     const container = document.getElementById('trackContainer');
     let scrollAmount = 0;
-    
-    // Width (350px) + Gap (30px) = 380px per slide
     const cardWidth = 380; 
 
     function moveSlide(direction) {
         const maxScroll = track.scrollWidth - container.clientWidth;
         scrollAmount += direction * cardWidth;
-
         if (scrollAmount < 0) scrollAmount = 0;
         if (scrollAmount > maxScroll) scrollAmount = maxScroll;
-
         track.style.transform = `translateX(-${scrollAmount}px)`;
     }
 
-    // Auto Scroll Feature
     let autoScroll = setInterval(() => {
         const maxScroll = track.scrollWidth - container.clientWidth;
-        if (scrollAmount >= maxScroll) {
-            scrollAmount = 0; // Reset loop
-        } else {
-            scrollAmount += cardWidth;
-        }
+        if (scrollAmount >= maxScroll) scrollAmount = 0;
+        else scrollAmount += cardWidth;
         track.style.transform = `translateX(-${scrollAmount}px)`;
-    }, 4500); // Slightly slower for better reading time
+    }, 4500);
 
-    // Pause on Hover
     track.addEventListener('mouseenter', () => clearInterval(autoScroll));
     track.addEventListener('mouseleave', () => {
         autoScroll = setInterval(() => {
@@ -686,5 +463,52 @@
     });
 </script>
 {% endif %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Target all elements with js-3d-tilt class
+        const cards = document.querySelectorAll('.js-3d-tilt');
+
+        cards.forEach(card => {
+            // 1. Inject Glare Element if not present
+            if (!card.querySelector('.holo-glare')) {
+                const glare = document.createElement('div');
+                glare.className = 'holo-glare';
+                card.appendChild(glare);
+            }
+
+            // 2. Mouse Move Event
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                // Calculate Center
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                // Calculate Tilt (Intensity: 15)
+                const rotateX = ((y - centerY) / centerY) * -15; 
+                const rotateY = ((x - centerX) / centerX) * 15;
+
+                // Apply Transform
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+
+                // Update Glare
+                const glare = card.querySelector('.holo-glare');
+                glare.style.opacity = '1';
+                // Dynamic radial gradient position
+                glare.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 80%)`;
+            });
+
+            // 3. Mouse Leave Event
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale(1)`;
+                const glare = card.querySelector('.holo-glare');
+                glare.style.opacity = '0';
+            });
+        });
+    });
+</script>
 
 {% endblock %}
